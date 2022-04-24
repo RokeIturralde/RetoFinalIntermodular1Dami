@@ -158,8 +158,32 @@ public class IUserControllerDBImplementation implements IUserController {
 	}
 
 	@Override
-	public void eliminarUser(String userName) {
-
+	public int eliminarUser(String userName) throws GestorException {
+		int cambios;
+		String deleteUser = "delete from user where username = ?";
+		
+		this.openConnection();
+		
+		try {
+			stmt = con.prepareStatement(deleteUser);
+			
+			stmt.setString(1, userName);
+			
+			cambios = stmt.executeUpdate();
+		} catch (SQLException e1) {
+			String error = "Error con la conexion con la base de datos";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				String error = "Error al cerrar conexion con la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		return cambios;
 	}
 
 }

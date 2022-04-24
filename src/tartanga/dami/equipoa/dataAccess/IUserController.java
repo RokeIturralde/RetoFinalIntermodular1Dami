@@ -13,6 +13,6 @@ public interface IUserController {
 	
 	public int modificarUser(User user) throws GestorException;
 	
-	public void eliminarUser(String userName);
+	public int eliminarUser(String userName) throws GestorException;
 	
 }
