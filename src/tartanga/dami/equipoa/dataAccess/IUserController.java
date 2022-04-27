@@ -5,7 +5,7 @@ import tartanga.dami.equipoa.model.User;
 
 public interface IUserController {
 	
-	public User userLogIn(String userName, String password);
+	public User userLogIn(String userName, String password) throws GestorException;
 	
 	public void altaUsuario(User user) throws GestorException;
 	

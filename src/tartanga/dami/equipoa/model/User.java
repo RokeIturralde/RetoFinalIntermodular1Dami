@@ -8,7 +8,7 @@ public class User implements Serializable {
 	private String password;
 	private String surname;
 	private String name;
-	private String addess;
+	private String address;
 	private int phone;
 	private char tipo;
 
@@ -56,12 +56,12 @@ public class User implements Serializable {
 		this.name = name;
 	}
 
-	public String getAddess() {
-		return addess;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setAddess(String addess) {
-		this.addess = addess;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public int getPhone() {
