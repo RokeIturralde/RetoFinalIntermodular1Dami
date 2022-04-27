@@ -11,6 +11,6 @@ public interface IGenreController {
 
 	public int modificarGenre(Genre genre) throws GestorException;
 
-	public void eliminarGenre(String genreName) throws GestorException;
+	public int eliminarGenre(String genreName) throws GestorException;
 
 }

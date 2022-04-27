@@ -1,15 +1,15 @@
-package tartanga.dami.equipoa.gui;
+package tartanga.dami.equipoa.dataAccess;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import tartanga.dami.equipoa.dataAccess.IAuthorController;
+
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
 
-public class AuthorControllerDB implements IAuthorController {
+public class IAuthorControllerDBImplementation implements IAuthorController {
 
 	private Connection con;
 	private PreparedStatement stmt;
@@ -36,10 +36,10 @@ public class AuthorControllerDB implements IAuthorController {
 	// Insertar un nuevo Autor en la base de Datos
 	@Override
 	public void altaAuthor(Author author) throws GestorException {
-		this.openConnection();
 
 		try {
-			String insertarAutor = "insert into author values (?,?,?,?,?)";
+			this.openConnection();
+			String insertarAutor = "INSERT INTO AUTHOR VALUES (?,?,?,?,?)";
 			stmt = con.prepareStatement(insertarAutor);
 			stmt.setString(1, author.getCodAuthor());
 			stmt.setString(2, author.getName());
@@ -71,9 +71,10 @@ public class AuthorControllerDB implements IAuthorController {
 		Author autor = null;
 
 		// Abrir conexion con BD
-		openConnection();
-		String busquedaAutor = "select * from author where codAuthor = ?";
+
+		String busquedaAutor = "SELECT * FROM AUTHOR WHERE CODAUTHOR = ?";
 		try {
+			this.openConnection();
 			stmt = con.prepareStatement(busquedaAutor);
 			stmt.setString(1, codAuthor);
 			rs = stmt.executeQuery();
@@ -108,14 +109,16 @@ public class AuthorControllerDB implements IAuthorController {
 		return autor;
 	}
 
-	// Modifica un autor mediante su clave primaria, te devuelve 1 si se ha modificado correctamente
+	// Modifica un autor mediante su clave primaria, te devuelve 1 si se ha
+	// modificado correctamente
 	@Override
 	public int modificarAuthor(Author author) throws GestorException {
-		this.openConnection();
+
 		int num;
 		try {
-			String insertarProp = "update author set name=? and surname=? and birthdate=? and deathdate=? where codAuthor=?";
-			stmt = con.prepareStatement(insertarProp);
+			this.openConnection();
+			String modificarAutor = "UPDATE AUTHOR SET NAME=? AND SURNAME=? AND BIRTHDATE=? AND DEATHDATE=? WHERE CODAUTHOR=?";
+			stmt = con.prepareStatement(modificarAutor);
 			stmt.setString(1, author.getName());
 			stmt.setString(2, author.getSurname());
 			stmt.setDate(3, author.getBirthDate());
@@ -141,11 +144,11 @@ public class AuthorControllerDB implements IAuthorController {
 	// Eliminas un autor mediante su clave primaria
 	@Override
 	public void eliminarAuthor(String codAuthor) throws GestorException {
-		this.openConnection();
 
 		try {
-			String insertarProp = "delete * from author where codAuthor=?";
-			stmt = con.prepareStatement(insertarProp);
+			this.openConnection();
+			String eliminarAutor = "DELETE * FROM AUTHOR WHERE CODAUTHOR=?";
+			stmt = con.prepareStatement(eliminarAutor);
 			stmt.setString(1, codAuthor);
 			stmt.executeUpdate();
 		} catch (Exception e) {

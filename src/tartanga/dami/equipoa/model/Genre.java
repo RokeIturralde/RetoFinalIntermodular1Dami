@@ -10,6 +10,10 @@ public class Genre implements Serializable{
 		super();
 	}
 
+	public Genre(String string, String string2) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getGenreName() {
 		return genreName;
 	}
@@ -24,6 +28,11 @@ public class Genre implements Serializable{
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	@Override
+	public String toString() {
+		return "Genre [genreName=" + genreName + ", description=" + description + "]";
 	}
 	
 	
