@@ -117,7 +117,7 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 		int num;
 		try {
 			this.openConnection();
-			String modificarAutor = "UPDATE AUTHOR SET NAME=? AND SURNAME=? AND BIRTHDATE=? AND DEATHDATE=? WHERE CODAUTHOR=?";
+			String modificarAutor = "UPDATE AUTHOR SET NAME=?, SURNAME=?, BIRTHDATE=?, DEATHDATE=? WHERE CODAUTHOR=?";
 			stmt = con.prepareStatement(modificarAutor);
 			stmt.setString(1, author.getName());
 			stmt.setString(2, author.getSurname());
@@ -126,7 +126,7 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 			stmt.setString(5, author.getCodAuthor());
 			num = stmt.executeUpdate();
 		} catch (Exception e) {
-			String error = "Error en la conexion de la base de datos";
+			String error = "Error en la conexion de la base de datos, algo no va bien con la modificacion";
 			GestorException exception = new GestorException(error);
 			throw exception;
 		} finally {
@@ -143,14 +143,14 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 
 	// Eliminas un autor mediante su clave primaria
 	@Override
-	public void eliminarAuthor(String codAuthor) throws GestorException {
-
+	public int eliminarAuthor(String codAuthor) throws GestorException {
+		int cambio;
 		try {
 			this.openConnection();
-			String eliminarAutor = "DELETE * FROM AUTHOR WHERE CODAUTHOR=?";
+			String eliminarAutor = "DELETE FROM AUTHOR WHERE CODAUTHOR=?";
 			stmt = con.prepareStatement(eliminarAutor);
 			stmt.setString(1, codAuthor);
-			stmt.executeUpdate();
+			cambio = stmt.executeUpdate();
 		} catch (Exception e) {
 			String error = "Error en la conexion de la base de datos";
 			GestorException exception = new GestorException(error);
@@ -164,6 +164,6 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 				throw exception;
 			}
 		}
-
+		return cambio;
 	}
 }

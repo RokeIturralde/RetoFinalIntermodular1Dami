@@ -11,6 +11,6 @@ public interface IAuthorController {
 	
 	public int modificarAuthor(Author author) throws GestorException;
 	
-	public void eliminarAuthor(String codAuthor) throws GestorException;
+	public int eliminarAuthor(String codAuthor) throws GestorException;
 	
 }

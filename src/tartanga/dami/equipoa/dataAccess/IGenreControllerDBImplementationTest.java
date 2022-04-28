@@ -41,7 +41,7 @@ public class IGenreControllerDBImplementationTest {
 			genero.setDescription("Heyyyyy");
 			System.out.println(genero.toString());
 			Genre pruebaBusqueda = pruebaGenero.buscarGenre(genero.getGenreName());
-			// assertEquals(genero, pruebaBusqueda);
+			assertEquals(genero, pruebaBusqueda);
 		} catch (Exception e) {
 			//e.printStackTrace();
 		}

@@ -3,13 +3,20 @@ package tartanga.dami.equipoa.model;
 import java.io.Serializable;
 import java.sql.Date;
 
-public class Author implements Serializable{
+public class Author implements Serializable {
 	private String codAuthor;
 	private String name;
 	private String surname;
+
+	@Override
+	public String toString() {
+		return "Author [codAuthor=" + codAuthor + ", name=" + name + ", surname=" + surname + ", birthDate=" + birthDate
+				+ ", deathDate=" + deathDate + "]";
+	}
+
 	private Date birthDate;
 	private Date deathDate;
-	
+
 	public Author() {
 		super();
 	}

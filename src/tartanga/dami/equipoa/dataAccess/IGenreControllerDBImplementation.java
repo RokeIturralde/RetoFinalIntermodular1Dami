@@ -130,7 +130,7 @@ public class IGenreControllerDBImplementation implements IGenreController {
 		int cambio;
 		try {
 			this.openConnection();
-			String insertarProp = "DELETE * FROM GENRE WHERE GENRENAME=?";
+			String insertarProp = "DELETE FROM GENRE WHERE GENRENAME=?";
 			stmt = con.prepareStatement(insertarProp);
 			stmt.setString(1, genreName);
 			cambio = stmt.executeUpdate();
