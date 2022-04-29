@@ -11,6 +11,8 @@ import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import javax.swing.UIManager;
 
+import tartanga.dami.equipoa.dataAccess.IAuthorController;
+import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IUserController;
 import tartanga.dami.equipoa.dataAccess.IUserControllerDBImplementation;
 import tartanga.dami.equipoa.gestorException.GestorException;
@@ -27,13 +29,19 @@ import java.awt.event.KeyListener;
 import javax.swing.SwingConstants;
 
 public class LogIn extends JFrame implements ActionListener, KeyListener, FocusListener {
-	private IUserController userInterface = new IUserControllerDBImplementation();
 	private JTextField textUsuario;
 	private JPasswordField passwordField;
 	private JButton btnRegistrar;
 	private JButton btnIniciarSesion;
+	private IUserController userInterface;
+	private IAuthorController authorInterface;
+	private IGenreController genreInterface;
 
-	public LogIn() {
+	public LogIn(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface) {
+		this.userInterface = userInterface;
+		this.authorInterface = authorInterface;
+		this.genreInterface = genreInterface;
+		
 		setIconImage(Toolkit.getDefaultToolkit()
 				.getImage(LogIn.class.getResource("/tartanga/dami/equipoa/resources/Logo.png")));
 		getContentPane().setForeground(UIManager.getColor("textInactiveText"));
@@ -105,7 +113,7 @@ public class LogIn extends JFrame implements ActionListener, KeyListener, FocusL
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(btnRegistrar)) {
-			Registro registro = new Registro();
+			Registro registro = new Registro(userInterface, authorInterface, genreInterface);
 			registro.setVisible(true);
 		}
 		if (e.getSource().equals(btnIniciarSesion)) {
