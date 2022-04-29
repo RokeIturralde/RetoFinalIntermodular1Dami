@@ -231,4 +231,60 @@ public class IUserControllerDBImplementation implements IUserController {
 		return cambios;
 	}
 
+	@Override
+	public void anadirAutor(String userName, String autor) throws GestorException {
+		String anadirAutor = "CALL anadirAutor(?,?)";
+		
+		try {
+			this.openConnection();
+			
+			stmt = con.prepareStatement(anadirAutor);
+			
+			stmt.setString(1, autor);
+			stmt.setString(2, userName);
+			
+			stmt.executeUpdate();
+		} catch (SQLException e1) {
+			String error = "Error con la conexion con la base de datos";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				String error = "Error al cerrar conexion con la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+	}
+
+	@Override
+	public void anadirGenero(String userName, String genero) throws GestorException {
+		String anadirGenero = "insert into partnergenre values(?,?)";
+		
+		try {
+			this.openConnection();
+			
+			stmt = con.prepareStatement(anadirGenero);
+			
+			stmt.setString(1, userName);
+			stmt.setString(2, genero);
+			
+			stmt.executeUpdate();
+		} catch (SQLException e1) {
+			String error = "Error con la conexion con la base de datos";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				String error = "Error al cerrar conexion con la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+	}
+
 }

@@ -15,4 +15,8 @@ public interface IUserController {
 	
 	public int eliminarUser(String userName) throws GestorException;
 	
+	public void anadirAutor(String userName, String autor) throws GestorException;
+	
+	public void anadirGenero(String userName, String genero) throws GestorException;
+	
 }

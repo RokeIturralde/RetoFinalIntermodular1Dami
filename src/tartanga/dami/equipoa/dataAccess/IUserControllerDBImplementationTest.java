@@ -13,7 +13,7 @@ import tartanga.dami.equipoa.model.User;
 public class IUserControllerDBImplementationTest {
 
 	private User user;
-	IUserController pruebaInterfaz = new IUserControllerDBImplementation();
+	private IUserController pruebaInterfaz = new IUserControllerDBImplementation();
 
 	@Test
 	public void testUserLogIn() throws GestorException {
