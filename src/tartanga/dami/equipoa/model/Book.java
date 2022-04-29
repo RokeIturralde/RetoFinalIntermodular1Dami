@@ -16,6 +16,25 @@ public class Book implements Serializable{
 	public Book() {
 		super();
 	}
+	
+	@Override
+	public String toString() {
+		return "Book [isbn=" + isbn + ", title=" + title + ", description=" + description + ", editorial=" + editorial
+				+ ", stock=" + stock + ", price=" + price + ", idDiscount=" + idDiscount + ", pubDate=" + pubDate + "]";
+	}
+
+	public Book(int isbn, String title, String description, String editorial, int stock, float price, int idDiscount,
+			Date pubDate) {
+		super();
+		this.isbn = isbn;
+		this.title = title;
+		this.description = description;
+		this.editorial = editorial;
+		this.stock = stock;
+		this.price = price;
+		this.idDiscount = idDiscount;
+		this.pubDate = pubDate;
+	}
 
 	public int getIsbn() {
 		return isbn;
