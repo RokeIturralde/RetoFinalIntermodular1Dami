@@ -121,7 +121,7 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 			stmt = con.prepareStatement(modificarAutor);
 			stmt.setString(1, author.getName());
 			stmt.setString(2, author.getSurname());
-			stmt.setDate(3, author.getBirthDate());
+			stmt.setDate(3, author.getBirthDate());  
 			stmt.setDate(4, author.getDeathDate());
 			stmt.setString(5, author.getCodAuthor());
 			num = stmt.executeUpdate();
