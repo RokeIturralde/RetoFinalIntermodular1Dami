@@ -6,7 +6,7 @@ import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IGenreControllerDBImplementation;
 import tartanga.dami.equipoa.dataAccess.IUserController;
 import tartanga.dami.equipoa.dataAccess.IUserControllerDBImplementation;
-import tartanga.dami.equipoa.gui.LogIn;
+import tartanga.dami.equipoa.gui.WLogIn;
 
 public class Application {
 
@@ -15,7 +15,7 @@ public class Application {
 		IAuthorController authorInterface = new IAuthorControllerDBImplementation();
 		IGenreController genreInterface = new IGenreControllerDBImplementation();
 		
-		LogIn logIn = new LogIn(userInterface, authorInterface, genreInterface);
+		WLogIn logIn = new WLogIn(userInterface, authorInterface, genreInterface);
 		logIn.setVisible(true);
 	}
 

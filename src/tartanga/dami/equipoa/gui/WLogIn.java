@@ -16,6 +16,7 @@ import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IUserController;
 import tartanga.dami.equipoa.dataAccess.IUserControllerDBImplementation;
 import tartanga.dami.equipoa.gestorException.GestorException;
+import tartanga.dami.equipoa.model.Administrator;
 import tartanga.dami.equipoa.model.User;
 
 import java.awt.Toolkit;
@@ -28,7 +29,7 @@ import java.awt.event.KeyListener;
 
 import javax.swing.SwingConstants;
 
-public class LogIn extends JFrame implements ActionListener, KeyListener, FocusListener {
+public class WLogIn extends JFrame implements ActionListener, KeyListener, FocusListener {
 	private JTextField textUsuario;
 	private JPasswordField passwordField;
 	private JButton btnRegistrar;
@@ -37,13 +38,13 @@ public class LogIn extends JFrame implements ActionListener, KeyListener, FocusL
 	private IAuthorController authorInterface;
 	private IGenreController genreInterface;
 
-	public LogIn(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface) {
+	public WLogIn(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface) {
 		this.userInterface = userInterface;
 		this.authorInterface = authorInterface;
 		this.genreInterface = genreInterface;
 		
 		setIconImage(Toolkit.getDefaultToolkit()
-				.getImage(LogIn.class.getResource("/tartanga/dami/equipoa/resources/Logo.png")));
+				.getImage(WLogIn.class.getResource("/tartanga/dami/equipoa/resources/Logo.png")));
 		getContentPane().setForeground(UIManager.getColor("textInactiveText"));
 		getContentPane().setBackground(Color.DARK_GRAY);
 		setBounds(100, 100, 602, 465);
@@ -113,7 +114,7 @@ public class LogIn extends JFrame implements ActionListener, KeyListener, FocusL
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(btnRegistrar)) {
-			Registro registro = new Registro(userInterface, authorInterface, genreInterface);
+			WRegistro registro = new WRegistro(userInterface, authorInterface, genreInterface);
 			registro.setVisible(true);
 		}
 		if (e.getSource().equals(btnIniciarSesion)) {
@@ -146,7 +147,12 @@ public class LogIn extends JFrame implements ActionListener, KeyListener, FocusL
 			try {
 				User user = userInterface.userLogIn(textUsuario.getText(), passwordField.getPassword().toString());
 				if (user != null) {
-					// Abrir ventana principal de la aplicacion
+					if(user instanceof Administrator) {
+						WAdmin admin = new WAdmin();
+						admin.setVisible(true);
+					} else {
+						//Ventana de usuario
+					}
 				} else {
 					JOptionPane.showMessageDialog(this, "El nombre de la cuenta y/o la contraseña son incorrectos",
 							"Error", JOptionPane.WARNING_MESSAGE);

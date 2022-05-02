@@ -30,7 +30,7 @@ import tartanga.dami.equipoa.model.User;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 
-public class Registro extends JDialog implements ActionListener, FocusListener {
+public class WRegistro extends JDialog implements ActionListener, FocusListener {
 	private JTextField textNombreUsr;
 	private JTextField textEmail;
 	private JPasswordField passwordField;
@@ -58,14 +58,14 @@ public class Registro extends JDialog implements ActionListener, FocusListener {
 	private IAuthorController authorInterface;
 	private IGenreController genreInterface;
 
-	public Registro(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface) {
+	public WRegistro(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface) {
 		this.userInterface = userInterface;
 		this.authorInterface = authorInterface;
 		this.genreInterface = genreInterface;
 
 		this.setModal(true);
 		setIconImage(Toolkit.getDefaultToolkit()
-				.getImage(Registro.class.getResource("/tartanga/dami/equipoa/resources/Logo.png")));
+				.getImage(WRegistro.class.getResource("/tartanga/dami/equipoa/resources/Logo.png")));
 		getContentPane().setBackground(Color.DARK_GRAY);
 		setBounds(100, 100, 791, 613);
 		getContentPane().setLayout(null);
