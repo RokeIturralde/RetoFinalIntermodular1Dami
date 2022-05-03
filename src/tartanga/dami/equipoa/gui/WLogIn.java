@@ -6,12 +6,14 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.awt.Menu;
 import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import javax.swing.UIManager;
 
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
+import tartanga.dami.equipoa.dataAccess.IBookController;
 import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IUserController;
 import tartanga.dami.equipoa.dataAccess.IUserControllerDBImplementation;
@@ -37,11 +39,13 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 	private IUserController userInterface;
 	private IAuthorController authorInterface;
 	private IGenreController genreInterface;
+	private IBookController bookInterface;
 
-	public WLogIn(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface) {
+	public WLogIn(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface, IBookController bookInterface) {
 		this.userInterface = userInterface;
 		this.authorInterface = authorInterface;
 		this.genreInterface = genreInterface;
+		this.bookInterface = bookInterface;
 		
 		setIconImage(Toolkit.getDefaultToolkit()
 				.getImage(WLogIn.class.getResource("/tartanga/dami/equipoa/resources/Logo.png")));
@@ -80,6 +84,7 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 		getContentPane().add(lblContr);
 
 		btnIniciarSesion = new JButton("Iniciar Sesi\u00F3n");
+		btnIniciarSesion.setFocusPainted(false);
 		btnIniciarSesion.setBorder(null);
 		btnIniciarSesion.setBackground(new Color(128, 128, 128));
 		btnIniciarSesion.setForeground(Color.WHITE);
@@ -101,6 +106,7 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 		getContentPane().add(lblNoCuenta);
 
 		btnRegistrar = new JButton("Registrate");
+		btnRegistrar.setFocusPainted(false);
 		btnRegistrar.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnRegistrar.setForeground(Color.CYAN);
 		btnRegistrar.setBackground(Color.DARK_GRAY);
@@ -145,13 +151,14 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 		String pass = new String(passwordField.getPassword());
 		if (!(textUsuario.getText().isEmpty() || pass.isEmpty())) {
 			try {
-				User user = userInterface.userLogIn(textUsuario.getText(), passwordField.getPassword().toString());
+				User user = userInterface.userLogIn(textUsuario.getText(), pass);
 				if (user != null) {
 					if(user instanceof Administrator) {
-						WAdmin admin = new WAdmin();
+						WAdmin admin = new WAdmin(user, bookInterface, authorInterface, genreInterface);
 						admin.setVisible(true);
 					} else {
-						//Ventana de usuario
+						WMenu menu = new WMenu();
+						menu.setVisible(true);
 					}
 				} else {
 					JOptionPane.showMessageDialog(this, "El nombre de la cuenta y/o la contraseña son incorrectos",

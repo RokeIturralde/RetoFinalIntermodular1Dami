@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.User;
 import tartanga.dami.equipoa.model.Administrator;
@@ -126,7 +127,7 @@ public class IUserControllerDBImplementation implements IUserController {
 		ResultSet rs = null;
 		User user = null;
 		String searchUser = "select u.*,p.numaccount from user u,partner p where u.username=p.username and u.username = ?";
-
+		
 		try {
 			this.openConnection();
 			

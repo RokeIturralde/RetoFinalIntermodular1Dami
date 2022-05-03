@@ -2,6 +2,8 @@ package tartanga.dami.equipoa;
 
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
 import tartanga.dami.equipoa.dataAccess.IAuthorControllerDBImplementation;
+import tartanga.dami.equipoa.dataAccess.IBookController;
+import tartanga.dami.equipoa.dataAccess.IBookControllerDBImplementation;
 import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IGenreControllerDBImplementation;
 import tartanga.dami.equipoa.dataAccess.IUserController;
@@ -14,8 +16,9 @@ public class Application {
 		IUserController userInterface = new IUserControllerDBImplementation();
 		IAuthorController authorInterface = new IAuthorControllerDBImplementation();
 		IGenreController genreInterface = new IGenreControllerDBImplementation();
+		IBookController bookInterface = new IBookControllerDBImplementation();
 		
-		WLogIn logIn = new WLogIn(userInterface, authorInterface, genreInterface);
+		WLogIn logIn = new WLogIn(userInterface, authorInterface, genreInterface, bookInterface);
 		logIn.setVisible(true);
 	}
 
