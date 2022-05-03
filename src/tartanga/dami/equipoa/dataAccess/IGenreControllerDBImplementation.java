@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Genre;
@@ -148,6 +149,45 @@ public class IGenreControllerDBImplementation implements IGenreController {
 			}
 		}
 		return cambio;
+	}
+
+	@Override
+	public ArrayList<Genre> listarGenerosPreferidos(String username) throws GestorException {
+		ArrayList<Genre> generos = new ArrayList<>();
+		ResultSet rs = null;
+		Genre genero = null;
+
+		// Abrir conexion con BD
+		openConnection();
+		String busquedaProp = "select genreName from genreauthor where username=?";
+		try {
+			stmt = con.prepareStatement(busquedaProp);
+			stmt.setString(1, username);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				genero = new Genre();
+				genero.setGenreName("genreName");
+				generos.add(genero);
+			}
+
+			if (rs != null) {
+				rs.close();
+			}
+			closeConnection();
+		} catch (Exception e) {
+			String error = "Error en el listado de generos";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				String error = "Error al cerrar conexion con la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		return generos;
 	}
 
 }

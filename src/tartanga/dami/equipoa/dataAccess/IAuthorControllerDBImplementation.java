@@ -5,7 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
 
@@ -121,7 +123,7 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 			stmt = con.prepareStatement(modificarAutor);
 			stmt.setString(1, author.getName());
 			stmt.setString(2, author.getSurname());
-			stmt.setDate(3, author.getBirthDate());  
+			stmt.setDate(3, author.getBirthDate());
 			stmt.setDate(4, author.getDeathDate());
 			stmt.setString(5, author.getCodAuthor());
 			num = stmt.executeUpdate();
@@ -152,7 +154,7 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 			stmt.setString(1, codAuthor);
 			cambio = stmt.executeUpdate();
 		} catch (Exception e) {
-			String error = "Error en la conexion de la base de datos";
+			String error = "Error en la eliminacion del autor";
 			GestorException exception = new GestorException(error);
 			throw exception;
 		} finally {
@@ -165,5 +167,84 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 			}
 		}
 		return cambio;
+	}
+
+	@Override
+	public ArrayList<Author> listarAutoresPreferidos(String username) throws GestorException {
+		ArrayList<Author> autores = new ArrayList<>();
+		ResultSet rs = null;
+		Author autor = null;
+
+		// Abrir conexion con BD
+		openConnection();
+		String busquedaProp = "select codAuthor from partnerauthor where username=?";
+		try {
+			stmt = con.prepareStatement(busquedaProp);
+			stmt.setString(1, username);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				autor = new Author();
+				autor.setCodAuthor(rs.getString("codAuthor"));
+				autores.add(autor);
+			}
+
+			if (rs != null) {
+				rs.close();
+			}
+			closeConnection();
+		} catch (Exception e) {
+			String error = "Error en el listado de autores";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				String error = "Error al cerrar conexion con la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		return autores;
+	}
+	
+	
+	@Override
+	public ArrayList<Author> listarComprasAutores(String username) throws GestorException {
+		ArrayList<Author> autores = new ArrayList<>();
+		ResultSet rs = null;
+		Author autor = null;
+
+		// Abrir conexion con BD
+		openConnection();
+		String busquedaProp = "select pa.codAuthor from partnerAuthor pa, purchase p where p.username=? and p.username=pa.username";
+		try {
+			stmt = con.prepareStatement(busquedaProp);
+			stmt.setString(1, username);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				autor = new Author();
+				autor.setCodAuthor(rs.getString("pa.codAuthor"));
+				autores.add(autor);
+			}
+
+			if (rs != null) {
+				rs.close();
+			}
+			closeConnection();
+		} catch (Exception e) {
+			String error = "Error en el guardado de autores";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				String error = "Error al cerrar conexion con la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		return autores;
 	}
 }
