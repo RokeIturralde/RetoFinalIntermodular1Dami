@@ -6,7 +6,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
-import java.awt.Menu;
 import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
@@ -16,7 +15,6 @@ import tartanga.dami.equipoa.dataAccess.IAuthorController;
 import tartanga.dami.equipoa.dataAccess.IBookController;
 import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IUserController;
-import tartanga.dami.equipoa.dataAccess.IUserControllerDBImplementation;
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Administrator;
 import tartanga.dami.equipoa.model.User;
@@ -154,7 +152,7 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 				User user = userInterface.userLogIn(textUsuario.getText(), pass);
 				if (user != null) {
 					if(user instanceof Administrator) {
-						WAdmin admin = new WAdmin(user, bookInterface, authorInterface, genreInterface);
+						WAdmin admin = new WAdmin(user, bookInterface, authorInterface, genreInterface, userInterface);
 						admin.setVisible(true);
 					} else {
 						WMenu menu = new WMenu();
