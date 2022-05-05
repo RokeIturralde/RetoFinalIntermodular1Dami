@@ -1,13 +1,42 @@
 package tartanga.dami.equipoa.gui;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.util.ArrayList;
 
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.table.JTableHeader;
+
+import tartanga.dami.equipoa.dataAccess.IAuthorBookController;
+import tartanga.dami.equipoa.dataAccess.IAuthorController;
+import tartanga.dami.equipoa.dataAccess.IBookController;
+import tartanga.dami.equipoa.dataAccess.IUserController;
+import tartanga.dami.equipoa.gestorException.GestorException;
+import tartanga.dami.equipoa.model.AuthorBook;
+import tartanga.dami.equipoa.model.Book;
+import tartanga.dami.equipoa.model.User;
+
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 public class WMenu extends JDialog {
-	public WMenu() {
+	private ArrayList<AuthorBook> listLikedBooks;
+	private JTable tableFav;
+	private JScrollPane scrollFav;
+	private IUserController userInterface;
+	private IBookController bookInterface;
+	private IAuthorController authorInterface;
+	private User user;
+	private JTable tableSales;
+	private JScrollPane scrollSales;
+	
+	
+	public WMenu(IAuthorController authorInterface, IBookController bookInterface, IUserController userInterface, User user, IAuthorBookController authorBookInterface) {
 		setBounds(100, 100, 1001, 620);
 		getContentPane().setLayout(null);
 		
@@ -15,20 +44,18 @@ public class WMenu extends JDialog {
 		tabbedPane.setBounds(10, 10, 968, 565);
 		getContentPane().add(tabbedPane);
 		
-		JPanel panel = new JPanel();
-		tabbedPane.addTab("Inicio", null, panel, null);
+		JPanel inicio = new JPanel();
+		tabbedPane.addTab("Inicio", null, inicio, null);
+		inicio.setLayout(null);
 		
-		JPanel panel_1 = new JPanel();
-		tabbedPane.addTab("Perfil", null, panel_1, null);
+		//Panel perfil
+		JPanel perfil = new JPanel();
+		tabbedPane.addTab("Perfil", null, perfil, null);
+				
+		//Panel consultas
+		JPanel consultas = new JPanel();
+		tabbedPane.addTab("Consultas", null, consultas, null);
 		
-		JPanel panel_2 = new JPanel();
-		tabbedPane.addTab("Consultas", null, panel_2, null);
-		
-	iniciarPaneles();
-		
-	}
-
-	private void iniciarPaneles() {
 		
 		
 	}

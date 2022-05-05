@@ -73,7 +73,7 @@ public class IBookControllerDBImplementation implements IBookController {
 		ResultSet rs = null;
 		Book book = null;
 
-		String buscarBook = "select * from book where isbn = ?";
+		String buscarBook = "select b.*,a.surname as author,bg.genreName as genre from book b,bookauthor ba, bookgenre bg, author a where b.isbn = ? and  b.isbn=ba.isbn and ba.codauthor=a.codauthor and b.isbn=bg.isbn";
 		try {
 			this.openConnection();
 			stmt = con.prepareStatement(buscarBook);
@@ -89,6 +89,8 @@ public class IBookControllerDBImplementation implements IBookController {
 				book.setPrice(rs.getFloat("price"));
 				book.setIdDiscount(rs.getInt("discount"));
 				book.setPubDate(rs.getDate("pubdate"));
+				book.setAuthor(rs.getString("author"));
+				book.setGenre(rs.getString("genre"));
 			}
 		} catch (SQLException e1) {
 			String error = "Error en la conexion con la base de datos";
@@ -303,6 +305,7 @@ public class IBookControllerDBImplementation implements IBookController {
 				book.setPrice(rs.getFloat("price"));
 				book.setIdDiscount(rs.getInt("idDiscount"));
 				book.setPubDate(rs.getDate("pubDate"));
+				books.add(book);
 			}
 		} catch (SQLException e1) {
 			String error = "Error en la conexion con la base de datos";
@@ -318,6 +321,39 @@ public class IBookControllerDBImplementation implements IBookController {
 			}
 		}
 		return books;
+		
 	}
 
+	@Override
+	public ArrayList<Integer> listTopSales() throws GestorException {
+		ArrayList<Integer> listTopSales = new ArrayList ();
+		Book book = null;
+		ResultSet rs = null;
+		String sentence = "SELECT isbn, sum(quantity) as quantity FROM purchase group by isbn order by sum(quantity) desc limit 5";
+		
+		try {
+			this.openConnection();
+			stmt = con.prepareStatement(sentence);
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				listTopSales.add(rs.getInt("isbn"));
+				listTopSales.add(rs.getInt("quantity"));
+			}
+		} catch (SQLException e1) {
+		String error = "Error en la conexion con la base de datos";
+		GestorException exception = new GestorException(error);
+		throw exception;
+		
+	} finally {
+		try {
+			this.closeConnection();
+		} catch (SQLException e1) {
+			String error = "Error al cerrar la base de datos";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		}
+		return listTopSales;
+	}
+
+}
 }

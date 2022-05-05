@@ -23,4 +23,6 @@ public interface IBookController {
 	public ArrayList<Book> listBookAuthorGenre(String author, String genre) throws GestorException;
 	
 	public ArrayList<Book> listAllBooks() throws GestorException;
+
+	public ArrayList<Integer> listTopSales() throws GestorException;
 }

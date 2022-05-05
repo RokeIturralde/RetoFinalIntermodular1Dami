@@ -12,7 +12,11 @@ public class Book implements Serializable{
 	private float price;
 	private int idDiscount;
 	private Date pubDate;
+	private String author;
+	private String genre;
 	
+	
+
 	public Book() {
 		super();
 	}
@@ -98,6 +102,22 @@ public class Book implements Serializable{
 
 	public void setPubDate(Date pubDate) {
 		this.pubDate = pubDate;
+	}
+	
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public String getGenre() {
+		return genre;
+	}
+
+	public void setGenre(String genre) {
+		this.genre = genre;
 	}
 	
 }

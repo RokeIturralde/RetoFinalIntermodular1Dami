@@ -11,9 +11,14 @@ import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import javax.swing.UIManager;
 
+import tartanga.dami.equipoa.dataAccess.IAuthorBookController;
+import tartanga.dami.equipoa.dataAccess.IAuthorController;
+import tartanga.dami.equipoa.dataAccess.IBookController;
+import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IUserController;
 import tartanga.dami.equipoa.dataAccess.IUserControllerDBImplementation;
 import tartanga.dami.equipoa.gestorException.GestorException;
+import tartanga.dami.equipoa.model.Administrator;
 import tartanga.dami.equipoa.model.User;
 
 import java.awt.Toolkit;
@@ -27,13 +32,17 @@ import java.awt.event.KeyListener;
 import javax.swing.SwingConstants;
 
 public class LogIn extends JFrame implements ActionListener, KeyListener, FocusListener {
-	private IUserController userInterface = new IUserControllerDBImplementation();
+	private IUserController userInterface;
+	private IBookController bookInterface;
+	private IAuthorController authorInterface;
+	private IAuthorBookController authorBookInterface;
+	
 	private JTextField textUsuario;
 	private JPasswordField passwordField;
 	private JButton btnRegistrar;
 	private JButton btnIniciarSesion;
 
-	public LogIn() {
+	public LogIn(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface, IBookController bookInterface, IAuthorBookController authorBookInterface) {
 		setIconImage(Toolkit.getDefaultToolkit()
 				.getImage(LogIn.class.getResource("/tartanga/dami/equipoa/resources/Logo.png")));
 		getContentPane().setForeground(UIManager.getColor("textInactiveText"));
@@ -138,7 +147,13 @@ public class LogIn extends JFrame implements ActionListener, KeyListener, FocusL
 			try {
 				User user = userInterface.userLogIn(textUsuario.getText(), passwordField.getPassword().toString());
 				if (user != null) {
-					// Abrir ventana principal de la aplicacion
+					if(user instanceof Administrator) {
+					// Open administrator window
+					}
+					else {
+						WMenu menu = new WMenu(authorInterface, bookInterface, userInterface, user, authorBookInterface);
+						menu.setVisible(true);
+					}
 				} else {
 					JOptionPane.showMessageDialog(this, "El nombre de la cuenta y/o la contraseña son incorrectos",
 							"Error", JOptionPane.WARNING_MESSAGE);

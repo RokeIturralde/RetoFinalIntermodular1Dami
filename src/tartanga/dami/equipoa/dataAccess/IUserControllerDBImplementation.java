@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.User;
 import tartanga.dami.equipoa.model.Administrator;
@@ -285,6 +287,72 @@ public class IUserControllerDBImplementation implements IUserController {
 				throw exception;
 			}
 		}
+	}
+
+	@Override
+	public ArrayList<String> userGenero(String username) throws GestorException {
+		ArrayList<String> userGenero = new ArrayList();
+		String buscarGenero = "select genreName from partnerGenre where username = ?";
+		ResultSet rs = null;
+		
+		try {
+			this.openConnection();
+			stmt = con.prepareStatement(buscarGenero);
+			stmt.setString(1, username);
+			rs = stmt.executeQuery();
+			
+			if(rs.next()){
+				String genre;
+				genre = rs.getString("genreName");
+				userGenero.add(genre);
+			}
+		}  catch (SQLException e1) {
+			String error = "Error con la conexion con la base de datos";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				String error = "Error al cerrar conexion con la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		return userGenero;
+	}
+
+	@Override
+	public ArrayList<String> userAuthor (String username) throws GestorException {
+		ArrayList<String> userTitulo = new ArrayList();
+		String buscarTitulo = "call userTitulo(?)";
+		ResultSet rs = null;
+		
+		try {
+			this.openConnection();
+			stmt = con.prepareStatement(buscarTitulo);
+			stmt.setString(1, username);
+			rs = stmt.executeQuery();
+			
+			if(rs.next()){
+				String titulo;
+				titulo = rs.getString("genreName");
+				userTitulo.add(titulo);
+			}
+		}  catch (SQLException e1) {
+			String error = "Error con la conexion con la base de datos";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				String error = "Error al cerrar conexion con la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		return userTitulo;
 	}
 
 }
