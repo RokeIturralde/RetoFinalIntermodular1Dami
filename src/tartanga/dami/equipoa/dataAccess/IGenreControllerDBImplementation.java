@@ -105,8 +105,8 @@ public class IGenreControllerDBImplementation implements IGenreController {
 		int cambio;
 		try {
 			this.openConnection();
-			String insertarProp = "UPDATE GENRE SET DESCRIPTION=? WHERE GENRENAME=?";
-			stmt = con.prepareStatement(insertarProp);
+			String modificarGenero = "UPDATE GENRE SET DESCRIPTION=? WHERE GENRENAME=?";
+			stmt = con.prepareStatement(modificarGenero);
 			stmt.setString(1, genre.getDescription());
 			stmt.setString(2, genre.getGenreName());
 			cambio = stmt.executeUpdate();
@@ -131,8 +131,8 @@ public class IGenreControllerDBImplementation implements IGenreController {
 		int cambio;
 		try {
 			this.openConnection();
-			String insertarProp = "DELETE FROM GENRE WHERE GENRENAME=?";
-			stmt = con.prepareStatement(insertarProp);
+			String eliminarGenero = "DELETE FROM GENRE WHERE GENRENAME=?";
+			stmt = con.prepareStatement(eliminarGenero);
 			stmt.setString(1, genreName);
 			cambio = stmt.executeUpdate();
 		} catch (Exception e) {
@@ -152,22 +152,22 @@ public class IGenreControllerDBImplementation implements IGenreController {
 	}
 
 	@Override
-	public ArrayList<Genre> listarGenerosPreferidos(String username) throws GestorException {
-		ArrayList<Genre> generos = new ArrayList<>();
+	public ArrayList<String> listarGenerosPreferidos(String username) throws GestorException {
+		ArrayList<String> generos = new ArrayList<>();
 		ResultSet rs = null;
 		Genre genero = null;
 
 		// Abrir conexion con BD
 		openConnection();
-		String busquedaProp = "select genreName from genreauthor where username=?";
+		String listarGenerosPreferidos = "select genreName from genreauthor where username=?";
 		try {
-			stmt = con.prepareStatement(busquedaProp);
+			stmt = con.prepareStatement(listarGenerosPreferidos);
 			stmt.setString(1, username);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				genero = new Genre();
 				genero.setGenreName("genreName");
-				generos.add(genero);
+				generos.add(genero.getGenreName());
 			}
 
 			if (rs != null) {
@@ -188,6 +188,33 @@ public class IGenreControllerDBImplementation implements IGenreController {
 			}
 		}
 		return generos;
+	}
+
+	@Override
+	public int borrarGenerosPreferidos(String genreCode, String username) throws GestorException {
+		int cambio;
+		// Abrir conexion con BD
+		openConnection();
+		String eliminarGeneroPreferido = "DELETE FROM PARTNERGENRE WHERE GENRENAME=? AND USERNAME=?";
+		try {
+			stmt = con.prepareStatement(eliminarGeneroPreferido);
+			stmt.setString(1, genreCode);
+			stmt.setString(1, username);
+			cambio = stmt.executeUpdate();
+		} catch (Exception e) {
+			String error = "Error en la eliminacion de un genero preferido";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				String error = "Error al cerrar conexion con la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		return cambio;
 	}
 
 }

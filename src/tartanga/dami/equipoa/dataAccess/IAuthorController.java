@@ -19,4 +19,6 @@ public interface IAuthorController {
 
 	public ArrayList<Author> listarComprasAutores(String username) throws GestorException;
 
+	public int borrarAutorPreferidos(String codAuthor, String username) throws GestorException;
+
 }

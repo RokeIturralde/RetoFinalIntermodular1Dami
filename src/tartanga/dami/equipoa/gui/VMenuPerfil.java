@@ -1,6 +1,7 @@
 package tartanga.dami.equipoa.gui;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -10,8 +11,10 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
+import javax.swing.ListModel;
 import javax.swing.table.JTableHeader;
 
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
@@ -20,7 +23,6 @@ import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IUserController;
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
-import tartanga.dami.equipoa.model.Book;
 import tartanga.dami.equipoa.model.Compra;
 import tartanga.dami.equipoa.model.Genre;
 import tartanga.dami.equipoa.model.Partner;
@@ -28,6 +30,8 @@ import tartanga.dami.equipoa.model.User;
 
 import javax.swing.JTextField;
 import javax.swing.JTable;
+import javax.swing.JComboBox;
+import javax.swing.ListSelectionModel;
 
 public class VMenuPerfil extends JPanel implements ActionListener {
 	private JTextField txtNombre;
@@ -36,32 +40,23 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 	private JTextField txtDireccion;
 	private JTextField txtTelefono;
 	private JTextField txtNumCuenta;
-	private JTable tablePreferenciasPersonales;
-	private JTable tableHistorialCompras;
-	private Partner user;
 	private Author autor;
 	private IUserController userInterface;
-	private IAuthorController authorInterface;
-	private IGenreController genreInterface;
-	private IComprasController comprasInterface;
-	private ArrayList<Partner> partnerList = new ArrayList<Partner>();
-	private ArrayList<Author> authorList = new ArrayList<Author>();
-	private ArrayList<Genre> genreList = new ArrayList<Genre>();
-	private ArrayList<Book> bookList = new ArrayList<Book>();
 
-	JButton btnGuardarCambios;
-	JButton btnModificarDatos;
-	private JLabel lblApellido;
+	private JButton btnGuardarCambios;
+	private JButton btnModificarDatos;
+	private JButton btnAnnadirPreferencia;
+	private JButton btnBorrarPreferencias;
 	private JTextField txtApellido;
+	private JScrollPane scrollPane;
+	private JTable tableHistorialCompras;
+	private JTable tablePreferenciasPersonales;
 
 	public VMenuPerfil(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInerface,
 			IComprasController comprasInterface, Partner user) {
 		setLayout(null);
-		this.user = user;
 		this.userInterface = userInterface;
-		this.genreInterface = genreInerface;
-		this.authorInterface = authorInterface;
-		this.comprasInterface = comprasInterface;
+
 		btnModificarDatos = new JButton("Modificar Datos");
 		btnModificarDatos.setBounds(32, 25, 118, 35);
 		add(btnModificarDatos);
@@ -71,6 +66,14 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 		btnGuardarCambios.setBounds(205, 25, 118, 35);
 		add(btnGuardarCambios);
 		btnGuardarCambios.setEnabled(false);
+
+		btnAnnadirPreferencia = new JButton("A\u00F1adir (Max 3)");
+		btnAnnadirPreferencia.setBounds(55, 576, 118, 23);
+		add(btnAnnadirPreferencia);
+
+		btnBorrarPreferencias = new JButton("Borrar");
+		btnBorrarPreferencias.setBounds(205, 576, 118, 23);
+		add(btnBorrarPreferencias);
 
 		JLabel lblNombre = new JLabel("Nombre");
 		lblNombre.setBounds(32, 94, 84, 29);
@@ -101,7 +104,7 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 		add(lblNumCuenta);
 
 		JLabel lblNewLabel = new JLabel("Preferencias Personales");
-		lblNewLabel.setBounds(136, 383, 118, 35);
+		lblNewLabel.setBounds(126, 360, 118, 35);
 		add(lblNewLabel);
 
 		txtNombre = new JTextField();
@@ -145,13 +148,9 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 		lblHistorialCompra.setBounds(636, 50, 118, 29);
 		add(lblHistorialCompra);
 
-		tablePreferenciasPersonales = new JTable();
-		tablePreferenciasPersonales.setBounds(32, 417, 319, 187);
-		add(tablePreferenciasPersonales);
-
-		tableHistorialCompras = new JTable();
-		tableHistorialCompras.setBounds(525, 94, 319, 382);
-		add(tableHistorialCompras);
+		JPanel panelHistorialCompra = new JPanel();
+		panelHistorialCompra.setBounds(506, 76, 370, 389);
+		add(panelHistorialCompra);
 
 		// Cargar los datos del Usuario
 		txtNombre.setText(user.getName());
@@ -169,54 +168,29 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 		txtNumCuenta.setText(Integer.toString(user.getNumAccount()));
 		txtNumCuenta.setEditable(false);
 
-		// Creacion de la tabla de Autores y Generos preferidos
+		// Listas de Autores y Generos favoritos
+		JLabel lblAutores = new JLabel("Autores");
+		lblAutores.setBounds(67, 384, 106, 29);
+		add(lblAutores);
+
+		JLabel lblNewLabel_1 = new JLabel("Generos");
+		lblNewLabel_1.setBounds(259, 381, 106, 35);
+		add(lblNewLabel_1);
 		try {
-			ArrayList<Author> idAutores = authorInterface.listarAutoresPreferidos(user.getUserName());
-			ArrayList<Genre> generos = genreInerface.listarGenerosPreferidos(user.getUserName());
-			if (idAutores.size() > 0 || generos.size() > 0) {
-				String matrizTabla[][] = new String[3][2];
-				for (int i = 0; i < 3; i++) {
-					// Carga los datos de ese autor
-					autor = authorInterface.buscarAuthor(idAutores.get(i).getCodAuthor());
-					if (i == 0) {
-						matrizTabla[0][0] = autor.getName() + " " + autor.getSurname();
-						matrizTabla[0][1] = generos.get(i).getGenreName();
-					}
-					if (i == 1) {
-						matrizTabla[1][0] = autor.getName() + " " + autor.getSurname();
-						matrizTabla[1][1] = generos.get(i).getGenreName();
-					}
-					if (i == 2) {
-						matrizTabla[2][0] = autor.getName() + " " + autor.getSurname();
-						matrizTabla[2][1] = generos.get(i).getGenreName();
-					}
+			ArrayList<Author> autores = authorInterface.listarAutoresPreferidos(user.getUserName());
+			ArrayList<String> generos = genreInerface.listarGenerosPreferidos(user.getUserName());
 
-				}
+			JList listAutores = new JList((ListModel) autores);
+			listAutores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			listAutores.setBounds(32, 406, 118, 148);
+			add(listAutores);
 
-				String titulos[] = { "Autores", "Generos" };
-
-				tablePreferenciasPersonales = new JTable(matrizTabla, titulos);
-
-				tablePreferenciasPersonales.setSelectionBackground(new Color(0, 230, 168));
-				tablePreferenciasPersonales.setSelectionForeground(Color.WHITE);
-				tablePreferenciasPersonales.setRowMargin(0);
-				tablePreferenciasPersonales.setRowHeight(22);
-				tablePreferenciasPersonales.setShowVerticalLines(false);
-				tablePreferenciasPersonales.setFont(new Font("Tahoma", Font.PLAIN, 12));
-				tablePreferenciasPersonales.add(tablePreferenciasPersonales);
-
-				JTableHeader tableHeader = tablePreferenciasPersonales.getTableHeader();
-				tableHeader.setBackground(new Color(0, 191, 140));
-				tableHeader.setForeground(Color.WHITE);
-				tableHeader.setFont(new Font("Tahoma", Font.BOLD, 15));
-				tableHeader.setBorder(null);
-				tableHeader.setEnabled(false);
-			} else {
-				JOptionPane.showMessageDialog(this, "No hay preferencias personales");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			e.getMessage();
+			JList listGeneros = new JList((ListModel) generos);
+			listGeneros.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			listGeneros.setBounds(222, 406, 118, 148);
+			add(listGeneros);
+		} catch (GestorException e1) {
+			e1.printStackTrace();
 		}
 
 		// Creacion tabla del historial de compra
@@ -231,6 +205,10 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 					matrizTabla[i][3] = Integer.toString(compras.get(i).getCantidadLibros());
 					matrizTabla[i][1] = Float.toString(compras.get(i).getPrecioCompra());
 				}
+
+				scrollPane = new JScrollPane();
+				scrollPane.setBounds(506, 76, 370, 389);
+				panelHistorialCompra.add(scrollPane);
 
 				String titulos[] = { "Fecha", "Autor", "Isbn", "Cantidad", "Precio" };
 
@@ -262,15 +240,30 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(btnModificarDatos)) {
-			modificar();
+			modificarDatos();
 		}
 		if (e.getSource().equals(btnGuardarCambios)) {
-			guardar();
+			guardarCambios();
+		}
+		if (e.getSource().equals(btnAnnadirPreferencia)) {
+			annadirPreferencia();
+		}
+		if (e.getSource().equals(btnBorrarPreferencias)) {
+			borrarPreferencia();
 		}
 
 	}
 
-	private void modificar() {
+	private void borrarPreferencia() {
+		int cambio;
+	}
+
+	private void annadirPreferencia() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void modificarDatos() {
 		btnGuardarCambios.setEnabled(true);
 		txtNombre.setEditable(true);
 		txtApellido.setEditable(true);
@@ -281,7 +274,7 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 		txtNumCuenta.setEditable(true);
 	}
 
-	private void guardar() {
+	private void guardarCambios() {
 		User user;
 		txtNombre.setEditable(false);
 		txtApellido.setEditable(false);

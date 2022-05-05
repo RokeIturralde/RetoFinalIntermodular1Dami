@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
+import tartanga.dami.equipoa.model.Genre;
 
 public class IAuthorControllerDBImplementation implements IAuthorController {
 
@@ -177,14 +178,14 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 
 		// Abrir conexion con BD
 		openConnection();
-		String busquedaProp = "select codAuthor from partnerauthor where username=?";
+		String busquedaProp = "select a.surname from author a, partnerauthor pa where pa.username=? and pa.codAuthor=a.codAuthor";
 		try {
 			stmt = con.prepareStatement(busquedaProp);
 			stmt.setString(1, username);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				autor = new Author();
-				autor.setCodAuthor(rs.getString("codAuthor"));
+				autor.setSurname(rs.getString("a.surname"));
 				autores.add(autor);
 			}
 
@@ -207,8 +208,7 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 		}
 		return autores;
 	}
-	
-	
+
 	@Override
 	public ArrayList<Author> listarComprasAutores(String username) throws GestorException {
 		ArrayList<Author> autores = new ArrayList<>();
@@ -246,5 +246,32 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 			}
 		}
 		return autores;
+	}
+
+	@Override
+	public int borrarAutorPreferidos(String codAuthor, String username) throws GestorException {
+		int cambio;
+		// Abrir conexion con BD
+		openConnection();
+		String eliminarAutorPreferido = "DELETE FROM PARTNERAUTHOR WHERE CODAUTHOR=? AND USERNAME=?";
+		try {
+			stmt = con.prepareStatement(eliminarAutorPreferido);
+			stmt.setString(1, codAuthor);
+			stmt.setString(1, username);
+			cambio = stmt.executeUpdate();
+		} catch (Exception e) {
+			String error = "Error en la eliminacion de un autor preferido";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				String error = "Error al cerrar conexion con la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		return cambio;
 	}
 }

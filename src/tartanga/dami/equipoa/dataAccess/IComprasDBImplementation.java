@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Compra;
-import tartanga.dami.equipoa.model.Genre;
 
 public class IComprasDBImplementation implements IComprasController {
 	private Connection con;

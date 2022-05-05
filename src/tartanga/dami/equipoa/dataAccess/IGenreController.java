@@ -15,6 +15,8 @@ public interface IGenreController {
 
 	public int eliminarGenre(String genreName) throws GestorException;
 
-	ArrayList<Genre> listarGenerosPreferidos(String username) throws GestorException;
+	public ArrayList<String> listarGenerosPreferidos(String username) throws GestorException;
+
+	public int borrarGenerosPreferidos(String genreCode, String username) throws GestorException;
 
 }

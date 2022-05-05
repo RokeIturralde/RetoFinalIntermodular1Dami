@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -166,7 +165,7 @@ public class IBookControllerDBImplementation implements IBookController {
 		ResultSet rs = null;
 		Book book = null;
 
-		ArrayList<Book> books = new ArrayList();
+		ArrayList<Book> books = new ArrayList<>();
 		String buscarBook = "select b.* from book b, bookGenre bg where bg.genreName = ? and b.isbn=bg.isbn";
 		try {
 			this.openConnection();
@@ -205,8 +204,8 @@ public class IBookControllerDBImplementation implements IBookController {
 	public ArrayList<Book> listaBookAuthor(String author) throws GestorException {
 		ResultSet rs = null;
 		Book book = null;
-		
-		ArrayList<Book> books = new ArrayList();
+
+		ArrayList<Book> books = new ArrayList<Book>();
 		String listaBookAuthor = "select * from book b, bookauthor ba, author a where b.isbn=ba.isbn and ba.codAuthor=a.codAuthor and a.surname = ?";
 		try {
 			this.openConnection();
@@ -245,8 +244,8 @@ public class IBookControllerDBImplementation implements IBookController {
 	public ArrayList<Book> listBookAuthorGenre(String author, String genre) throws GestorException {
 		ResultSet rs = null;
 		Book book = null;
-		ArrayList<Book> books = new ArrayList();
-		
+		ArrayList<Book> books = new ArrayList<>();
+
 		String listaBookAuthorGenre = "select b.* from book b, author a, bookauthor ba, bookgenre bg where"
 				+ " b.isbn=ba.isbn and ba.codAuthor = a.codAuthor and b.isbn=bg.isbn and bg.genreName = ? or a.surname= ? ";
 		try {
@@ -282,13 +281,13 @@ public class IBookControllerDBImplementation implements IBookController {
 		}
 		return books;
 	}
-	
+
 	public ArrayList<Book> listAllBooks() throws GestorException {
-		ArrayList<Book> books = new ArrayList();
+		ArrayList<Book> books = new ArrayList<>();
 		Book book = null;
 		ResultSet rs = null;
 		String listAllBooks = "SELECT * FROM BOOK";
-		
+
 		try {
 			this.openConnection();
 			stmt = con.prepareStatement(listAllBooks);
