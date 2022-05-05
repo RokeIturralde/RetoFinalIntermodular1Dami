@@ -11,9 +11,12 @@ import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import javax.swing.UIManager;
 
+import tartanga.dami.equipoa.dataAccess.IAuthorController;
+import tartanga.dami.equipoa.dataAccess.IBookController;
+import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IUserController;
-import tartanga.dami.equipoa.dataAccess.IUserControllerDBImplementation;
 import tartanga.dami.equipoa.gestorException.GestorException;
+import tartanga.dami.equipoa.model.Administrator;
 import tartanga.dami.equipoa.model.User;
 
 import java.awt.Toolkit;
@@ -26,16 +29,24 @@ import java.awt.event.KeyListener;
 
 import javax.swing.SwingConstants;
 
-public class LogIn extends JFrame implements ActionListener, KeyListener, FocusListener {
-	private IUserController userInterface = new IUserControllerDBImplementation();
+public class WLogIn extends JFrame implements ActionListener, KeyListener, FocusListener {
 	private JTextField textUsuario;
 	private JPasswordField passwordField;
 	private JButton btnRegistrar;
 	private JButton btnIniciarSesion;
+	private IUserController userInterface;
+	private IAuthorController authorInterface;
+	private IGenreController genreInterface;
+	private IBookController bookInterface;
 
-	public LogIn() {
+	public WLogIn(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface, IBookController bookInterface) {
+		this.userInterface = userInterface;
+		this.authorInterface = authorInterface;
+		this.genreInterface = genreInterface;
+		this.bookInterface = bookInterface;
+		
 		setIconImage(Toolkit.getDefaultToolkit()
-				.getImage(LogIn.class.getResource("/tartanga/dami/equipoa/resources/Logo.png")));
+				.getImage(WLogIn.class.getResource("/tartanga/dami/equipoa/resources/Logo.png")));
 		getContentPane().setForeground(UIManager.getColor("textInactiveText"));
 		getContentPane().setBackground(Color.DARK_GRAY);
 		setBounds(100, 100, 602, 465);
@@ -71,6 +82,7 @@ public class LogIn extends JFrame implements ActionListener, KeyListener, FocusL
 		getContentPane().add(lblContr);
 
 		btnIniciarSesion = new JButton("Iniciar Sesi\u00F3n");
+		btnIniciarSesion.setFocusPainted(false);
 		btnIniciarSesion.setBorder(null);
 		btnIniciarSesion.setBackground(new Color(128, 128, 128));
 		btnIniciarSesion.setForeground(Color.WHITE);
@@ -92,6 +104,7 @@ public class LogIn extends JFrame implements ActionListener, KeyListener, FocusL
 		getContentPane().add(lblNoCuenta);
 
 		btnRegistrar = new JButton("Registrate");
+		btnRegistrar.setFocusPainted(false);
 		btnRegistrar.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnRegistrar.setForeground(Color.CYAN);
 		btnRegistrar.setBackground(Color.DARK_GRAY);
@@ -105,7 +118,7 @@ public class LogIn extends JFrame implements ActionListener, KeyListener, FocusL
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(btnRegistrar)) {
-			Registro registro = new Registro();
+			WRegistro registro = new WRegistro(userInterface, authorInterface, genreInterface);
 			registro.setVisible(true);
 		}
 		if (e.getSource().equals(btnIniciarSesion)) {
@@ -136,9 +149,17 @@ public class LogIn extends JFrame implements ActionListener, KeyListener, FocusL
 		String pass = new String(passwordField.getPassword());
 		if (!(textUsuario.getText().isEmpty() || pass.isEmpty())) {
 			try {
-				User user = userInterface.userLogIn(textUsuario.getText(), passwordField.getPassword().toString());
+				User user = userInterface.userLogIn(textUsuario.getText(), pass);
 				if (user != null) {
-					// Abrir ventana principal de la aplicacion
+					if(user instanceof Administrator) {
+						WAdmin admin = new WAdmin(user, bookInterface, authorInterface, genreInterface, userInterface);
+						admin.setVisible(true);
+					} else {
+						WMenu menu = new WMenu();
+						menu.setVisible(true);
+					}
+					textUsuario.setText("");
+					passwordField.setText("");
 				} else {
 					JOptionPane.showMessageDialog(this, "El nombre de la cuenta y/o la contraseña son incorrectos",
 							"Error", JOptionPane.WARNING_MESSAGE);

@@ -75,11 +75,13 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 
 		// Abrir conexion con BD
 
-		String busquedaAutor = "SELECT * FROM AUTHOR WHERE CODAUTHOR = ?";
+		String busquedaAutor = "SELECT * FROM AUTHOR WHERE CODAUTHOR = ? OR NAME = ? OR SURNAME = ?";
 		try {
 			this.openConnection();
 			stmt = con.prepareStatement(busquedaAutor);
 			stmt.setString(1, codAuthor);
+			stmt.setString(2, codAuthor);
+			stmt.setString(3, codAuthor);
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				autor = new Author();
