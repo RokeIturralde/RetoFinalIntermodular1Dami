@@ -324,7 +324,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 				}
 			} else {
 				JOptionPane.showMessageDialog(this, "Uno de los campos esta vacio", "Error",
-						JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.WARNING_MESSAGE);
 			}
 
 		}
@@ -350,7 +350,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 			}
 			try {
 				User usr = userInterface.buscarUser(textNombreUsr.getText());
-				if (usr != null) {
+				if (usr == null && !textNombreUsr.getText().isEmpty()) {
 					textNombreUsr.setText("");
 
 					JOptionPane.showMessageDialog(this, "El nombre de usuario ya esta registrado", "Error",

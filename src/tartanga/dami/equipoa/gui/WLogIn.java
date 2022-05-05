@@ -160,6 +160,8 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 						WMenu menu = new WMenu();
 						menu.setVisible(true);
 					}
+					textUsuario.setText("");
+					passwordField.setText("");
 				} else {
 					JOptionPane.showMessageDialog(this, "El nombre de la cuenta y/o la contraseña son incorrectos",
 							"Error", JOptionPane.WARNING_MESSAGE);
