@@ -13,7 +13,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JTextPane;
 import javax.swing.ListModel;
 import javax.swing.table.JTableHeader;
 
@@ -24,13 +23,11 @@ import tartanga.dami.equipoa.dataAccess.IUserController;
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
 import tartanga.dami.equipoa.model.Compra;
-import tartanga.dami.equipoa.model.Genre;
 import tartanga.dami.equipoa.model.Partner;
 import tartanga.dami.equipoa.model.User;
 
 import javax.swing.JTextField;
 import javax.swing.JTable;
-import javax.swing.JComboBox;
 import javax.swing.ListSelectionModel;
 
 public class VMenuPerfil extends JPanel implements ActionListener {
@@ -40,7 +37,6 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 	private JTextField txtDireccion;
 	private JTextField txtTelefono;
 	private JTextField txtNumCuenta;
-	private Author autor;
 	private IUserController userInterface;
 
 	private JButton btnGuardarCambios;
@@ -50,7 +46,6 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 	private JTextField txtApellido;
 	private JScrollPane scrollPane;
 	private JTable tableHistorialCompras;
-	private JTable tablePreferenciasPersonales;
 
 	public VMenuPerfil(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInerface,
 			IComprasController comprasInterface, Partner user) {
@@ -66,14 +61,19 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 		btnGuardarCambios.setBounds(205, 25, 118, 35);
 		add(btnGuardarCambios);
 		btnGuardarCambios.setEnabled(false);
+		btnGuardarCambios.addActionListener(this);
 
 		btnAnnadirPreferencia = new JButton("A\u00F1adir (Max 3)");
 		btnAnnadirPreferencia.setBounds(55, 576, 118, 23);
 		add(btnAnnadirPreferencia);
+		btnAnnadirPreferencia.setEnabled(false);
+		btnAnnadirPreferencia.addActionListener(this);
 
 		btnBorrarPreferencias = new JButton("Borrar");
 		btnBorrarPreferencias.setBounds(205, 576, 118, 23);
 		add(btnBorrarPreferencias);
+		btnBorrarPreferencias.setEnabled(false);
+		btnBorrarPreferencias.addActionListener(this);
 
 		JLabel lblNombre = new JLabel("Nombre");
 		lblNombre.setBounds(32, 94, 84, 29);
@@ -260,11 +260,13 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 
 	private void annadirPreferencia() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void modificarDatos() {
 		btnGuardarCambios.setEnabled(true);
+		btnAnnadirPreferencia.setEnabled(true);
+		btnBorrarPreferencias.setEnabled(true);
 		txtNombre.setEditable(true);
 		txtApellido.setEditable(true);
 		txtContrasenna.setEditable(true);
