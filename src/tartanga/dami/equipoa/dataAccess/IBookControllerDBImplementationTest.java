@@ -18,6 +18,7 @@ public class IBookControllerDBImplementationTest {
 	private Book book;
 	IBookController pruebaLibros = new IBookControllerDBImplementation();
 	
+	/*
 	@Test
 	public void testAltaBook() {
 			try {
@@ -30,6 +31,7 @@ public class IBookControllerDBImplementationTest {
 				e.printStackTrace();
 			}
 	}
+	*/
 	
 
 	@Test

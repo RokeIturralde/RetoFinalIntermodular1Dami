@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tartanga.dami.equipoa.gestorException.GestorException;
+import tartanga.dami.equipoa.model.Author;
 import tartanga.dami.equipoa.model.Book;
+import tartanga.dami.equipoa.model.Genre;
 
 public interface IBookController {
 	
-	public void altaBook(Book book, String author, String genre) throws GestorException;
+	public void altaBook(Book book) throws GestorException;
 	
 	public Book buscarBook(int isbn) throws GestorException;
 	
@@ -24,5 +26,9 @@ public interface IBookController {
 	
 	public ArrayList<Book> listAllBooks() throws GestorException;
 
+
 	public ArrayList<Integer> listTopSales() throws GestorException;
+
+	
+	public ArrayList<Integer> listDiscount() throws GestorException;
 }

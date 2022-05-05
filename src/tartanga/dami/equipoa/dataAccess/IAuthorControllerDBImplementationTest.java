@@ -3,9 +3,11 @@ package tartanga.dami.equipoa.dataAccess;
 import static org.junit.Assert.*;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 import org.junit.Test;
 
+import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
 import tartanga.dami.equipoa.model.Genre;
 
@@ -65,5 +67,27 @@ public class IAuthorControllerDBImplementationTest {
 			// TODO: handle exception
 		}
 	}
+
+	/*
+	 * @Test public void testListarComprasAutores() { int prueba; try {autor = new
+	 * Author(); autor.setCodAuthor("A003"); autor.setName("Sendoa");
+	 * autor.setSurname("awa awa"); autor.setBirthDate(fecha);
+	 * autor.setDeathDate(fecha2); System.out.println(autor.toString()); prueba =
+	 * pruebaAutor.listarComprasAutores(); assertEquals(prueba, 1); } catch
+	 * (GestorException e) { // TODO Auto-generated catch block }
+	 * 
+	 * }
+	 */
+
+	/*
+	 * @Test public void testListarAutoresPreferidos() { int prueba; try {autor =
+	 * new Author(); autor.setCodAuthor("A003"); autor.setName("Sendoa");
+	 * autor.setSurname("awa awa"); autor.setBirthDate(fecha);
+	 * autor.setDeathDate(fecha2); System.out.println(autor.toString()); prueba =
+	 * pruebaAutor.listarComprasAutores(); assertEquals(prueba, 1); } catch
+	 * (GestorException e) { // TODO Auto-generated catch block }
+	 * 
+	 * }
+	 */
 
 }

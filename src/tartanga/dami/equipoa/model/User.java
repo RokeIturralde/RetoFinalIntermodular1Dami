@@ -3,6 +3,7 @@ package tartanga.dami.equipoa.model;
 import java.io.Serializable;
 
 public class User implements Serializable {
+
 	private String userName;
 	private String email;
 	private String password;

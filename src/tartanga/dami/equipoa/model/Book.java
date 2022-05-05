@@ -14,8 +14,11 @@ public class Book implements Serializable{
 	private Date pubDate;
 	private String author;
 	private String genre;
+<<<<<<< HEAD
 	
 	
+=======
+>>>>>>> 80fdb29ecfafbd7d750c1fa2851244fa887d83e5
 
 	public Book() {
 		super();
@@ -119,5 +122,8 @@ public class Book implements Serializable{
 	public void setGenre(String genre) {
 		this.genre = genre;
 	}
+<<<<<<< HEAD
 	
+=======
+>>>>>>> 80fdb29ecfafbd7d750c1fa2851244fa887d83e5
 }
