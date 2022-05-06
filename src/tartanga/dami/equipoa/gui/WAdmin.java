@@ -162,7 +162,7 @@ public class WAdmin extends JDialog implements ActionListener, FocusListener {
 		lblDescuento.setBounds(36, 326, 197, 14);
 		libros.add(lblDescuento);
 
-		comboBoxDescuento = new JComboBox();
+		comboBoxDescuento = new JComboBox<Integer>();
 		comboBoxDescuento.setBounds(36, 351, 137, 22);
 		libros.add(comboBoxDescuento);
 		try {
@@ -524,10 +524,9 @@ public class WAdmin extends JDialog implements ActionListener, FocusListener {
 			try {
 				Genre genre = genreInterface.buscarGenre(textGenero.getText());
 				if (genre == null && !textGenero.getText().isEmpty()) {
-					int seleccion = JOptionPane.showConfirmDialog(libros, "Ese genero no existe quieres añadirlo?",
-							"Aviso", 0);
+					int seleccion = JOptionPane.showConfirmDialog(libros, "Ese genero no existe quieres añadirlo?", "Aviso", 0);
 					if (seleccion == 0) {
-
+						tabbedPane.setSelectedIndex(2);
 					} else {
 						textGenero.setText("");
 					}
