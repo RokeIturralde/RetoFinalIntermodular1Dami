@@ -259,7 +259,7 @@ public class WAdmin extends JDialog implements ActionListener, FocusListener {
 		libros.add(btnCancelar);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(616, 102, 227, 101);
+		panel.setBounds(723, 158, 210, 140);
 		libros.add(panel);
 		tabbedPane.setBackgroundAt(0, Color.GRAY);
 		btnCancelar.addActionListener(this);
