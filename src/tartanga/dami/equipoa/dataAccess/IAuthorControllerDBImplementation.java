@@ -180,14 +180,16 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 
 		// Abrir conexion con BD
 		openConnection();
-		String busquedaProp = "select a.surname from author a, partnerauthor pa where pa.username=? and pa.codAuthor=a.codAuthor";
+		String busquedaProp = "select a.name,a.surname,a.codAuthor from author a, partnerauthor pa where pa.username=? and pa.codAuthor=a.codAuthor";
 		try {
 			stmt = con.prepareStatement(busquedaProp);
 			stmt.setString(1, username);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				autor = new Author();
+				autor.setName(rs.getString("a.name"));
 				autor.setSurname(rs.getString("a.surname"));
+				autor.setCodAuthor(rs.getString("a.codAuthor"));
 				autores.add(autor);
 			}
 
@@ -196,7 +198,7 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 			}
 			closeConnection();
 		} catch (Exception e) {
-			String error = "Error en el listado de autores";
+			String error = "Error en el listado de autores preferidos";
 			GestorException exception = new GestorException(error);
 			throw exception;
 		} finally {
@@ -251,15 +253,16 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 	}
 
 	@Override
-	public int borrarAutorPreferidos(String codAuthor, String username) throws GestorException {
+	public int borrarAutorPreferidos(String surname, String username, String name) throws GestorException {
 		int cambio;
 		// Abrir conexion con BD
 		openConnection();
-		String eliminarAutorPreferido = "DELETE FROM PARTNERAUTHOR WHERE CODAUTHOR=? AND USERNAME=?";
+		String eliminarAutorPreferido = "delete pa from partnerauthor pa,author a where pa.username=? and pa.codAuthor=a.codAuthor and a.surname=? and a.name=?";
 		try {
 			stmt = con.prepareStatement(eliminarAutorPreferido);
-			stmt.setString(1, codAuthor);
 			stmt.setString(1, username);
+			stmt.setString(2, surname);
+			stmt.setString(3, name);
 			cambio = stmt.executeUpdate();
 		} catch (Exception e) {
 			String error = "Error en la eliminacion de un autor preferido";
@@ -276,4 +279,71 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 		}
 		return cambio;
 	}
+
+	@Override
+	public int insertarAutorPreferido(String username, String codAuthor) throws GestorException {
+		int cambio;
+		// Abrir conexion con BD
+		openConnection();
+		String insertarAutorPreferido = "insert into partnerAuthor values (?,?)";
+		try {
+			stmt = con.prepareStatement(insertarAutorPreferido);
+			stmt.setString(1, username);
+			stmt.setString(2, codAuthor);
+			cambio = stmt.executeUpdate();
+		} catch (Exception e) {
+			String error = "Error en la insercion de un autor preferido";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				String error = "Error al cerrar conexion con la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		return cambio;
+	}
+
+	@Override
+	public ArrayList<Author> listarAutores() throws GestorException {
+		ResultSet rs = null;
+		ArrayList<Author> autores = new ArrayList<>();
+		Author autor = null;
+
+		// Abrir conexion con BD
+
+		String listadoAutores = "SELECT CODAUTHOR,SURNAME FROM AUTHOR";
+		try {
+			this.openConnection();
+			stmt = con.prepareStatement(listadoAutores);
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				autor = new Author();
+				autor.setCodAuthor(rs.getString("CODAUTHOR"));
+				autor.setSurname(rs.getString("SURNAME"));
+				autores.add(autor);
+			}
+
+			if (rs != null) {
+				rs.close();
+			}
+		} catch (SQLException e) {
+			String error = "Error en el listado de los Autores";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				String error = "Error al cerrar conexion con la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		return autores;
+	}
+
 }

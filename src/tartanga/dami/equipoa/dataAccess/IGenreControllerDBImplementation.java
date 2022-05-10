@@ -217,4 +217,66 @@ public class IGenreControllerDBImplementation implements IGenreController {
 		return cambio;
 	}
 
+	@Override
+	public ArrayList<String> listarGeneros() throws GestorException {
+		ResultSet rs = null;
+		ArrayList<String> generos = new ArrayList<>();
+
+		// Abrir conexion con BD
+
+		String listadoAutores = "SELECT GENRENAME FROM GENRE";
+		try {
+			this.openConnection();
+			stmt = con.prepareStatement(listadoAutores);
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				generos.add(rs.getString("GENRENAME"));
+			}
+
+			if (rs != null) {
+				rs.close();
+			}
+		} catch (SQLException e) {
+			String error = "Error en el listado de los Generos";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				String error = "Error al cerrar conexion con la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		return generos;
+	}
+
+	@Override
+	public int insertarGeneroPreferido(String username, String genreName) throws GestorException {
+		int cambio;
+		// Abrir conexion con BD
+		openConnection();
+		String insertarAutorPreferido = "insert into partnerGenre values (?,?)";
+		try {
+			stmt = con.prepareStatement(insertarAutorPreferido);
+			stmt.setString(1, username);
+			stmt.setString(2, genreName);
+			cambio = stmt.executeUpdate();
+		} catch (Exception e) {
+			String error = "Error en la insercion de un genero preferido";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				String error = "Error al cerrar conexion con la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		return cambio;
+	}
+
 }

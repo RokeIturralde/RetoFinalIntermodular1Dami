@@ -9,13 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.ListModel;
 import javax.swing.table.JTableHeader;
-
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
 import tartanga.dami.equipoa.dataAccess.IComprasController;
 import tartanga.dami.equipoa.dataAccess.IGenreController;
@@ -29,6 +28,7 @@ import tartanga.dami.equipoa.model.User;
 import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.JComboBox;
 
 public class VMenuPerfil extends JPanel implements ActionListener {
 	private JTextField txtNombre;
@@ -38,6 +38,8 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 	private JTextField txtTelefono;
 	private JTextField txtNumCuenta;
 	private IUserController userInterface;
+	private IAuthorController authorInterface;
+	private IGenreController genreInterface;
 
 	private JButton btnGuardarCambios;
 	private JButton btnModificarDatos;
@@ -46,11 +48,24 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 	private JTextField txtApellido;
 	private JScrollPane scrollPane;
 	private JTable tableHistorialCompras;
+	private JLabel lblAutor;
+	private JLabel lblGenero;
+	private JComboBox cbxGeneros;
+	private JComboBox cbxAutores;
+	private JList listGeneros;
+	private JList listAutores;
+	// Listas para el JList
+	private ArrayList<Author> autores;
+	private ArrayList<String> generos;
+	private Partner user;
 
-	public VMenuPerfil(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInerface,
-			IComprasController comprasInterface, Partner user) {
+	public VMenuPerfil(IUserController userInterface, IAuthorController authorInterface,
+			IGenreController genreInterface, IComprasController comprasInterface, Partner user) {
 		setLayout(null);
 		this.userInterface = userInterface;
+		this.authorInterface = authorInterface;
+		this.user = user;
+		this.genreInterface = genreInterface;
 
 		btnModificarDatos = new JButton("Modificar Datos");
 		btnModificarDatos.setBounds(32, 25, 118, 35);
@@ -64,13 +79,13 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 		btnGuardarCambios.addActionListener(this);
 
 		btnAnnadirPreferencia = new JButton("A\u00F1adir (Max 3)");
-		btnAnnadirPreferencia.setBounds(55, 576, 118, 23);
+		btnAnnadirPreferencia.setBounds(526, 531, 118, 23);
 		add(btnAnnadirPreferencia);
 		btnAnnadirPreferencia.setEnabled(false);
 		btnAnnadirPreferencia.addActionListener(this);
 
 		btnBorrarPreferencias = new JButton("Borrar");
-		btnBorrarPreferencias.setBounds(205, 576, 118, 23);
+		btnBorrarPreferencias.setBounds(107, 575, 118, 23);
 		add(btnBorrarPreferencias);
 		btnBorrarPreferencias.setEnabled(false);
 		btnBorrarPreferencias.addActionListener(this);
@@ -104,7 +119,7 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 		add(lblNumCuenta);
 
 		JLabel lblNewLabel = new JLabel("Preferencias Personales");
-		lblNewLabel.setBounds(126, 360, 118, 35);
+		lblNewLabel.setBounds(107, 360, 118, 35);
 		add(lblNewLabel);
 
 		txtNombre = new JTextField();
@@ -149,7 +164,7 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 		add(lblHistorialCompra);
 
 		JPanel panelHistorialCompra = new JPanel();
-		panelHistorialCompra.setBounds(506, 76, 370, 389);
+		panelHistorialCompra.setBounds(506, 76, 370, 319);
 		add(panelHistorialCompra);
 
 		// Cargar los datos del Usuario
@@ -168,27 +183,57 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 		txtNumCuenta.setText(Integer.toString(user.getNumAccount()));
 		txtNumCuenta.setEditable(false);
 
-		// Listas de Autores y Generos favoritos
+		// Listas de Autores Preferidos
 		JLabel lblAutores = new JLabel("Autores");
 		lblAutores.setBounds(67, 384, 106, 29);
 		add(lblAutores);
 
-		JLabel lblNewLabel_1 = new JLabel("Generos");
-		lblNewLabel_1.setBounds(259, 381, 106, 35);
-		add(lblNewLabel_1);
+		JLabel lblGeneros = new JLabel("Generos");
+		lblGeneros.setBounds(217, 381, 106, 35);
+		add(lblGeneros);
 		try {
-			ArrayList<Author> autores = authorInterface.listarAutoresPreferidos(user.getUserName());
-			ArrayList<String> generos = genreInerface.listarGenerosPreferidos(user.getUserName());
+			autores = authorInterface.listarAutoresPreferidos(user.getUserName());
+			generos = genreInterface.listarGenerosPreferidos(user.getUserName());
 
-			JList listAutores = new JList((ListModel) autores);
+			listAutores = new JList();
+			DefaultListModel modelo = new DefaultListModel();
+			for (int i = 0; i < autores.size(); i++) {
+				modelo.addElement(autores.get(i).getName() + " " + autores.get(i).getSurname());
+			}
+
 			listAutores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			listAutores.setBounds(32, 406, 118, 148);
+			listAutores.setModel(modelo);
 			add(listAutores);
 
-			JList listGeneros = new JList((ListModel) generos);
+			// Inicializamos la Lista de Generos Preferidos
+			listGeneros = new JList();
+			DefaultListModel modelo2 = new DefaultListModel();
+			for (int i = 0; i < generos.size(); i++) {
+				modelo2.addElement(generos.get(i));
+			}
 			listGeneros.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			listGeneros.setBounds(222, 406, 118, 148);
+			listGeneros.setBounds(183, 406, 118, 148);
+			listGeneros.setModel(modelo2);
 			add(listGeneros);
+
+			lblAutor = new JLabel("A\u00F1adir Autor");
+			lblAutor.setBounds(389, 444, 106, 23);
+			add(lblAutor);
+
+			cbxGeneros = new JComboBox();
+			cbxGeneros.setBounds(652, 476, 158, 29);
+			cargarGeneros();
+			add(cbxGeneros);
+
+			lblGenero = new JLabel("A\u00F1adir Genero");
+			lblGenero.setBounds(691, 447, 96, 17);
+			add(lblGenero);
+
+			cbxAutores = new JComboBox();
+			cbxAutores.setBounds(351, 476, 158, 29);
+			cargarAutores();
+			add(cbxAutores);
 		} catch (GestorException e1) {
 			e1.printStackTrace();
 		}
@@ -229,7 +274,7 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 				tableHeader.setBorder(null);
 				tableHeader.setEnabled(false);
 			} else {
-				JOptionPane.showMessageDialog(this, "No hay preferencias personales");
+				// JOptionPane.showMessageDialog(this, "No hay preferencias personales");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -249,17 +294,130 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 			annadirPreferencia();
 		}
 		if (e.getSource().equals(btnBorrarPreferencias)) {
-			borrarPreferencia();
+			borrarPreferencia(autores, user, generos);
 		}
 
 	}
 
-	private void borrarPreferencia() {
-		int cambio;
+	// Eliminar preferencias personales de la base de datos (JList se verá igual)
+	private void borrarPreferencia(ArrayList<Author> autores, Partner user, ArrayList<String> generos) {
+		int cambio, confirmacion, posicion, posicion2;
+
+		confirmacion = JOptionPane.showConfirmDialog(this, "Quieres eliminar la preferencia seleccionada?", "Aviso", 0);
+		posicion = listAutores.getSelectedIndex();
+		posicion2 = listGeneros.getSelectedIndex();
+		if (confirmacion == 0 && posicion != -1 || posicion2 != -1) {
+			try {
+				// Si solo se ha seleccionado la lista de los Autores
+				if (posicion != -1 && posicion2 == -1) {
+					cambio = authorInterface.borrarAutorPreferidos(autores.get(posicion).getSurname(),
+							user.getUserName(), autores.get(posicion).getName());
+					if (cambio == 1) {
+						JOptionPane.showMessageDialog(this,
+								"Se han modificado los cambios de Autores preferidos, en el siguiente inicio de sesion los cambios estaran actualizados");
+
+					}
+					// Si solo se ha seleccionado la lista de los Generos
+				} else if (posicion == -1) {
+					cambio = genreInterface.borrarGenerosPreferidos(generos.get(posicion2), user.getUserName());
+					if (cambio == 1) {
+						JOptionPane.showMessageDialog(this,
+								"Se han modificado los cambios de Generos preferidos, en el siguiente inicio de sesion los cambios estaran actualizados");
+					}
+					// Si las dos listas han sido seleccionadas
+				} else {
+					int cambioAutor = authorInterface.borrarAutorPreferidos(autores.get(posicion).getSurname(),
+							user.getUserName(), autores.get(posicion).getName());
+					int cambioGenero = genreInterface.borrarGenerosPreferidos(generos.get(posicion2),
+							user.getUserName());
+
+					// Los cambios se efectuan correctamente
+					if (cambioAutor == 1 && cambioGenero == 1) {
+						JOptionPane.showMessageDialog(this,
+								"Se han modificado los cambios de Autores y de Generos preferidos, en el siguiente inicio de sesion los cambios estaran actualizados");
+						// Los cambios solo se hacen en Autor
+					} else if (cambioAutor == 1 && cambioGenero == 0) {
+						JOptionPane.showMessageDialog(this,
+								"Se han modificado los cambios de Autores preferidos, pero no de Generos, en el siguiente inicio de sesion los cambios estaran actualizados");
+						// Los cambios solo se hacen en Genero
+					} else {
+						JOptionPane.showMessageDialog(this,
+								"Se han modificado los cambios de Generos preferidos, pero no de Autor, en el siguiente inicio de sesion los cambios estaran actualizados");
+					}
+				}
+
+			} catch (GestorException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void cargarAutores() {
+		ArrayList<Author> autores;
+		try {
+			autores = authorInterface.listarAutores();
+			for (int i = 0; i < autores.size(); i++) {
+				cbxAutores.addItem(autores.get(i).getSurname());
+			}
+			cbxAutores.setSelectedIndex(-1);
+
+		} catch (GestorException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private void cargarGeneros() {
+		ArrayList<String> generos;
+		try {
+			generos = genreInterface.listarGeneros();
+			for (int i = 0; i < generos.size(); i++) {
+				cbxGeneros.addItem(generos.get(i));
+			}
+			cbxAutores.setSelectedIndex(-1);
+
+		} catch (GestorException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	private void annadirPreferencia() {
-		// TODO Auto-generated method stub
+		int cantidadAutores, cantidadGeneros, cambioAutor, cambioGenero;
+		ArrayList<Author> autoresCombo;
+		try {
+			ArrayList<Author> autores = authorInterface.listarAutoresPreferidos(user.getUserName());
+			ArrayList<String> generos = genreInterface.listarGenerosPreferidos(user.getUserName());
+			cantidadAutores = autores.size();
+			cantidadGeneros = generos.size();
+			// Tiene el maximo de preferencias (3 autores y 3 generos)
+			if (cantidadAutores == 3 && cantidadGeneros == 3) {
+				JOptionPane.showMessageDialog(this,
+						"No se pueden añadir generos o autores, elimine preferencias actuales para poder añadir nuevas");
+				// Tiene el maximo de preferencias en generos, pero no en autores
+			} else if (cantidadAutores < 3 && cantidadGeneros == 3) {
+				JOptionPane.showMessageDialog(this,
+						"Solo se han añadido preferencias de autor, ya tienes 3 generos preferidos, no puedes añadir mas, elimine preferencias actuales para poder añadir nuevas");
+				// Tiene el maximo de preferencias en autores, pero no en generos
+			} else if (cantidadAutores == 3 && cantidadGeneros < 3) {
+				JOptionPane.showMessageDialog(this,
+						"Solo se han añadido preferencias de genero, ya tienes 3 autores preferidos, no puedes añadir mas, elimine preferencias actuales para poder añadir nuevas");
+			} else {
+				autoresCombo = authorInterface.listarAutores();
+				cambioAutor = authorInterface.insertarAutorPreferido(user.getUserName(),
+						autoresCombo.get(cbxAutores.getSelectedIndex()).getCodAuthor());
+				cambioGenero = genreInterface.insertarGeneroPreferido(user.getUserName(),
+						generos.get(cbxGeneros.getSelectedIndex()));
+				if (cambioAutor == 1 && cambioGenero == 1) {
+					JOptionPane.showMessageDialog(this,
+							"Se han añadido tanto un autor como un genero favorito, en el siguiente inicio de sesion se actualizaran los datos");
+				} else {
+					JOptionPane.showMessageDialog(this, "No puedes introducir una preferencia que ya este introducida");
+				}
+			}
+		} catch (GestorException e) {
+			e.printStackTrace();
+		}
 
 	}
 
