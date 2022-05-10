@@ -6,15 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-<<<<<<< HEAD
 
-=======
-import java.util.HashSet;
-import java.util.Set;
->>>>>>> 80fdb29ecfafbd7d750c1fa2851244fa887d83e5
+
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
-import tartanga.dami.equipoa.model.Genre;
 
 public class IAuthorControllerDBImplementation implements IAuthorController {
 

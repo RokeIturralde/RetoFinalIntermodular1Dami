@@ -5,6 +5,7 @@ import javax.swing.JScrollPane;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
-public class VMenuPerfil extends JPanel implements ActionListener {
+public class WMenuPerfil extends JPanel implements ActionListener {
 	private JTextField txtNombre;
 	private JTextField txtContrasenna;
 	private JTextField txtEmail;
@@ -47,10 +48,11 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 	private JScrollPane scrollPane;
 	private JTable tableHistorialCompras;
 
-	public VMenuPerfil(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInerface,
-			IComprasController comprasInterface, Partner user) {
+	public WMenuPerfil(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInerface,
+			IComprasController comprasInterface, User user) {
 		setLayout(null);
-		this.userInterface = userInterface;
+
+		setBounds(100, 300, 520, 12);
 
 		btnModificarDatos = new JButton("Modificar Datos");
 		btnModificarDatos.setBounds(32, 25, 118, 35);
@@ -165,7 +167,7 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 		txtDireccion.setEditable(false);
 		txtTelefono.setText(Integer.toString(user.getPhone()));
 		txtTelefono.setEditable(false);
-		txtNumCuenta.setText(Integer.toString(user.getNumAccount()));
+		txtNumCuenta.setText(Integer.toString(((Partner) user).getNumAccount()));
 		txtNumCuenta.setEditable(false);
 
 		// Listas de Autores y Generos favoritos
@@ -176,22 +178,21 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 		JLabel lblNewLabel_1 = new JLabel("Generos");
 		lblNewLabel_1.setBounds(259, 381, 106, 35);
 		add(lblNewLabel_1);
-		try {
-			ArrayList<Author> autores = authorInterface.listarAutoresPreferidos(user.getUserName());
-			ArrayList<String> generos = genreInerface.listarGenerosPreferidos(user.getUserName());
-
-			JList listAutores = new JList((ListModel) autores);
-			listAutores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			listAutores.setBounds(32, 406, 118, 148);
-			add(listAutores);
-
-			JList listGeneros = new JList((ListModel) generos);
-			listGeneros.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			listGeneros.setBounds(222, 406, 118, 148);
-			add(listGeneros);
-		} catch (GestorException e1) {
-			e1.printStackTrace();
-		}
+		/*
+		 * try { ArrayList<Author> autores =
+		 * authorInterface.listarAutoresPreferidos(user.getUserName());
+		 * ArrayList<String> generos =
+		 * genreInerface.listarGenerosPreferidos(user.getUserName());
+		 * 
+		 * JList listAutores = new JList((ListModel) autores);
+		 * listAutores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		 * listAutores.setBounds(32, 406, 118, 148); add(listAutores);
+		 * 
+		 * JList listGeneros = new JList((ListModel) generos);
+		 * listGeneros.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		 * listGeneros.setBounds(222, 406, 118, 148); add(listGeneros); } catch
+		 * (GestorException e1) { e1.printStackTrace(); }
+		 */
 
 		// Creacion tabla del historial de compra
 		try {
@@ -203,11 +204,11 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 					matrizTabla[i][1] = compras.get(i).getNombreAutor() + " " + compras.get(i).getApellidoAutor();
 					matrizTabla[i][2] = Integer.toString(compras.get(i).getIsbn());
 					matrizTabla[i][3] = Integer.toString(compras.get(i).getCantidadLibros());
-					matrizTabla[i][1] = Float.toString(compras.get(i).getPrecioCompra());
+					matrizTabla[i][4] = Float.toString(compras.get(i).getPrecioCompra());
 				}
 
 				scrollPane = new JScrollPane();
-				scrollPane.setBounds(506, 76, 370, 389);
+				scrollPane.setBounds(25, 209, 583, 125);
 				panelHistorialCompra.add(scrollPane);
 
 				String titulos[] = { "Fecha", "Autor", "Isbn", "Cantidad", "Precio" };
@@ -219,8 +220,8 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 				tableHistorialCompras.setRowMargin(0);
 				tableHistorialCompras.setRowHeight(22);
 				tableHistorialCompras.setShowVerticalLines(false);
+				scrollPane.setViewportView(tableHistorialCompras);
 				tableHistorialCompras.setFont(new Font("Tahoma", Font.PLAIN, 12));
-				tableHistorialCompras.add(tableHistorialCompras);
 
 				JTableHeader tableHeader = tableHistorialCompras.getTableHeader();
 				tableHeader.setBackground(new Color(0, 191, 140));

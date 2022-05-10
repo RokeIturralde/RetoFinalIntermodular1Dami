@@ -12,6 +12,10 @@ public interface IBookController {
 	
 	public void altaBook(Book book) throws GestorException;
 	
+	public void anadirAuthor(ArrayList<String> codAuthor, int isbn) throws GestorException;
+	
+	public void anadirGenre(ArrayList<String> genre, int isbn) throws GestorException;
+	
 	public Book buscarBook(int isbn) throws GestorException;
 	
 	public int modificarBook(Book book) throws GestorException;

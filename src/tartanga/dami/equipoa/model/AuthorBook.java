@@ -17,6 +17,10 @@ public class AuthorBook {
 		this.price = price;
 	}
 	
+	public AuthorBook() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getTitle() {
 		return title;
 	}

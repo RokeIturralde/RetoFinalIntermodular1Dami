@@ -159,7 +159,7 @@ public class IGenreControllerDBImplementation implements IGenreController {
 
 		// Abrir conexion con BD
 		openConnection();
-		String listarGenerosPreferidos = "select genreName from genreauthor where username=?";
+		String listarGenerosPreferidos = "select genreName from partnerGenre where username=?";
 		try {
 			stmt = con.prepareStatement(listarGenerosPreferidos);
 			stmt.setString(1, username);
@@ -175,7 +175,7 @@ public class IGenreControllerDBImplementation implements IGenreController {
 			}
 			closeConnection();
 		} catch (Exception e) {
-			String error = "Error en el listado de generos";
+			String error = "Error en el listado de generos favoritos";
 			GestorException exception = new GestorException(error);
 			throw exception;
 		} finally {
