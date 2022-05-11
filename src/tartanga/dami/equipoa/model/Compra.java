@@ -1,17 +1,15 @@
 package tartanga.dami.equipoa.model;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 public class Compra {
 	private Date fechaCompra;
-	private String nombreAutor;
-	private String apellidoAutor;
+	private ArrayList<Author> authors;
 	private int isbn;
 	private int cantidadLibros;
 	private float precioCompra;
 
-	
-	
 	public Date getFechaCompra() {
 		return fechaCompra;
 	}
@@ -20,20 +18,12 @@ public class Compra {
 		this.fechaCompra = fechaCompra;
 	}
 
-	public String getNombreAutor() {
-		return nombreAutor;
+	public ArrayList<Author> getAuthors() {
+		return authors;
 	}
 
-	public void setNombreAutor(String nombreAutor) {
-		this.nombreAutor = nombreAutor;
-	}
-
-	public String getApellidoAutor() {
-		return apellidoAutor;
-	}
-
-	public void setApellidoAutor(String apellidoAutor) {
-		this.apellidoAutor = apellidoAutor;
+	public void setAuthors(ArrayList<Author> authors) {
+		this.authors = authors;
 	}
 
 	public int getIsbn() {

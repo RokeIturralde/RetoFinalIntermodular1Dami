@@ -358,17 +358,4 @@ public class IBookControllerDBImplementation implements IBookController {
 		return array;
 	}
 
-	@Override
-	public Author bookAuthor() throws GestorException {
-		ResultSet rs = null;
-		Author autor = null;
-		return null;
-	}
-
-	@Override
-	public Genre bookGenre() throws GestorException {
-
-		return null;
-	}
-
 }

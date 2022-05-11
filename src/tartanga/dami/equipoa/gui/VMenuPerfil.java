@@ -245,7 +245,8 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 				String matrizTabla[][] = new String[compras.size()][5];
 				for (int i = 0; i < compras.size(); i++) {
 					matrizTabla[i][0] = compras.get(i).getFechaCompra().toString();
-					matrizTabla[i][1] = compras.get(i).getNombreAutor() + " " + compras.get(i).getApellidoAutor();
+					// Sacar los autores de ese libro comprado
+					matrizTabla[i][1] = compras.get(i).getAuthors().toString();
 					matrizTabla[i][2] = Integer.toString(compras.get(i).getIsbn());
 					matrizTabla[i][3] = Integer.toString(compras.get(i).getCantidadLibros());
 					matrizTabla[i][1] = Float.toString(compras.get(i).getPrecioCompra());
