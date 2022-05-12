@@ -9,37 +9,42 @@ import java.util.ArrayList;
 
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
+import tartanga.dami.equipoa.model.ConnectionOpenClose;
 
 public class IAuthorControllerDBImplementation implements IAuthorController {
 
 	private Connection con;
 	private PreparedStatement stmt;
+	private ConnectionOpenClose connection = new ConnectionOpenClose();
 
 	// Abrir conexion con nuestra base de datos
-	private void openConnection() {
+	/*private void openConnection() {
 		try {
-			String url = "jdbc:mysql://localhost:3306/irakurle?serverTimezone=Europe/Madrid&useSSL=false";
-			con = DriverManager.getConnection(url, "root", "abcd*1234");
+			con = connection.openConnection();
 		} catch (SQLException e) {
 			System.out.println("No se puede acceder a la base de Datos");
+		} catch (GestorException e) {
+			e.printStackTrace();
 		}
 	}
+	*/
 
 	// Cerrar conexion con la base de datos
-	private void closeConnection() throws SQLException {
+	/*private void closeConnection() throws SQLException {
 		if (stmt != null) {
 			stmt.close();
 		}
 		if (con != null)
 			con.close();
 	}
+	*/
 
 	// Insertar un nuevo Autor en la base de Datos
 	@Override
 	public void altaAuthor(Author author) throws GestorException {
 
 		try {
-			this.openConnection();
+			con = connection.openConnection();
 			String insertarAutor = "INSERT INTO AUTHOR VALUES (?,?,?,?,?)";
 			stmt = con.prepareStatement(insertarAutor);
 			stmt.setString(1, author.getCodAuthor());
@@ -54,7 +59,7 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 			throw exception;
 		} finally {
 			try {
-				this.closeConnection();
+				connection.closeConnection(stmt, con);
 			} catch (SQLException e) {
 				String error = "Error al cerrar conexion con la base de datos";
 				GestorException exception = new GestorException(error);
@@ -75,7 +80,7 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 
 		String busquedaAutor = "SELECT * FROM AUTHOR WHERE CODAUTHOR = ? OR NAME = ? OR SURNAME = ?";
 		try {
-			this.openConnection();
+			con = connection.openConnection();
 			stmt = con.prepareStatement(busquedaAutor);
 			stmt.setString(1, codAuthor);
 			stmt.setString(2, codAuthor);
@@ -102,7 +107,7 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 			throw exception;
 		} finally {
 			try {
-				this.closeConnection();
+				connection.closeConnection(stmt, con);
 			} catch (SQLException e) {
 				String error = "Error al cerrar conexion con la base de datos";
 				GestorException exception = new GestorException(error);
@@ -119,7 +124,7 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 
 		int num;
 		try {
-			this.openConnection();
+			con = connection.openConnection();
 			String modificarAutor = "UPDATE AUTHOR SET NAME=?, SURNAME=?, BIRTHDATE=?, DEATHDATE=? WHERE CODAUTHOR=?";
 			stmt = con.prepareStatement(modificarAutor);
 			stmt.setString(1, author.getName());
@@ -134,7 +139,7 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 			throw exception;
 		} finally {
 			try {
-				this.closeConnection();
+				connection.closeConnection(stmt, con);
 			} catch (SQLException e) {
 				String error = "Error al cerrar conexion con la base de datos";
 				GestorException exception = new GestorException(error);
@@ -149,7 +154,7 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 	public int eliminarAuthor(String codAuthor) throws GestorException {
 		int cambio;
 		try {
-			this.openConnection();
+			con = connection.openConnection();
 			String eliminarAutor = "DELETE FROM AUTHOR WHERE CODAUTHOR=?";
 			stmt = con.prepareStatement(eliminarAutor);
 			stmt.setString(1, codAuthor);
@@ -268,7 +273,7 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 			throw exception;
 		} finally {
 			try {
-				this.closeConnection();
+				connection.closeConnection(stmt, con);
 			} catch (SQLException e) {
 				String error = "Error al cerrar conexion con la base de datos";
 				GestorException exception = new GestorException(error);

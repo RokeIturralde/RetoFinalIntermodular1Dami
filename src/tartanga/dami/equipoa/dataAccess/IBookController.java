@@ -11,15 +11,19 @@ import tartanga.dami.equipoa.model.Genre;
 public interface IBookController {
 
 	public void altaBook(Book book) throws GestorException;
-
+	
 	public void anadirAuthor(ArrayList<String> codAuthor, int isbn) throws GestorException;
-
+	
 	public void anadirGenre(ArrayList<String> genre, int isbn) throws GestorException;
-
+	
 	public Book buscarBook(int isbn) throws GestorException;
-
-	public int modificarBook(Book book) throws GestorException;
-
+	
+	public ArrayList<String> listAuthors(int isbn) throws GestorException;
+	
+	public ArrayList<String> listGenres(int isbn) throws GestorException;
+	
+	public int modificarBook(Book book, ArrayList<String> codAuthor, ArrayList<String> genrename) throws GestorException;
+	
 	public void eliminarBook(int isbn) throws GestorException;
 
 	public ArrayList<Book> listaBookGenre(String genre) throws GestorException;
@@ -33,4 +37,5 @@ public interface IBookController {
 	public ArrayList<Integer> listTopSales() throws GestorException;
 
 	public ArrayList<Integer> listDiscount() throws GestorException;
+  
 }

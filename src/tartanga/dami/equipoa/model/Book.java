@@ -103,22 +103,20 @@ public class Book implements Serializable{
 		this.pubDate = pubDate;
 	}
 
-	public ArrayList<String> getAuthors() {
+	public ArrayList<String> getAuthor() {
 		return authors;
 	}
 
-	public void setAuthors(ArrayList<String> authors) {
-		this.authors = authors;
+	public void setAuthor(ArrayList<String> author) {
+		this.authors = author;
 	}
 
-	public ArrayList<String> getGenres() {
+	public ArrayList<String> getGenre() {
 		return genres;
 	}
 
-	public void setGenres(ArrayList<String> genres) {
-		this.genres = genres;
+	public void setGenre(ArrayList<String> genre) {
+		this.genres = genre;
 	}
-	
-
-
+  
 }

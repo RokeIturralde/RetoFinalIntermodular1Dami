@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.User;
 import tartanga.dami.equipoa.model.Administrator;
+import tartanga.dami.equipoa.model.ConnectionOpenClose;
 import tartanga.dami.equipoa.model.Partner;
 import java.sql.DriverManager;
 
@@ -18,9 +19,10 @@ public class IUserControllerDBImplementation implements IUserController {
 
 	private Connection con;
 	private PreparedStatement stmt;
+	private ConnectionOpenClose connection = new ConnectionOpenClose();
 
 	// Metodo para abrir la conexion con la base de datos
-	private void openConnection() {
+	/*private void openConnection() {
 		try {
 			String url = "jdbc:mysql://localhost:3306/irakurle?serverTimezone=Europe/Madrid&useSSL=false";
 			con = DriverManager.getConnection(url, "root", "abcd*1234");
@@ -37,7 +39,7 @@ public class IUserControllerDBImplementation implements IUserController {
 		if (con != null)
 			con.close();
 		System.out.println("------------------------");
-	}
+	}*/
 
 	// Metodo para comprobar si el login es correcto
 	@Override
@@ -47,7 +49,7 @@ public class IUserControllerDBImplementation implements IUserController {
 		String userLogIn = "CALL logIn(?,?)";
 		
 		try {
-			this.openConnection();
+			con = connection.openConnection();
 			
 			stmt = con.prepareStatement(userLogIn);
 
@@ -80,7 +82,7 @@ public class IUserControllerDBImplementation implements IUserController {
 			throw exception;
 		} finally {
 			try {
-				this.closeConnection();
+				connection.closeConnection(stmt, con);
 			} catch (SQLException e) {
 				String error = "Error al cerrar conexion con la base de datos";
 				GestorException exception = new GestorException(error);
@@ -93,9 +95,9 @@ public class IUserControllerDBImplementation implements IUserController {
 	// Metodo para añadir un usuario a la base de datos
 	@Override
 	public void altaUsuario(User user) throws GestorException {
-		this.openConnection();
 
 		try {
+			con = connection.openConnection();
 			String insertUser = "call altaPartner(?,?,?,?,?,?,?,?,?)";
 			stmt = con.prepareStatement(insertUser);
 
@@ -116,7 +118,7 @@ public class IUserControllerDBImplementation implements IUserController {
 			throw exception;
 		} finally {
 			try {
-				this.closeConnection();
+				connection.closeConnection(stmt, con);
 			} catch (SQLException e) {
 				String error = "Error al cerrar conexion con la base de datos";
 				GestorException exception = new GestorException(error);
@@ -132,7 +134,7 @@ public class IUserControllerDBImplementation implements IUserController {
 		String searchUser = "select u.*,p.numaccount from user u,partner p where u.username=p.username and u.username = ?";
 		
 		try {
-			this.openConnection();
+			con = connection.openConnection();
 			
 			stmt = con.prepareStatement(searchUser);
 
@@ -158,7 +160,7 @@ public class IUserControllerDBImplementation implements IUserController {
 			throw exception;
 		} finally {
 			try {
-				this.closeConnection();
+				connection.closeConnection(stmt, con);
 			} catch (SQLException e) {
 				String error = "Error al cerrar conexion con la base de datos";
 				GestorException exception = new GestorException(error);
@@ -174,7 +176,7 @@ public class IUserControllerDBImplementation implements IUserController {
 		String updateUser = "CALL modificarPartner(?,?,?,?,?,?,?,?)";
 		
 		try {
-			this.openConnection();
+			con = connection.openConnection();
 			
 			stmt = con.prepareStatement(updateUser);
 			
@@ -195,7 +197,7 @@ public class IUserControllerDBImplementation implements IUserController {
 			throw exception;
 		} finally {
 			try {
-				this.closeConnection();
+				connection.closeConnection(stmt, con);
 			} catch (SQLException e) {
 				String error = "Error al cerrar conexion con la base de datos";
 				GestorException exception = new GestorException(error);
@@ -211,7 +213,7 @@ public class IUserControllerDBImplementation implements IUserController {
 		String deleteUser = "delete from user where username = ? and tipo = ?";
 		
 		try {
-			this.openConnection();
+			con = connection.openConnection();
 			
 			stmt = con.prepareStatement(deleteUser);
 			
@@ -225,7 +227,7 @@ public class IUserControllerDBImplementation implements IUserController {
 			throw exception;
 		} finally {
 			try {
-				this.closeConnection();
+				connection.closeConnection(stmt, con);
 			} catch (SQLException e) {
 				String error = "Error al cerrar conexion con la base de datos";
 				GestorException exception = new GestorException(error);
@@ -240,7 +242,7 @@ public class IUserControllerDBImplementation implements IUserController {
 		String anadirAutor = "CALL anadirAutor(?,?)";
 		
 		try {
-			this.openConnection();
+			con = connection.openConnection();
 			
 			stmt = con.prepareStatement(anadirAutor);
 			
@@ -254,7 +256,7 @@ public class IUserControllerDBImplementation implements IUserController {
 			throw exception;
 		} finally {
 			try {
-				this.closeConnection();
+				connection.closeConnection(stmt, con);
 			} catch (SQLException e) {
 				String error = "Error al cerrar conexion con la base de datos";
 				GestorException exception = new GestorException(error);
@@ -268,7 +270,7 @@ public class IUserControllerDBImplementation implements IUserController {
 		String anadirGenero = "insert into partnergenre values(?,?)";
 		
 		try {
-			this.openConnection();
+			con = connection.openConnection();
 			
 			stmt = con.prepareStatement(anadirGenero);
 			
@@ -282,7 +284,7 @@ public class IUserControllerDBImplementation implements IUserController {
 			throw exception;
 		} finally {
 			try {
-				this.closeConnection();
+				connection.closeConnection(stmt, con);
 			} catch (SQLException e) {
 				String error = "Error al cerrar conexion con la base de datos";
 				GestorException exception = new GestorException(error);

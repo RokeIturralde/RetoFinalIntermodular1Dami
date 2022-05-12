@@ -171,9 +171,7 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 					} else {
 						WMenu menu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface, authorBookInterface, comprasInterface, user);
 						menu.setVisible(true);
-					}
-					textUsuario.setText("");
-					passwordField.setText("");
+					}					
 				} else {
 					JOptionPane.showMessageDialog(this, "El nombre de la cuenta y/o la contraseña son incorrectos",
 							"Error", JOptionPane.WARNING_MESSAGE);
@@ -209,7 +207,7 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 	
 	public boolean insertString(int maximo, String texto) {
 		if(texto.length() > maximo) {
-			JOptionPane.showMessageDialog(this, "Excedido el limite de caracteres (50)","Error", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Excedido el limite de caracteres ("+maximo+")","Error", JOptionPane.WARNING_MESSAGE);
 			return true;
 		}
 		return false;
