@@ -17,11 +17,13 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.table.JTableHeader;
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
+import tartanga.dami.equipoa.dataAccess.IBookController;
 import tartanga.dami.equipoa.dataAccess.IComprasController;
 import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IUserController;
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
+import tartanga.dami.equipoa.model.Book;
 import tartanga.dami.equipoa.model.Compra;
 import tartanga.dami.equipoa.model.Partner;
 import tartanga.dami.equipoa.model.User;
@@ -41,6 +43,8 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 	private IUserController userInterface;
 	private IAuthorController authorInterface;
 	private IGenreController genreInterface;
+	private IBookController bookInterface;
+
 
 	private JButton btnGuardarCambios;
 	private JButton btnModificarDatos;
@@ -241,14 +245,28 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 		}
 
 		// Creacion tabla del historial de compra
+		String nombreApellidos = "";
 		try {
 			ArrayList<Compra> compras = comprasInterface.historialCompras(user.getUserName());
 			if (compras.size() > 0) {
 				String matrizTabla[][] = new String[compras.size()][5];
 				for (int i = 0; i < compras.size(); i++) {
+						Book book;
+						try {
+							book = bookInterface.buscarBook(compras.get(i).getIsbn());
+							for(int j = 0; i<book.getAuthors().size();j++) {
+								Author author = authorInterface.buscarAuthor(book.getAuthors().get(j));
+								nombreApellidos += author.getName();
+								nombreApellidos+=" "+author.getSurname();
+								if(j<book.getAuthors().size())
+									nombreApellidos+=", ";}
+							}  catch (GestorException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 					matrizTabla[i][0] = compras.get(i).getFechaCompra().toString();
-					// Sacar los autores de ese libro comprado (Necesitamos ArrayList)
 					matrizTabla[i][1] = compras.get(i).getAuthors();
+
 					matrizTabla[i][2] = Integer.toString(compras.get(i).getIsbn());
 					matrizTabla[i][3] = Integer.toString(compras.get(i).getCantidadLibros());
 					matrizTabla[i][4] = Float.toString(compras.get(i).getPrecioCompra());
@@ -326,7 +344,7 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 
 	}
 
-	// Eliminar preferencias personales de la base de datos (JList se verá igual)
+	// Eliminar preferencias personales de la base de datos (JList se verï¿½ igual)
 	private void borrarPreferencia(ArrayList<Author> autores, User user, ArrayList<String> generos) {
 		int cambio, confirmacion, posicion, posicion2;
 
@@ -444,16 +462,16 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 			// Tiene el maximo de preferencias (3 autores y 3 generos)
 			if (cantidadAutores == 3 && cantidadGeneros == 3) {
 				JOptionPane.showMessageDialog(this,
-						"No se pueden añadir generos o autores, elimine preferencias actuales para poder añadir nuevas");
+						"No se pueden aï¿½adir generos o autores, elimine preferencias actuales para poder aï¿½adir nuevas");
 				// Tiene el maximo de preferencias en generos, pero no en autores
 			} else if (cantidadAutores < 3 && cantidadGeneros == 3) {
 				JOptionPane.showMessageDialog(this,
-						"Solo se han añadido preferencias de autor, ya tienes 3 generos preferidos, no puedes añadir mas, elimine preferencias actuales para poder añadir nuevas");
+						"Solo se han aï¿½adido preferencias de autor, ya tienes 3 generos preferidos, no puedes aï¿½adir mas, elimine preferencias actuales para poder aï¿½adir nuevas");
 				refrescarPreferencias();
 				// Tiene el maximo de preferencias en autores, pero no en generos
 			} else if (cantidadAutores == 3 && cantidadGeneros < 3) {
 				JOptionPane.showMessageDialog(this,
-						"Solo se han añadido preferencias de genero, ya tienes 3 autores preferidos, no puedes añadir mas, elimine preferencias actuales para poder añadir nuevas");
+						"Solo se han aï¿½adido preferencias de genero, ya tienes 3 autores preferidos, no puedes aï¿½adir mas, elimine preferencias actuales para poder aï¿½adir nuevas");
 				refrescarPreferencias();
 			} else {
 				autoresCombo = authorInterface.listarAutores();
@@ -461,7 +479,7 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 					cambioGenero = genreInterface.insertarGeneroPreferido(user.getUserName(),
 							generos.get(cbxGeneros.getSelectedIndex()));
 					if (cambioGenero == 1) {
-						JOptionPane.showMessageDialog(this, "Se ha añadido un genero favorito");
+						JOptionPane.showMessageDialog(this, "Se ha aï¿½adido un genero favorito");
 						refrescarPreferencias();
 					}
 				} else if (cbxGeneros.getSelectedIndex() == -1 && cbxAutores.getSelectedIndex() != -1) {
@@ -469,7 +487,7 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 					cambioAutor = authorInterface.insertarAutorPreferido(user.getUserName(),
 							a.getCodAuthor());
 					if (cambioAutor == 1) {
-						JOptionPane.showMessageDialog(this, "Se ha añadido un autor favorito");
+						JOptionPane.showMessageDialog(this, "Se ha aï¿½adido un autor favorito");
 						refrescarPreferencias();
 					}
 				} else {
@@ -478,7 +496,7 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 					cambioAutor = authorInterface.insertarAutorPreferido(user.getUserName(),
 							autoresCombo.get(cbxAutores.getSelectedIndex() + 1).getCodAuthor());
 					if (cambioAutor == 1 && cambioGenero == 1) {
-						JOptionPane.showMessageDialog(this, "Se han añadido tanto un autor como un genero favorito");
+						JOptionPane.showMessageDialog(this, "Se han aï¿½adido tanto un autor como un genero favorito");
 						refrescarPreferencias();
 					}
 				}
@@ -537,4 +555,7 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 			e.getMessage();
 		}
 	}
+	
+	
+	
 }

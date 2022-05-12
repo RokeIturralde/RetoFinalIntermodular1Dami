@@ -18,6 +18,7 @@ public class Compra {
 		this.fechaCompra = fechaCompra;
 	}
 
+
 	public String getAuthors() {
 		return authors;
 	}
@@ -48,6 +49,6 @@ public class Compra {
 
 	public void setPrecioCompra(float precioCompra) {
 		this.precioCompra = precioCompra;
-	}
+	}	
 
 }

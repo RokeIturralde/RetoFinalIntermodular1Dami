@@ -90,8 +90,6 @@ public class WMenuInicio extends JPanel implements MouseListener {
 			scrollFav = new JScrollPane();
 			scrollFav.setBounds(25, 100, 420, 325);
 
-			// 470,100,520,200
-
 			this.add(scrollFav);
 
 			String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
@@ -168,32 +166,35 @@ public class WMenuInicio extends JPanel implements MouseListener {
 			}
 		}
 
-		String matrizTablaSales[][] = new String[ventas.size()][5];
-		for (int i = 0; i < libros.size(); i++) {
-			matrizTablaSales[i][0] = Integer.toString(i + 1) + " " + ventas.get(i);
-			matrizTablaSales[i][1] = libros.get(i).getTitle();
-			matrizTablaSales[i][2] = // libros.get(i).getAuthors().toString();
-					matrizTablaSales[i][3] = libros.get(i).getDescription();
-			matrizTablaSales[i][4] = "comprar";
-		}
+			String matrizTablaSales[][] = new String[ventas.size()][5];
+			for (int i = 0; i < libros.size(); i++) {
+				matrizTablaSales[i][0] = Integer.toString(i + 1) + " " + ventas.get(i);
+				matrizTablaSales[i][1] = libros.get(i).getTitle();
+				matrizTablaSales[i][2] = libros.get(i).getAuthors().toString();
+				matrizTablaSales[i][3] = libros.get(i).getDescription();
+				matrizTablaSales[i][4] = "comprar";
+			}
+			
+			String[] columNames = { "Posicion", "Titulo", "Autor", "Descripcion", "Â¿Te interesa?" };
+			
+			tableSales = new JTable(matrizTablaSales, columNames) {
+				
+					/*
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
 
-		String[] columNames = { "Posicion", "Titulo", "Autor", "Descripcion", "¿Te interesa?" };
-
-		tableSales = new JTable(matrizTablaSales, columNames) {
-
-			/*
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			// ***********************METODO PARA HACER QUE LA TABLA NO SEA EDITABLE, Y ASI
-			// HACER DOBLE CLICK************************************
-			// Para ello sobreescribimos el metodo que ya tiene la clase
-			// JTable.isCellEditable
-			public boolean isCellEditable(int row, int column) {
-				for (int i = 0; i < tableFav.getRowCount(); i++) {
-					if (row == i) {
-						return false;
+					// ***********************METODO PARA HACER QUE LA TABLA NO SEA EDITABLE, Y ASI
+					// HACER DOBLE CLICK************************************
+					// Para ello sobreescribimos el metodo que ya tiene la clase
+					// JTable.isCellEditable
+					public boolean isCellEditable(int row, int column) {
+						for (int i = 0; i < tableFav.getRowCount(); i++) {
+							if (row == i) {
+								return false;
+							}
+						}
+						return true;
 					}
 				}
 				return true;
@@ -250,23 +251,31 @@ public class WMenuInicio extends JPanel implements MouseListener {
 				}
 			}
 		}
-		// Anadir libro al carrito
-		if (e.getSource().equals(tableSales)) {
-			if (tableSales.getSelectedColumn() == 4) {
+		
+		//Anadir libro al carrito
+		if(e.getSource().equals(tableSales)){
+			if(tableSales.getSelectedColumn()==4) {
 				int cual = tableFav.getSelectedRow();
+				int cantidad = Integer.parseInt(JOptionPane.showInputDialog(null, "Introduce el numero de ejemplares que deseas comprar", "Confirma la compra", JOptionPane.PLAIN_MESSAGE));
 				Book book = libros.get(cual);
 				Compra compra = new Compra();
 				compra.setIsbn(book.getIsbn());
-				// compra.setNombreAutor(book.getAuthor());
-				// System.out.println(compra.getNombreAutor());
-				// compra.setApellidoAutor(book.getAuthor());
+
 				compra.setCantidadLibros(1);
 				compra.setPrecioCompra(book.getPrice());
+				compra.setCantidadLibros(cantidad);
+				compras.add(compra);
 			}
 		}
+		
+		
 
 	}
-
+	
+	public ArrayList<Compra> enviarCompras(){
+			return compras; 
+		}
+	
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub

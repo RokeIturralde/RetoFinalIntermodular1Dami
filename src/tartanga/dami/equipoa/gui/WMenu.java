@@ -122,7 +122,8 @@ public class WMenu extends JDialog implements MouseListener{
 			this.dispose();
 		}		
 		if(e.getSource().equals(lblCarrito)) {
-			
+			ArrayList<Compra> compras = panelInicio.enviarCompras();
+			WCarrito carrito = new WCarrito(bookInterface, authorInterface, compras);
 		}
 	}
 

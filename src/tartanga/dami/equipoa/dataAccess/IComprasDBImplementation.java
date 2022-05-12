@@ -1,11 +1,15 @@
 package tartanga.dami.equipoa.dataAccess;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Compra;
@@ -51,9 +55,9 @@ public class IComprasDBImplementation implements IComprasController {
 			this.openConnection();
 			stmt = con.prepareStatement(listadoCompras);
 			stmt.setString(1, username);
-			rs = stmt.executeQuery();
-			System.out.println(rs.getFetchSize());
-			if (rs.next()) {
+			rs = stmt.executeQuery();			
+			if(rs.next()) {
+
 				compra = new Compra();
 				compra.setFechaCompra(rs.getDate("p.purchaseDate"));
 				compra.setIsbn(rs.getInt("p.isbn"));
@@ -76,5 +80,61 @@ public class IComprasDBImplementation implements IComprasController {
 			}
 		}
 		return compras;
+	}
+
+	@Override
+	public float calcularPrecio(int isbn) throws GestorException {
+		String sentencia = "select b.price-(b.price*d.discount)/100 as price from book b, discount d where b.isbn = ? and b.idDiscount = d.idDiscount";
+		ResultSet rs;
+		float precio=0;
+		try {
+			this.openConnection();
+			stmt = con.prepareStatement(sentencia);
+			stmt.setInt(1, isbn);
+			rs = stmt.executeQuery();
+			if(rs.next()) {
+				precio= rs.getInt("price");
+			}
+		}  catch (SQLException e) {
+			String error = "Error en la agregacion de datos al Array";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				String error = "Error al cerrar conexion con la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		return precio;
+	}
+
+	@Override
+	public void escribirCompra(Compra compra, String user) throws GestorException {
+		String sentencia = "insert into compra values ?, ?, ?, ?";
+		
+		try {
+			this.openConnection();
+			stmt = con.prepareStatement(sentencia);
+			stmt.setString(1, user);
+			stmt.setInt(2, compra.getIsbn());
+			stmt.setInt(3, compra.getCantidadLibros());
+			stmt.setDate(4, Date.valueOf(LocalDateTime.now().toString()));
+			stmt.executeQuery();
+		} catch (SQLException e) {
+			String error = "Error en el registro de compra";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				String error = "Error al cerrar conexion con la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
 	}
 }
