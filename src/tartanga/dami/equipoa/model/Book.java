@@ -118,5 +118,5 @@ public class Book implements Serializable{
 	public void setGenre(ArrayList<String> genre) {
 		this.genres = genre;
 	}
-	
+  
 }

@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -20,24 +19,12 @@ public class IBookControllerDBImplementation implements IBookController {
 	private PreparedStatement stmt;
 	private ConnectionOpenClose connection = new ConnectionOpenClose();
 
-	// Metodo para abrir la conexion con la base de datos
-	/*
-	 * private void openConnection() { try { String url =
-	 * "jdbc:mysql://localhost:3306/irakurle?serverTimezone=Europe/Madrid&useSSL=false";
-	 * con = DriverManager.getConnection(url, "root", "abcd*1234"); } catch
-	 * (SQLException e) { System.out.println("Error al intentar abrir la BD"); } }
-	 * 
-	 * // Metodo para cerrar la conexion con la base de datos private void
-	 * closeConnection() throws SQLException {
-	 * System.out.println("Conexion cerrada"); if (stmt != null) stmt.close(); if
-	 * (con != null) con.close(); System.out.println("-----------------------"); }
-	 */
-
 	@Override
 	public void altaBook(Book book) throws GestorException {
 		try {
 			con = connection.openConnection();
 			String insertBook = "insert into book values(?,?,?,?,?,?,?,?)";
+
 			stmt = con.prepareStatement(insertBook);
 			stmt.setInt(1, book.getIsbn());
 			stmt.setString(2, book.getTitle());
@@ -68,8 +55,8 @@ public class IBookControllerDBImplementation implements IBookController {
 		ResultSet rs = null;
 		Book book = null;
 
-		String buscarBook = "select b.*,a.surname as author,a.codAuthor as codAuthor, bg.genreName as genre from book b,bookauthor ba, bookgenre bg, author a "
-				+ "where b.isbn = ? and  b.isbn=ba.isbn and ba.codauthor=a.codauthor and b.isbn=bg.isbn";
+		String buscarBook = "select b.*,a.surname as author,bg.genreName as genre from book b,bookauthor ba, bookgenre bg, author a where b.isbn = ? and  b.isbn=ba.isbn and ba.codauthor=a.codauthor and b.isbn=bg.isbn";
+		String contarAutores = "count";
 		try {
 			con = connection.openConnection();
 			stmt = con.prepareStatement(buscarBook);
@@ -86,6 +73,7 @@ public class IBookControllerDBImplementation implements IBookController {
 				book.setIdDiscount(rs.getInt("idDiscount"));
 				book.setPubDate(rs.getDate("pubdate"));
 			}
+
 		} catch (SQLException e1) {
 			String error = "Error en la conexion con la base de datos";
 			GestorException exception = new GestorException(error);
@@ -190,7 +178,7 @@ public class IBookControllerDBImplementation implements IBookController {
 		ResultSet rs = null;
 		Book book = null;
 
-		ArrayList<Book> books = new ArrayList();
+		ArrayList<Book> books = new ArrayList<>();
 		String buscarBook = "select b.* from book b, bookGenre bg where bg.genreName = ? and b.isbn=bg.isbn";
 		try {
 			con = connection.openConnection();
@@ -229,8 +217,7 @@ public class IBookControllerDBImplementation implements IBookController {
 	public ArrayList<Book> listaBookAuthor(String author) throws GestorException {
 		ResultSet rs = null;
 		Book book = null;
-
-		ArrayList<Book> books = new ArrayList();
+		ArrayList<Book> books = new ArrayList<Book>();
 		String listaBookAuthor = "select * from book b, bookauthor ba, author a where b.isbn=ba.isbn and ba.codAuthor=a.codAuthor and a.surname = ?";
 		try {
 			con = connection.openConnection();
@@ -269,7 +256,7 @@ public class IBookControllerDBImplementation implements IBookController {
 	public ArrayList<Book> listBookAuthorGenre(String author, String genre) throws GestorException {
 		ResultSet rs = null;
 		Book book = null;
-		ArrayList<Book> books = new ArrayList();
+		ArrayList<Book> books = new ArrayList<>();
 
 		String listaBookAuthorGenre = "select b.* from book b, author a, bookauthor ba, bookgenre bg where"
 				+ " b.isbn=ba.isbn and ba.codAuthor = a.codAuthor and b.isbn=bg.isbn and bg.genreName = ? or a.surname= ? ";
@@ -308,7 +295,7 @@ public class IBookControllerDBImplementation implements IBookController {
 	}
 
 	public ArrayList<Book> listAllBooks() throws GestorException {
-		ArrayList<Book> books = new ArrayList();
+		ArrayList<Book> books = new ArrayList<>();
 		Book book = null;
 		ResultSet rs = null;
 		String listAllBooks = "SELECT * FROM BOOK";
@@ -327,6 +314,7 @@ public class IBookControllerDBImplementation implements IBookController {
 				book.setPrice(rs.getFloat("price"));
 				book.setIdDiscount(rs.getInt("idDiscount"));
 				book.setPubDate(rs.getDate("pubDate"));
+				books.add(book);
 			}
 		} catch (SQLException e1) {
 			String error = "Error en la conexion con la base de datos";
@@ -342,6 +330,40 @@ public class IBookControllerDBImplementation implements IBookController {
 			}
 		}
 		return books;
+
+	}
+
+	@Override
+	public ArrayList<Integer> listTopSales() throws GestorException {
+		ArrayList<Integer> listTopSales = new ArrayList();
+		Book book = null;
+		ResultSet rs = null;
+		String sentence = "SELECT isbn, sum(quantity) as quantity FROM purchase group by isbn order by sum(quantity) desc limit 5";
+
+		try {
+			this.openConnection();
+			stmt = con.prepareStatement(sentence);
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				listTopSales.add(rs.getInt("isbn"));
+				listTopSales.add(rs.getInt("quantity"));
+			}
+			System.out.println(rs.getFetchSize());
+		} catch (SQLException e1) {
+			String error = "Error en la conexion con la base de datos";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e1) {
+				String error = "Error al cerrar la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+
+		}
+		return listTopSales;
 	}
 
 	@Override
@@ -504,5 +526,4 @@ public class IBookControllerDBImplementation implements IBookController {
 
 		return array;
 	}
-
 }
