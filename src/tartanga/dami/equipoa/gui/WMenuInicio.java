@@ -177,56 +177,33 @@ public class WMenuInicio extends JPanel implements MouseListener {
 			
 			String[] columNames = { "Posicion", "Titulo", "Autor", "Descripcion", "¿Te interesa?" };
 			
-			tableSales = new JTable(matrizTablaSales, columNames) {
-				
-					/*
-					 * 
-					 */
-					private static final long serialVersionUID = 1L;
+	tableSales = new JTable(matrizTablaSales, columNames) {
 
-					// ***********************METODO PARA HACER QUE LA TABLA NO SEA EDITABLE, Y ASI
-					// HACER DOBLE CLICK************************************
-					// Para ello sobreescribimos el metodo que ya tiene la clase
-					// JTable.isCellEditable
-					public boolean isCellEditable(int row, int column) {
-						for (int i = 0; i < tableFav.getRowCount(); i++) {
-							if (row == i) {
-								return false;
-							}
-						}
-						return true;
-					}
+	private static final long serialVersionUID = 1L;
+
+	public boolean isCellEditable(int row, int column) {
+			for (int i = 0; i < tableFav.getRowCount(); i++) {
+				if (row == i) {
+					return false;
 				}
-				return true;
 			}
-		};
+			return true;
+		}};
 
-		scrollSellers = new JScrollPane();
-		scrollSellers.setBounds(470, 100, 520, 325);
+	scrollSellers=new JScrollPane();scrollSellers.setBounds(470,100,520,325);
 
-		this.add(scrollSellers);
+	this.add(scrollSellers);
 
-		RowsRenderer rRowsRenderer = new RowsRenderer(3);
-		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-		tableSales.setDefaultRenderer(Object.class, rRowsRenderer);
-		tableSales.isCellEditable(listLikedBooks.size(), 4);
+	RowsRenderer rRowsRenderer = new RowsRenderer(3);
+	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();tableSales.setDefaultRenderer(Object.class,rRowsRenderer);tableSales.isCellEditable(listLikedBooks.size(),4);
 
-		tableSales.setSelectionBackground(new Color(0, 230, 168));
-		tableSales.setSelectionForeground(Color.WHITE);
-		tableSales.setRowMargin(0);
-		tableSales.setRowHeight(20);
-		tableSales.setShowHorizontalLines(true);
-		tableSales.setShowVerticalLines(true);
-		scrollSellers.setViewportView(tableSales);
+	tableSales.setSelectionBackground(new Color(0,230,168));tableSales.setSelectionForeground(Color.WHITE);tableSales.setRowMargin(0);tableSales.setRowHeight(20);tableSales.setShowHorizontalLines(true);tableSales.setShowVerticalLines(true);scrollSellers.setViewportView(tableSales);
 
-		tableSales.addMouseListener(this);
+	tableSales.addMouseListener(this);
 
-		// Estilo del header
-		JTableHeader tableHeader = tableSales.getTableHeader();
-		tableHeader.setBackground(new Color(0, 191, 140));
-		tableHeader.setForeground(Color.WHITE);
-		tableHeader.setBorder(null);
-		tableHeader.setEnabled(false);
+	// Estilo del header
+	JTableHeader tableHeader = tableSales
+			.getTableHeader();tableHeader.setBackground(new Color(0,191,140));tableHeader.setForeground(Color.WHITE);tableHeader.setBorder(null);tableHeader.setEnabled(false);
 
 	}
 
@@ -271,11 +248,11 @@ public class WMenuInicio extends JPanel implements MouseListener {
 		
 
 	}
-	
+
 	public ArrayList<Compra> enviarCompras(){
 			return compras; 
 		}
-	
+
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
