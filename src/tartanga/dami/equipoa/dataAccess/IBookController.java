@@ -37,5 +37,7 @@ public interface IBookController {
 	public ArrayList<Integer> listTopSales() throws GestorException;
 
 	public ArrayList<Integer> listDiscount() throws GestorException;
+
+	String listAuthorsIsbn(int isbn) throws GestorException;
   
 }

@@ -45,7 +45,6 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 	private IGenreController genreInterface;
 	private IBookController bookInterface;
 
-
 	private JButton btnGuardarCambios;
 	private JButton btnModificarDatos;
 	private JButton btnAnnadirPreferencia;
@@ -251,22 +250,8 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 			if (compras.size() > 0) {
 				String matrizTabla[][] = new String[compras.size()][5];
 				for (int i = 0; i < compras.size(); i++) {
-						Book book;
-						try {
-							book = bookInterface.buscarBook(compras.get(i).getIsbn());
-							for(int j = 0; i<book.getAuthors().size();j++) {
-								Author author = authorInterface.buscarAuthor(book.getAuthors().get(j));
-								nombreApellidos += author.getName();
-								nombreApellidos+=" "+author.getSurname();
-								if(j<book.getAuthors().size())
-									nombreApellidos+=", ";}
-							}  catch (GestorException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
 					matrizTabla[i][0] = compras.get(i).getFechaCompra().toString();
 					matrizTabla[i][1] = compras.get(i).getAuthors();
-
 					matrizTabla[i][2] = Integer.toString(compras.get(i).getIsbn());
 					matrizTabla[i][3] = Integer.toString(compras.get(i).getCantidadLibros());
 					matrizTabla[i][4] = Float.toString(compras.get(i).getPrecioCompra());
@@ -338,7 +323,6 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 			cargarAutores();
 			cargarGeneros();
 		} catch (GestorException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -434,7 +418,7 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 			ArrayList<String> generosPref = genreInterface.listarGenerosPreferidos(user.getUserName());
 			for (int i = 0; i < generosPref.size(); i++) {
 				for (int j = 0; j < generos.size(); j++) {
-					if (!( generosPref.get(i).equals(generos.get(j))) ) {
+					if (!(generosPref.get(i).equals(generos.get(j)))) {
 						cbxGeneros.addItem(generos.get(j));
 						esta = true;
 					}
@@ -483,9 +467,9 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 						refrescarPreferencias();
 					}
 				} else if (cbxGeneros.getSelectedIndex() == -1 && cbxAutores.getSelectedIndex() != -1) {
-					Author a = authorInterface.buscarAuthor(cbxAutores.getSelectedItem().toString().substring(cbxAutores.getSelectedItem().toString().indexOf(" ") + 1));
-					cambioAutor = authorInterface.insertarAutorPreferido(user.getUserName(),
-							a.getCodAuthor());
+					Author a = authorInterface.buscarAuthor(cbxAutores.getSelectedItem().toString()
+							.substring(cbxAutores.getSelectedItem().toString().indexOf(" ") + 1));
+					cambioAutor = authorInterface.insertarAutorPreferido(user.getUserName(), a.getCodAuthor());
 					if (cambioAutor == 1) {
 						JOptionPane.showMessageDialog(this, "Se ha a�adido un autor favorito");
 						refrescarPreferencias();
@@ -503,7 +487,7 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 
 			}
 		} catch (GestorException e) {
-			e.printStackTrace(); 
+			e.printStackTrace();
 		}
 
 	}
@@ -555,7 +539,5 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 			e.getMessage();
 		}
 	}
-	
-	
-	
+
 }
