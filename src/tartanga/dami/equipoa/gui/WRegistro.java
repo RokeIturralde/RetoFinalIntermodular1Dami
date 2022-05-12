@@ -1,8 +1,8 @@
 package tartanga.dami.equipoa.gui;
 
-import java.awt.EventQueue;
 
 import javax.swing.JDialog;
+
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -20,7 +20,6 @@ import javax.swing.JTextField;
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
 import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IUserController;
-import tartanga.dami.equipoa.dataAccess.IUserControllerDBImplementation;
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
 import tartanga.dami.equipoa.model.Genre;
@@ -127,7 +126,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 		textNombre.setBounds(309, 242, 172, 20);
 		getContentPane().add(textNombre);
 		textNombre.addFocusListener(this);
-
+		
 		JLabel lblApellidos = new JLabel("Apellidos:");
 		lblApellidos.setForeground(Color.WHITE);
 		lblApellidos.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -163,7 +162,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 		textNumtelef.setBounds(309, 335, 172, 20);
 		getContentPane().add(textNumtelef);
 		textNumtelef.addFocusListener(this);
-
+		
 		lblNumCuenta = new JLabel("Numero de cuenta:");
 		lblNumCuenta.setForeground(Color.WHITE);
 		lblNumCuenta.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -350,7 +349,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 			}
 			try {
 				User usr = userInterface.buscarUser(textNombreUsr.getText());
-				if (usr == null && !textNombreUsr.getText().isEmpty()) {
+				if (usr != null && !textNombreUsr.getText().isEmpty()) {
 					textNombreUsr.setText("");
 
 					JOptionPane.showMessageDialog(this, "El nombre de usuario ya esta registrado", "Error",
@@ -393,11 +392,20 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 			if (insertString(50, textCuenta.getText())) {
 				textCuenta.setText("");
 			}
-			if (textCuenta.getText().matches("[a-zA-Z]+")) {
+			try {
+				if(!textCuenta.getText().isEmpty()) {
+					if(Integer.valueOf(textCuenta.getText()) < 0) {
+						JOptionPane.showMessageDialog(this, "No se puede introducir un numero negativo", "Error",
+								JOptionPane.WARNING_MESSAGE);
+						textCuenta.setText("");
+					}
+				}
+			} catch (NumberFormatException e1) {
 				JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros", "Error",
 						JOptionPane.WARNING_MESSAGE);
 				textCuenta.setText("");
 			}
+			
 		}
 		if (e.getSource().equals(textDireccion)) {
 			if (insertString(50, textDireccion.getText())) {
@@ -423,8 +431,16 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 			if (insertString(50, textNumtelef.getText())) {
 				textNumtelef.setText("");
 			}
-			if (textNumtelef.getText().matches("[a-zA-Z]+")) {
-				JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros", "Error",
+			try {
+				if(!textNumtelef.getText().isEmpty()) {
+					if(Integer.valueOf(textNumtelef.getText())<0) {
+						JOptionPane.showMessageDialog(this, "No se pueden introducir un numero negativo", "Error",
+								JOptionPane.WARNING_MESSAGE);
+						textNumtelef.setText("");
+					}
+				}
+			} catch (NumberFormatException e1) {
+				JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros enteros", "Error",
 						JOptionPane.WARNING_MESSAGE);
 				textNumtelef.setText("");
 			}
@@ -433,7 +449,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 
 	public boolean insertString(int maximo, String texto) {
 		if (texto.length() > maximo) {
-			JOptionPane.showMessageDialog(this, "Excedido el limite de caracteres (50)", "Error",
+			JOptionPane.showMessageDialog(this, "Excedido el limite de caracteres ("+maximo+")", "Error",
 					JOptionPane.WARNING_MESSAGE);
 			return true;
 		}
