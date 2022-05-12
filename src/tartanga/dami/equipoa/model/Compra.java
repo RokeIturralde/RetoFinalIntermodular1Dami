@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Compra {
 	private Date fechaCompra;
-	private ArrayList<Author> authors;
+	private String authors;
 	private int isbn;
 	private int cantidadLibros;
 	private float precioCompra;
@@ -16,6 +16,15 @@ public class Compra {
 
 	public void setFechaCompra(Date fechaCompra) {
 		this.fechaCompra = fechaCompra;
+	}
+
+
+	public String getAuthors() {
+		return authors;
+	}
+
+	public void setAuthors(String authors) {
+		this.authors = authors;
 	}
 
 	public int getIsbn() {
@@ -40,15 +49,6 @@ public class Compra {
 
 	public void setPrecioCompra(float precioCompra) {
 		this.precioCompra = precioCompra;
-	}
-
-	public ArrayList<Author> getAuthors() {
-		return authors;
-	}
-
-	public void setAuthors(ArrayList<Author> authors) {
-		this.authors = authors;
-	}
-	
+	}	
 
 }

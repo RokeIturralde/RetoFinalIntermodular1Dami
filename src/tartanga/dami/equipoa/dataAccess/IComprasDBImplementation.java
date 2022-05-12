@@ -37,6 +37,7 @@ public class IComprasDBImplementation implements IComprasController {
 			con.close();
 	}
 
+	// Sacar informacion de la compra, menos los autores
 	@Override
 	public ArrayList<Compra> historialCompras(String username) throws GestorException {
 		ResultSet rs;
@@ -44,25 +45,29 @@ public class IComprasDBImplementation implements IComprasController {
 		ArrayList<Compra> compras = new ArrayList();
 
 		// Abrir conexion con BD
-
-		String listadoCompras = "select p.purchaseDate,a.name,a.surname,p.isbn,p.quantity,(p.quantity*b.price)-((p.quantity*b.price)*d.discount)/100 from author a, book b, purchase p, discount d,partnerAuthor pa where p.username= ? and pa.username=p.username and p.isbn=b.isbn and pa.codAuthor=a.codAuthor and b.idDiscount=d.idDiscount";
+		// String listadoCompras = "select
+		// p.purchaseDate,p.isbn,p.quantity,(p.quantity*b.price)-((p.quantity*b.price)*d.discount)/100
+		// from author a, book b, purchase p, discount d,partnerAuthor pa where
+		// p.username= ? and pa.username=p.username and p.isbn=b.isbn and
+		// pa.codAuthor=a.codAuthor and b.idDiscount=d.idDiscount";
+		String listadoCompras = "select p.purchaseDate,GROUP_CONCAT(distinct a.name,a.surname) as authors,p.isbn,p.quantity,(p.quantity*b.price)-((p.quantity*b.price)*d.discount)/100 from author a, book b, purchase p, discount d,partnerAuthor pa where p.username=? and pa.username=p.username and p.isbn=b.isbn and pa.codAuthor=a.codAuthor and b.idDiscount=d.idDiscount";
 		try {
 			this.openConnection();
 			stmt = con.prepareStatement(listadoCompras);
 			stmt.setString(1, username);
 			rs = stmt.executeQuery();			
 			if(rs.next()) {
+
 				compra = new Compra();
 				compra.setFechaCompra(rs.getDate("p.purchaseDate"));
-				compra.setNombreAutor(rs.getString("a.name"));
-				compra.setApellidoAutor(rs.getString("a.surname"));
 				compra.setIsbn(rs.getInt("p.isbn"));
 				compra.setCantidadLibros(rs.getInt("p.quantity"));
+				compra.setAuthors(rs.getString("authors"));
 				compra.setPrecioCompra(rs.getFloat("(p.quantity*b.price)-((p.quantity*b.price)*d.discount)/100"));
 				compras.add(compra);
 			}
 		} catch (SQLException e) {
-			String error = "Error en la agregacion de datos al Array";
+			String error = "Error en la agregacion de datos al Array de Compras";
 			GestorException exception = new GestorException(error);
 			throw exception;
 		} finally {

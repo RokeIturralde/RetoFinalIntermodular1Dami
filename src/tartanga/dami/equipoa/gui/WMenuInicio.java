@@ -89,7 +89,7 @@ public class WMenuInicio extends JPanel implements MouseListener {
 
 			scrollFav = new JScrollPane();
 			scrollFav.setBounds(25, 100, 420, 325);
-			
+
 			this.add(scrollFav);
 
 			String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
@@ -146,20 +146,20 @@ public class WMenuInicio extends JPanel implements MouseListener {
 		Book book;
 		try {
 			bookSales = bookInterface.listTopSales();
-		}catch (GestorException e) {
-				JOptionPane.showMessageDialog(this, "Error al cargar la tabla", "Aviso", 0);
-				e.printStackTrace();
-			}
-		
+		} catch (GestorException e) {
+			JOptionPane.showMessageDialog(this, "Error al cargar la tabla", "Aviso", 0);
+			e.printStackTrace();
+		}
+
 		libros = new ArrayList<>();
 		ArrayList<Integer> ventas = new ArrayList<>();
 		System.out.println(bookSales.size());
 		for (int i = 0; i < bookSales.size(); i++) {
-			if (i%2 == 0) {
+			if (i % 2 == 0) {
 				try {
 					libros.add(bookInterface.buscarBook(bookSales.get(i)));
 				} catch (GestorException e) {
-				e.printStackTrace();
+					e.printStackTrace();
 				}
 			} else {
 				ventas.add(bookSales.get(i));
@@ -175,7 +175,7 @@ public class WMenuInicio extends JPanel implements MouseListener {
 				matrizTablaSales[i][4] = "comprar";
 			}
 			
-			String[] columNames = { "Posicion", "Titulo", "Autor", "Descripcion", "¿Te interesa?" };
+			String[] columNames = { "Posicion", "Titulo", "Autor", "Descripcion", "Â¿Te interesa?" };
 			
 			tableSales = new JTable(matrizTablaSales, columNames) {
 				
@@ -196,40 +196,43 @@ public class WMenuInicio extends JPanel implements MouseListener {
 						}
 						return true;
 					}
-				};
-	
-	scrollSellers=new JScrollPane();
-	scrollSellers.setBounds(470,100,520,325);
-	
-	this.add(scrollSellers);
-	
+				}
+				return true;
+			}
+		};
 
-	RowsRenderer rRowsRenderer = new RowsRenderer(3);
-	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-	tableSales.setDefaultRenderer(Object.class,rRowsRenderer);
-	tableSales.isCellEditable(listLikedBooks.size(),4);
+		scrollSellers = new JScrollPane();
+		scrollSellers.setBounds(470, 100, 520, 325);
 
-	tableSales.setSelectionBackground(new Color(0,230,168));
-	tableSales.setSelectionForeground(Color.WHITE);
-	tableSales.setRowMargin(0);
-	tableSales.setRowHeight(20);
-	tableSales.setShowHorizontalLines(true);
-	tableSales.setShowVerticalLines(true);
-	scrollSellers.setViewportView(tableSales);
+		this.add(scrollSellers);
 
-	tableSales.addMouseListener(this);
+		RowsRenderer rRowsRenderer = new RowsRenderer(3);
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		tableSales.setDefaultRenderer(Object.class, rRowsRenderer);
+		tableSales.isCellEditable(listLikedBooks.size(), 4);
 
-	// Estilo del header
-	JTableHeader tableHeader = tableSales
-			.getTableHeader();tableHeader.setBackground(new Color(0,191,140));tableHeader.setForeground(Color.WHITE);tableHeader.setBorder(null);tableHeader.setEnabled(false);
+		tableSales.setSelectionBackground(new Color(0, 230, 168));
+		tableSales.setSelectionForeground(Color.WHITE);
+		tableSales.setRowMargin(0);
+		tableSales.setRowHeight(20);
+		tableSales.setShowHorizontalLines(true);
+		tableSales.setShowVerticalLines(true);
+		scrollSellers.setViewportView(tableSales);
+
+		tableSales.addMouseListener(this);
+
+		// Estilo del header
+		JTableHeader tableHeader = tableSales.getTableHeader();
+		tableHeader.setBackground(new Color(0, 191, 140));
+		tableHeader.setForeground(Color.WHITE);
+		tableHeader.setBorder(null);
+		tableHeader.setEnabled(false);
 
 	}
 
-	
-
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		//Mostrar descripcion del libro
+		// Mostrar descripcion del libro
 		if (e.getSource().equals(tableSales)) {
 			if (e.getClickCount() == 2) {
 				if (tableSales.getSelectedColumn() == 3) {
@@ -240,11 +243,11 @@ public class WMenuInicio extends JPanel implements MouseListener {
 			}
 		}
 		if (e.getSource().equals(tableFav)) {
-			if(e.getClickCount()==2) {
-				if(tableFav.getSelectedColumn()==2) {
+			if (e.getClickCount() == 2) {
+				if (tableFav.getSelectedColumn() == 2) {
 					int cual = tableFav.getSelectedRow();
-					JOptionPane.showMessageDialog(this, libros.get(cual).getDescription(), 
-					"Descripcion de la obra", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(this, libros.get(cual).getDescription(), "Descripcion de la obra",
+							JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		}
@@ -257,6 +260,7 @@ public class WMenuInicio extends JPanel implements MouseListener {
 				Book book = libros.get(cual);
 				Compra compra = new Compra();
 				compra.setIsbn(book.getIsbn());
+
 				compra.setCantidadLibros(1);
 				compra.setPrecioCompra(book.getPrice());
 				compra.setCantidadLibros(cantidad);
