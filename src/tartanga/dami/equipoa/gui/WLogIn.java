@@ -11,8 +11,12 @@ import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import javax.swing.UIManager;
 
+
+import tartanga.dami.equipoa.dataAccess.IAuthorBookController;
+
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
 import tartanga.dami.equipoa.dataAccess.IBookController;
+import tartanga.dami.equipoa.dataAccess.IComprasController;
 import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IUserController;
 import tartanga.dami.equipoa.gestorException.GestorException;
@@ -29,7 +33,10 @@ import java.awt.event.KeyListener;
 
 import javax.swing.SwingConstants;
 
+
+
 public class WLogIn extends JFrame implements ActionListener, KeyListener, FocusListener {
+
 	private JTextField textUsuario;
 	private JPasswordField passwordField;
 	private JButton btnRegistrar;
@@ -38,13 +45,19 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 	private IAuthorController authorInterface;
 	private IGenreController genreInterface;
 	private IBookController bookInterface;
+	private IAuthorBookController authorBookInterface;
+	private IComprasController comprasInterface;
 
-	public WLogIn(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface, IBookController bookInterface) {
+
+	public WLogIn(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface, IBookController bookInterface, IAuthorBookController authorBookInterface, IComprasController comprasInterface) {
 		this.userInterface = userInterface;
 		this.authorInterface = authorInterface;
 		this.genreInterface = genreInterface;
 		this.bookInterface = bookInterface;
+		this.authorBookInterface = authorBookInterface;
+		this.comprasInterface = comprasInterface;
 		
+
 		setIconImage(Toolkit.getDefaultToolkit()
 				.getImage(WLogIn.class.getResource("/tartanga/dami/equipoa/resources/Logo.png")));
 		getContentPane().setForeground(UIManager.getColor("textInactiveText"));
@@ -151,11 +164,12 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 			try {
 				User user = userInterface.userLogIn(textUsuario.getText(), pass);
 				if (user != null) {
+					this.dispose();
 					if(user instanceof Administrator) {
 						WAdmin admin = new WAdmin(user, bookInterface, authorInterface, genreInterface, userInterface);
 						admin.setVisible(true);
 					} else {
-						WMenu menu = new WMenu();
+						WMenu menu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface, authorBookInterface, comprasInterface, user);
 						menu.setVisible(true);
 					}
 					textUsuario.setText("");

@@ -12,6 +12,10 @@ public interface IBookController {
 
 	public void altaBook(Book book) throws GestorException;
 
+	public void anadirAuthor(ArrayList<String> codAuthor, int isbn) throws GestorException;
+
+	public void anadirGenre(ArrayList<String> genre, int isbn) throws GestorException;
+
 	public Book buscarBook(int isbn) throws GestorException;
 
 	public int modificarBook(Book book) throws GestorException;
@@ -25,6 +29,8 @@ public interface IBookController {
 	public ArrayList<Book> listBookAuthorGenre(String author, String genre) throws GestorException;
 
 	public ArrayList<Book> listAllBooks() throws GestorException;
+
+	public ArrayList<Integer> listTopSales() throws GestorException;
 
 	public ArrayList<Integer> listDiscount() throws GestorException;
 }

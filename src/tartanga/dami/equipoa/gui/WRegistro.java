@@ -350,7 +350,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 			}
 			try {
 				User usr = userInterface.buscarUser(textNombreUsr.getText());
-				if (usr == null && !textNombreUsr.getText().isEmpty()) {
+				if (usr != null && !textNombreUsr.getText().isEmpty()) {
 					textNombreUsr.setText("");
 
 					JOptionPane.showMessageDialog(this, "El nombre de usuario ya esta registrado", "Error",

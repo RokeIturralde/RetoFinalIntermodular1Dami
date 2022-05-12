@@ -17,7 +17,9 @@ public class IBookControllerDBImplementationTest {
 	private Date fechaPrueba = new Date(2014 - 05 - 06);
 	private Book book;
 	IBookController pruebaLibros = new IBookControllerDBImplementation();
-
+	
+	/*
+>>>>>>> d3813e7e0e1f8bd20d59be1c687093fa6c4e2c4a
 	@Test
 	public void testAltaBook() {
 		try {
@@ -30,6 +32,9 @@ public class IBookControllerDBImplementationTest {
 			e.printStackTrace();
 		}
 	}
+<<<<<<< HEAD
+=======
+	*/
 
 	@Test
 	public void testBuscarBook() {

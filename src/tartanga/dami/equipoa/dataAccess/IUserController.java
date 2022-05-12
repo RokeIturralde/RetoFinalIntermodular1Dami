@@ -1,5 +1,7 @@
 package tartanga.dami.equipoa.dataAccess;
 
+import java.util.ArrayList;
+
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.User;
 
@@ -19,4 +21,7 @@ public interface IUserController {
 	
 	public void anadirGenero(String userName, String genero) throws GestorException;
 	
+	public ArrayList<String> userGenero(String username) throws GestorException;
+	
+	public ArrayList<String> userAuthor(String username) throws GestorException;
 }

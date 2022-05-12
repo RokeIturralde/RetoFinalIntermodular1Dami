@@ -159,14 +159,14 @@ public class IGenreControllerDBImplementation implements IGenreController {
 
 		// Abrir conexion con BD
 		openConnection();
-		String listarGenerosPreferidos = "select genreName from genreauthor where username=?";
+		String listarGenerosPreferidos = "select genreName from partnerGenre where username=?";
 		try {
 			stmt = con.prepareStatement(listarGenerosPreferidos);
 			stmt.setString(1, username);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				genero = new Genre();
-				genero.setGenreName("genreName");
+				genero.setGenreName(rs.getString("genreName"));
 				generos.add(genero.getGenreName());
 			}
 
@@ -175,7 +175,7 @@ public class IGenreControllerDBImplementation implements IGenreController {
 			}
 			closeConnection();
 		} catch (Exception e) {
-			String error = "Error en el listado de generos";
+			String error = "Error en el listado de generos favoritos";
 			GestorException exception = new GestorException(error);
 			throw exception;
 		} finally {
@@ -192,14 +192,14 @@ public class IGenreControllerDBImplementation implements IGenreController {
 
 	@Override
 	public int borrarGenerosPreferidos(String genreCode, String username) throws GestorException {
-		int cambio;
+		int cambio = 0;
 		// Abrir conexion con BD
 		openConnection();
 		String eliminarGeneroPreferido = "DELETE FROM PARTNERGENRE WHERE GENRENAME=? AND USERNAME=?";
 		try {
 			stmt = con.prepareStatement(eliminarGeneroPreferido);
 			stmt.setString(1, genreCode);
-			stmt.setString(1, username);
+			stmt.setString(2, username);
 			cambio = stmt.executeUpdate();
 		} catch (Exception e) {
 			String error = "Error en la eliminacion de un genero preferido";
@@ -229,7 +229,7 @@ public class IGenreControllerDBImplementation implements IGenreController {
 			this.openConnection();
 			stmt = con.prepareStatement(listadoAutores);
 			rs = stmt.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				generos.add(rs.getString("GENRENAME"));
 			}
 
@@ -266,6 +266,7 @@ public class IGenreControllerDBImplementation implements IGenreController {
 		} catch (Exception e) {
 			String error = "Error en la insercion de un genero preferido";
 			GestorException exception = new GestorException(error);
+			e.printStackTrace();
 			throw exception;
 		} finally {
 			try {

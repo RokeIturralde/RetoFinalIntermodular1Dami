@@ -41,7 +41,7 @@ public class IBookControllerDBImplementation implements IBookController {
 	public void altaBook(Book book) throws GestorException {
 		try {
 			this.openConnection();
-			String insertBook = "call insertBook(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			String insertBook = "insert into book values (isbn, title, description, editorial, stock, price, idDiscount, pubDate);(?, ?, ?, ?, ?, ?, ?, ?)";
 			stmt = con.prepareStatement(insertBook);
 			stmt.setInt(1, book.getIsbn());
 			stmt.setString(2, book.getTitle());
@@ -51,8 +51,6 @@ public class IBookControllerDBImplementation implements IBookController {
 			stmt.setFloat(6, book.getPrice());
 			stmt.setInt(7, book.getIdDiscount());
 			stmt.setDate(8, book.getPubDate());
-			stmt.setString(9, book.getAuthor());
-			stmt.setString(10, book.getGenre());
 			stmt.executeUpdate();
 		} catch (SQLException e1) {
 			String error = "Error en la conexion con la base de datos";
@@ -74,8 +72,8 @@ public class IBookControllerDBImplementation implements IBookController {
 		ResultSet rs = null;
 		Book book = null;
 
-		String buscarBook = "select b.*,a.surname as author,a.codAuthor as codAuthor, bg.genreName as genre from book b,bookauthor ba, bookgenre bg, author a "
-				+ "where b.isbn = ? and  b.isbn=ba.isbn and ba.codauthor=a.codauthor and b.isbn=bg.isbn";
+		String buscarBook = "select b.*,a.surname as author,bg.genreName as genre from book b,bookauthor ba, bookgenre bg, author a where b.isbn = ? and  b.isbn=ba.isbn and ba.codauthor=a.codauthor and b.isbn=bg.isbn";
+		String contarAutores = "count";
 		try {
 			this.openConnection();
 			stmt = con.prepareStatement(buscarBook);
@@ -91,9 +89,9 @@ public class IBookControllerDBImplementation implements IBookController {
 				book.setPrice(rs.getFloat("price"));
 				book.setIdDiscount(rs.getInt("idDiscount"));
 				book.setPubDate(rs.getDate("pubdate"));
-				book.setAuthor(rs.getString("codAuthor"));
-				book.setGenre(rs.getString("genre"));
+
 			}
+
 		} catch (SQLException e1) {
 			String error = "Error en la conexion con la base de datos";
 			GestorException exception = new GestorException(error);
@@ -125,8 +123,8 @@ public class IBookControllerDBImplementation implements IBookController {
 			stmt.setFloat(5, book.getPrice());
 			stmt.setInt(6, book.getIdDiscount());
 			stmt.setDate(7, book.getPubDate());
-			stmt.setString(8, book.getAuthor());
-			stmt.setString(9, book.getGenre());
+			// stmt.setString(8, book.getAuthor());
+			// stmt.setString(9, book.getGenre());
 			stmt.setInt(10, book.getIsbn());
 			cuantos = stmt.executeUpdate();
 		} catch (SQLException e1) {
@@ -309,6 +307,7 @@ public class IBookControllerDBImplementation implements IBookController {
 				book.setPrice(rs.getFloat("price"));
 				book.setIdDiscount(rs.getInt("idDiscount"));
 				book.setPubDate(rs.getDate("pubDate"));
+				books.add(book);
 			}
 		} catch (SQLException e1) {
 			String error = "Error en la conexion con la base de datos";
@@ -324,6 +323,40 @@ public class IBookControllerDBImplementation implements IBookController {
 			}
 		}
 		return books;
+
+	}
+
+	@Override
+	public ArrayList<Integer> listTopSales() throws GestorException {
+		ArrayList<Integer> listTopSales = new ArrayList();
+		Book book = null;
+		ResultSet rs = null;
+		String sentence = "SELECT isbn, sum(quantity) as quantity FROM purchase group by isbn order by sum(quantity) desc limit 5";
+
+		try {
+			this.openConnection();
+			stmt = con.prepareStatement(sentence);
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				listTopSales.add(rs.getInt("isbn"));
+				listTopSales.add(rs.getInt("quantity"));
+			}
+			System.out.println(rs.getFetchSize());
+		} catch (SQLException e1) {
+			String error = "Error en la conexion con la base de datos";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e1) {
+				String error = "Error al cerrar la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+
+		}
+		return listTopSales;
 	}
 
 	@Override
@@ -358,4 +391,57 @@ public class IBookControllerDBImplementation implements IBookController {
 		return array;
 	}
 
+	@Override
+	public void anadirAuthor(ArrayList<String> codAuthor, int isbn) throws GestorException {
+		String anadirAuthor = "insert into bookauthor values (?, ?)";
+		for (int i = 0; i < codAuthor.size(); i++) {
+			try {
+				this.openConnection();
+				stmt = con.prepareStatement(anadirAuthor);
+				stmt.setString(1, codAuthor.get(i));
+				stmt.setInt(2, isbn);
+				stmt.executeUpdate();
+			} catch (SQLException e1) {
+				String error = "Error en la insercion de autores";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			} finally {
+				try {
+					this.closeConnection();
+				} catch (SQLException e1) {
+					String error = "Error al cerrar la base de datos";
+					GestorException exception = new GestorException(error);
+					throw exception;
+				}
+			}
+		}
+
+	}
+
+	@Override
+	public void anadirGenre(ArrayList<String> genre, int isbn) throws GestorException {
+		String anadirGenre = "insert into bookgenre values (?, ?)";
+		for (int i = 0; i < genre.size(); i++) {
+			try {
+				this.openConnection();
+				stmt = con.prepareStatement(anadirGenre);
+				stmt.setString(1, genre.get(i));
+				stmt.setInt(2, isbn);
+				stmt.executeUpdate();
+			} catch (SQLException e1) {
+				String error = "Error en la insercion de generos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			} finally {
+				try {
+					this.closeConnection();
+				} catch (SQLException e1) {
+					String error = "Error al cerrar la base de datos";
+					GestorException exception = new GestorException(error);
+					throw exception;
+				}
+			}
+		}
+
+	}
 }

@@ -7,6 +7,6 @@ import tartanga.dami.equipoa.model.Compra;
 
 public interface IComprasController {
 
-	public ArrayList<Compra> historialCompras(String genreName) throws GestorException;
+	public ArrayList<Compra> historialCompras(String userName) throws GestorException;
 
 }

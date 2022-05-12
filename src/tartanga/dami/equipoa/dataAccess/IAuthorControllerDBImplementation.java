@@ -6,11 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
-import tartanga.dami.equipoa.model.Genre;
 
 public class IAuthorControllerDBImplementation implements IAuthorController {
 
@@ -85,7 +83,7 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				autor = new Author();
-				autor.setCodAuthor(codAuthor);
+				autor.setCodAuthor(rs.getString("codAuthor"));
 				autor.setName(rs.getString("name"));
 				autor.setSurname(rs.getString("surname"));
 				autor.setBirthDate(rs.getDate("birthDate"));
@@ -294,6 +292,7 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 		} catch (Exception e) {
 			String error = "Error en la insercion de un autor preferido";
 			GestorException exception = new GestorException(error);
+			e.printStackTrace();
 			throw exception;
 		} finally {
 			try {
@@ -315,15 +314,16 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 
 		// Abrir conexion con BD
 
-		String listadoAutores = "SELECT CODAUTHOR,SURNAME FROM AUTHOR";
+		String listadoAutores = "SELECT CODAUTHOR,SURNAME,NAME FROM AUTHOR";
 		try {
 			this.openConnection();
 			stmt = con.prepareStatement(listadoAutores);
 			rs = stmt.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				autor = new Author();
 				autor.setCodAuthor(rs.getString("CODAUTHOR"));
 				autor.setSurname(rs.getString("SURNAME"));
+				autor.setName(rs.getString("NAME"));
 				autores.add(autor);
 			}
 
@@ -346,4 +346,28 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 		return autores;
 	}
 
+	/*
+	 * @Override public ArrayList<Author>
+	 * listarAutoresNoPreferidos(ArrayList<Author> autoresPreferidos) throws
+	 * GestorException { ResultSet rs = null; ArrayList<Author> autores = new
+	 * ArrayList<>(); Author autor = null;
+	 * 
+	 * // Abrir conexion con BD
+	 * 
+	 * String listadoAutores =
+	 * "SELECT CODAUTHOR,SURNAME,NAME FROM AUTHOR WHERE NAME!=? AND SURNAME!=?"; try
+	 * { this.openConnection(); stmt = con.prepareStatement(listadoAutores);
+	 * stmt.setString(1, autoresPreferidos.get(i).getName()); rs =
+	 * stmt.executeQuery(); while (rs.next()) { autor = new Author();
+	 * autor.setCodAuthor(rs.getString("CODAUTHOR"));
+	 * autor.setSurname(rs.getString("SURNAME"));
+	 * autor.setName(rs.getString("NAME")); autores.add(autor); }
+	 * 
+	 * if (rs != null) { rs.close(); } } catch (SQLException e) { String error =
+	 * "Error en el listado de los Autores"; GestorException exception = new
+	 * GestorException(error); throw exception; } finally { try {
+	 * this.closeConnection(); } catch (SQLException e) { String error =
+	 * "Error al cerrar conexion con la base de datos"; GestorException exception =
+	 * new GestorException(error); throw exception; } } return autores; }
+	 */
 }

@@ -2,6 +2,7 @@ package tartanga.dami.equipoa.model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
 
 public class Book implements Serializable{
 	private int isbn;
@@ -12,8 +13,8 @@ public class Book implements Serializable{
 	private float price;
 	private int idDiscount;
 	private Date pubDate;
-	private String author;
-	private String genre;
+	private ArrayList<String> authors;
+	private ArrayList<String> genres;
 
 	public Book() {
 		super();
@@ -101,20 +102,23 @@ public class Book implements Serializable{
 	public void setPubDate(Date pubDate) {
 		this.pubDate = pubDate;
 	}
+
+	public ArrayList<String> getAuthors() {
+		return authors;
+	}
+
+	public void setAuthors(ArrayList<String> authors) {
+		this.authors = authors;
+	}
+
+	public ArrayList<String> getGenres() {
+		return genres;
+	}
+
+	public void setGenres(ArrayList<String> genres) {
+		this.genres = genres;
+	}
 	
-	public String getAuthor() {
-		return author;
-	}
 
-	public void setAuthor(String author) {
-		this.author = author;
-	}
 
-	public String getGenre() {
-		return genre;
-	}
-
-	public void setGenre(String genre) {
-		this.genre = genre;
-	}
 }

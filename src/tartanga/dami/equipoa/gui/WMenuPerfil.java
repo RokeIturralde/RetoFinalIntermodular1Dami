@@ -5,6 +5,7 @@ import javax.swing.JScrollPane;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.JComboBox;
 
-public class VMenuPerfil extends JPanel implements ActionListener {
+public class WMenuPerfil extends JPanel implements ActionListener {
 	private JTextField txtNombre;
 	private JTextField txtContrasenna;
 	private JTextField txtEmail;
@@ -48,24 +49,24 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 	private JTextField txtApellido;
 	private JScrollPane scrollPane;
 	private JTable tableHistorialCompras;
-	private JLabel lblAutor;
-	private JLabel lblGenero;
-	private JComboBox cbxGeneros;
-	private JComboBox cbxAutores;
-	private JList listGeneros;
-	private JList listAutores;
+	private JLabel lblAutor, lblGenero;
+	private JComboBox cbxGeneros, cbxAutores;
+	private JList listGeneros, listAutores;
 	// Listas para el JList
 	private ArrayList<Author> autores;
 	private ArrayList<String> generos;
-	private Partner user;
+	private User user;
+	private DefaultListModel modelo2, modelo;
 
-	public VMenuPerfil(IUserController userInterface, IAuthorController authorInterface,
-			IGenreController genreInterface, IComprasController comprasInterface, Partner user) {
+	public WMenuPerfil(IUserController userInterface, IAuthorController authorInterface,
+			IGenreController genreInterface, IComprasController comprasInterface, User user) {
 		setLayout(null);
 		this.userInterface = userInterface;
 		this.authorInterface = authorInterface;
 		this.user = user;
 		this.genreInterface = genreInterface;
+
+		setBounds(100, 300, 520, 12);
 
 		btnModificarDatos = new JButton("Modificar Datos");
 		btnModificarDatos.setBounds(32, 25, 118, 35);
@@ -115,7 +116,7 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 		add(lblTelefono);
 
 		JLabel lblNumCuenta = new JLabel("Numero de Cuenta");
-		lblNumCuenta.setBounds(32, 320, 106, 29);
+		lblNumCuenta.setBounds(10, 320, 128, 29);
 		add(lblNumCuenta);
 
 		JLabel lblNewLabel = new JLabel("Preferencias Personales");
@@ -164,7 +165,7 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 		add(lblHistorialCompra);
 
 		JPanel panelHistorialCompra = new JPanel();
-		panelHistorialCompra.setBounds(506, 76, 370, 319);
+		panelHistorialCompra.setBounds(454, 76, 490, 319);
 		add(panelHistorialCompra);
 
 		// Cargar los datos del Usuario
@@ -180,7 +181,7 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 		txtDireccion.setEditable(false);
 		txtTelefono.setText(Integer.toString(user.getPhone()));
 		txtTelefono.setEditable(false);
-		txtNumCuenta.setText(Integer.toString(user.getNumAccount()));
+		txtNumCuenta.setText(Integer.toString(((Partner) user).getNumAccount()));
 		txtNumCuenta.setEditable(false);
 
 		// Listas de Autores Preferidos
@@ -191,12 +192,13 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 		JLabel lblGeneros = new JLabel("Generos");
 		lblGeneros.setBounds(217, 381, 106, 35);
 		add(lblGeneros);
+
 		try {
 			autores = authorInterface.listarAutoresPreferidos(user.getUserName());
 			generos = genreInterface.listarGenerosPreferidos(user.getUserName());
 
 			listAutores = new JList();
-			DefaultListModel modelo = new DefaultListModel();
+			modelo = new DefaultListModel();
 			for (int i = 0; i < autores.size(); i++) {
 				modelo.addElement(autores.get(i).getName() + " " + autores.get(i).getSurname());
 			}
@@ -208,7 +210,7 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 
 			// Inicializamos la Lista de Generos Preferidos
 			listGeneros = new JList();
-			DefaultListModel modelo2 = new DefaultListModel();
+			modelo2 = new DefaultListModel();
 			for (int i = 0; i < generos.size(); i++) {
 				modelo2.addElement(generos.get(i));
 			}
@@ -245,15 +247,15 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 				String matrizTabla[][] = new String[compras.size()][5];
 				for (int i = 0; i < compras.size(); i++) {
 					matrizTabla[i][0] = compras.get(i).getFechaCompra().toString();
-					// Sacar los autores de ese libro comprado
-					matrizTabla[i][1] = compras.get(i).getAuthors().toString();
+					// Sacar los autores de ese libro comprado (Necesitamos ArrayList)
+					matrizTabla[i][1] = compras.get(i).getAuthors();
 					matrizTabla[i][2] = Integer.toString(compras.get(i).getIsbn());
 					matrizTabla[i][3] = Integer.toString(compras.get(i).getCantidadLibros());
-					matrizTabla[i][1] = Float.toString(compras.get(i).getPrecioCompra());
+					matrizTabla[i][4] = Float.toString(compras.get(i).getPrecioCompra());
 				}
 
 				scrollPane = new JScrollPane();
-				scrollPane.setBounds(506, 76, 370, 389);
+				scrollPane.setBounds(25, 209, 583, 125);
 				panelHistorialCompra.add(scrollPane);
 
 				String titulos[] = { "Fecha", "Autor", "Isbn", "Cantidad", "Precio" };
@@ -265,8 +267,8 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 				tableHistorialCompras.setRowMargin(0);
 				tableHistorialCompras.setRowHeight(22);
 				tableHistorialCompras.setShowVerticalLines(false);
+				scrollPane.setViewportView(tableHistorialCompras);
 				tableHistorialCompras.setFont(new Font("Tahoma", Font.PLAIN, 12));
-				tableHistorialCompras.add(tableHistorialCompras);
 
 				JTableHeader tableHeader = tableHistorialCompras.getTableHeader();
 				tableHeader.setBackground(new Color(0, 191, 140));
@@ -300,8 +302,32 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 
 	}
 
+	// Refrescar los datos modificados
+	public void refrescarPreferencias() {
+		try {
+			modelo.clear();
+			modelo2.clear();
+			ArrayList<String> generosPreferidos = genreInterface.listarGenerosPreferidos(user.getUserName());
+			ArrayList<Author> autoresPreferidos = authorInterface.listarAutoresPreferidos(user.getUserName());
+			for (int i = 0; i < autoresPreferidos.size(); i++) {
+				modelo.addElement(autoresPreferidos.get(i).getName() + " " + autoresPreferidos.get(i).getSurname());
+			}
+			for (int i = 0; i < generosPreferidos.size(); i++) {
+				modelo2.addElement(generosPreferidos.get(i));
+			}
+			cbxAutores.removeAllItems();
+			cbxGeneros.removeAllItems();
+			cargarAutores();
+			cargarGeneros();
+		} catch (GestorException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
 	// Eliminar preferencias personales de la base de datos (JList se verá igual)
-	private void borrarPreferencia(ArrayList<Author> autores, Partner user, ArrayList<String> generos) {
+	private void borrarPreferencia(ArrayList<Author> autores, User user, ArrayList<String> generos) {
 		int cambio, confirmacion, posicion, posicion2;
 
 		confirmacion = JOptionPane.showConfirmDialog(this, "Quieres eliminar la preferencia seleccionada?", "Aviso", 0);
@@ -316,7 +342,7 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 					if (cambio == 1) {
 						JOptionPane.showMessageDialog(this,
 								"Se han modificado los cambios de Autores preferidos, en el siguiente inicio de sesion los cambios estaran actualizados");
-
+						refrescarPreferencias();
 					}
 					// Si solo se ha seleccionado la lista de los Generos
 				} else if (posicion == -1) {
@@ -324,6 +350,7 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 					if (cambio == 1) {
 						JOptionPane.showMessageDialog(this,
 								"Se han modificado los cambios de Generos preferidos, en el siguiente inicio de sesion los cambios estaran actualizados");
+						refrescarPreferencias();
 					}
 					// Si las dos listas han sido seleccionadas
 				} else {
@@ -336,14 +363,17 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 					if (cambioAutor == 1 && cambioGenero == 1) {
 						JOptionPane.showMessageDialog(this,
 								"Se han modificado los cambios de Autores y de Generos preferidos, en el siguiente inicio de sesion los cambios estaran actualizados");
+						refrescarPreferencias();
 						// Los cambios solo se hacen en Autor
 					} else if (cambioAutor == 1 && cambioGenero == 0) {
 						JOptionPane.showMessageDialog(this,
 								"Se han modificado los cambios de Autores preferidos, pero no de Generos, en el siguiente inicio de sesion los cambios estaran actualizados");
+						refrescarPreferencias();
 						// Los cambios solo se hacen en Genero
 					} else {
 						JOptionPane.showMessageDialog(this,
 								"Se han modificado los cambios de Generos preferidos, pero no de Autor, en el siguiente inicio de sesion los cambios estaran actualizados");
+						refrescarPreferencias();
 					}
 				}
 
@@ -355,10 +385,20 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 
 	private void cargarAutores() {
 		ArrayList<Author> autores;
+		boolean esta = false;
 		try {
 			autores = authorInterface.listarAutores();
-			for (int i = 0; i < autores.size(); i++) {
-				cbxAutores.addItem(autores.get(i).getSurname());
+			ArrayList<Author> autoresPref = authorInterface.listarAutoresPreferidos(user.getUserName());
+			for (int i = 0; i < autoresPref.size(); i++) {
+				for (int j = 0; j < autores.size(); j++) {
+					if (autoresPref.get(i).getCodAuthor() != autores.get(j).getCodAuthor()) {
+						cbxAutores.addItem(autores.get(i).getName() + " " + autores.get(i).getSurname());
+						esta = true;
+					}
+					if (esta) {
+						j = autores.size();
+					}
+				}
 			}
 			cbxAutores.setSelectedIndex(-1);
 
@@ -370,12 +410,22 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 
 	private void cargarGeneros() {
 		ArrayList<String> generos;
+		boolean esta = false;
 		try {
 			generos = genreInterface.listarGeneros();
-			for (int i = 0; i < generos.size(); i++) {
-				cbxGeneros.addItem(generos.get(i));
+			ArrayList<String> generosPref = genreInterface.listarGenerosPreferidos(user.getUserName());
+			for (int i = 0; i < generosPref.size(); i++) {
+				for (int j = 0; j < generos.size(); j++) {
+					if (!( generosPref.get(i).equals(generos.get(j))) ) {
+						cbxGeneros.addItem(generos.get(j));
+						esta = true;
+					}
+					if (esta) {
+						j = generos.size();
+					}
+				}
 			}
-			cbxAutores.setSelectedIndex(-1);
+			cbxGeneros.setSelectedIndex(-1);
 
 		} catch (GestorException e) {
 			e.printStackTrace();
@@ -399,25 +449,43 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 			} else if (cantidadAutores < 3 && cantidadGeneros == 3) {
 				JOptionPane.showMessageDialog(this,
 						"Solo se han añadido preferencias de autor, ya tienes 3 generos preferidos, no puedes añadir mas, elimine preferencias actuales para poder añadir nuevas");
+				refrescarPreferencias();
 				// Tiene el maximo de preferencias en autores, pero no en generos
 			} else if (cantidadAutores == 3 && cantidadGeneros < 3) {
 				JOptionPane.showMessageDialog(this,
 						"Solo se han añadido preferencias de genero, ya tienes 3 autores preferidos, no puedes añadir mas, elimine preferencias actuales para poder añadir nuevas");
+				refrescarPreferencias();
 			} else {
 				autoresCombo = authorInterface.listarAutores();
-				cambioAutor = authorInterface.insertarAutorPreferido(user.getUserName(),
-						autoresCombo.get(cbxAutores.getSelectedIndex()).getCodAuthor());
-				cambioGenero = genreInterface.insertarGeneroPreferido(user.getUserName(),
-						generos.get(cbxGeneros.getSelectedIndex()));
-				if (cambioAutor == 1 && cambioGenero == 1) {
-					JOptionPane.showMessageDialog(this,
-							"Se han añadido tanto un autor como un genero favorito, en el siguiente inicio de sesion se actualizaran los datos");
+				if (cbxAutores.getSelectedIndex() == -1 && cbxGeneros.getSelectedIndex() != -1) {
+					cambioGenero = genreInterface.insertarGeneroPreferido(user.getUserName(),
+							generos.get(cbxGeneros.getSelectedIndex()));
+					if (cambioGenero == 1) {
+						JOptionPane.showMessageDialog(this, "Se ha añadido un genero favorito");
+						refrescarPreferencias();
+					}
+				} else if (cbxGeneros.getSelectedIndex() == -1 && cbxAutores.getSelectedIndex() != -1) {
+					Author a = authorInterface.buscarAuthor(cbxAutores.getSelectedItem().toString().substring(cbxAutores.getSelectedItem().toString().indexOf(" ") + 1));
+					cambioAutor = authorInterface.insertarAutorPreferido(user.getUserName(),
+							a.getCodAuthor());
+					if (cambioAutor == 1) {
+						JOptionPane.showMessageDialog(this, "Se ha añadido un autor favorito");
+						refrescarPreferencias();
+					}
 				} else {
-					JOptionPane.showMessageDialog(this, "No puedes introducir una preferencia que ya este introducida");
+					cambioGenero = genreInterface.insertarGeneroPreferido(user.getUserName(),
+							cbxGeneros.getSelectedItem().toString());
+					cambioAutor = authorInterface.insertarAutorPreferido(user.getUserName(),
+							autoresCombo.get(cbxAutores.getSelectedIndex() + 1).getCodAuthor());
+					if (cambioAutor == 1 && cambioGenero == 1) {
+						JOptionPane.showMessageDialog(this, "Se han añadido tanto un autor como un genero favorito");
+						refrescarPreferencias();
+					}
 				}
+
 			}
 		} catch (GestorException e) {
-			e.printStackTrace();
+			e.printStackTrace(); 
 		}
 
 	}
@@ -444,6 +512,8 @@ public class VMenuPerfil extends JPanel implements ActionListener {
 		txtDireccion.setEditable(false);
 		txtTelefono.setEditable(false);
 		txtNumCuenta.setEditable(false);
+		btnAnnadirPreferencia.setEnabled(false);
+		btnBorrarPreferencias.setEnabled(false);
 
 		user = new Partner();
 		user.setName(txtNombre.getText());

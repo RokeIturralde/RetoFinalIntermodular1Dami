@@ -303,8 +303,8 @@ public class WAdmin extends JDialog implements ActionListener, FocusListener {
 					book.setStock(Integer.valueOf(textStock.getText()));
 					book.setPrice(Float.valueOf(textPrecio.getText()));
 					book.setIdDiscount(Integer.valueOf(comboBoxDescuento.getSelectedItem().toString()));
-					book.setAuthor(textAutor.getText());
-					book.setGenre(textGenero.getText());
+					// book.setAuthor(textAutor.getText());
+					// book.setGenre(textGenero.getText());
 					Date fecha = new Date(calendario.getDate().getTime());
 					book.setPubDate(fecha);
 					bookInterface.altaBook(book);
@@ -348,8 +348,8 @@ public class WAdmin extends JDialog implements ActionListener, FocusListener {
 						book.setStock(Integer.valueOf(textStock.getText()));
 						book.setPrice(Float.valueOf(textPrecio.getText()));
 						book.setIdDiscount(Integer.valueOf(comboBoxDescuento.getSelectedItem().toString()));
-						book.setAuthor(textAutor.getText());
-						book.setGenre(textGenero.getText());
+						// book.setAuthor(textAutor.getText());
+						// book.setGenre(textGenero.getText());
 						Date fecha = new Date(calendario.getDate().getTime());
 						book.setPubDate(fecha);
 						bookInterface.modificarBook(book);
@@ -461,8 +461,8 @@ public class WAdmin extends JDialog implements ActionListener, FocusListener {
 
 							textIsbn.setText(String.valueOf(book.getIsbn()));
 							textIsbn.setEnabled(false);
-							textAutor.setText(book.getAuthor());
-							textGenero.setText(book.getGenre());
+							// textAutor.setText(book.getAuthor());
+							// textGenero.setText(book.getGenre());
 							textDescripcion.setText(book.getDescription());
 							textEditorial.setText(book.getEditorial());
 							textPrecio.setText(String.valueOf(book.getPrice()));
@@ -506,7 +506,8 @@ public class WAdmin extends JDialog implements ActionListener, FocusListener {
 			try {
 				Author author = authorInterface.buscarAuthor(textAutor.getText());
 				if (author == null && !textAutor.getText().isEmpty()) {
-					int seleccion = JOptionPane.showConfirmDialog(libros, "Ese autor no existe quieres añadirlo?", "Aviso", 0);
+					int seleccion = JOptionPane.showConfirmDialog(libros, "Ese autor no existe quieres añadirlo?",
+							"Aviso", 0);
 					if (seleccion == 0) {
 						tabbedPane.setSelectedIndex(1);
 					} else {
