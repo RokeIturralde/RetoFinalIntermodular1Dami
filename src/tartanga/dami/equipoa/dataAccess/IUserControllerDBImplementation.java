@@ -300,7 +300,7 @@ public class IUserControllerDBImplementation implements IUserController {
 		ResultSet rs = null;
 		
 		try {
-			this.openConnection();
+			con = connection.openConnection();
 			stmt = con.prepareStatement(buscarGenero);
 			stmt.setString(1, username);
 			rs = stmt.executeQuery();
@@ -316,7 +316,7 @@ public class IUserControllerDBImplementation implements IUserController {
 			throw exception;
 		} finally {
 			try {
-				this.closeConnection();
+				connection.closeConnection(stmt, con);
 			} catch (SQLException e) {
 				String error = "Error al cerrar conexion con la base de datos";
 				GestorException exception = new GestorException(error);
@@ -333,7 +333,7 @@ public class IUserControllerDBImplementation implements IUserController {
 		ResultSet rs = null;
 		
 		try {
-			this.openConnection();
+			con = connection.openConnection();
 			stmt = con.prepareStatement(buscarTitulo);
 			stmt.setString(1, username);
 			rs = stmt.executeQuery();
@@ -349,7 +349,7 @@ public class IUserControllerDBImplementation implements IUserController {
 			throw exception;
 		} finally {
 			try {
-				this.closeConnection();
+				connection.closeConnection(stmt, con);
 			} catch (SQLException e) {
 				String error = "Error al cerrar conexion con la base de datos";
 				GestorException exception = new GestorException(error);

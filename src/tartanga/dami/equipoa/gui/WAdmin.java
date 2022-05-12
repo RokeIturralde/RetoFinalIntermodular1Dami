@@ -5,8 +5,10 @@ import java.awt.EventQueue;
 import javax.swing.JDialog;
 import javax.swing.JTextArea;
 
+import tartanga.dami.equipoa.dataAccess.IAuthorBookController;
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
 import tartanga.dami.equipoa.dataAccess.IBookController;
+import tartanga.dami.equipoa.dataAccess.IComprasController;
 import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IUserController;
 import tartanga.dami.equipoa.gestorException.GestorException;
@@ -52,6 +54,8 @@ public class WAdmin extends JDialog implements MouseListener {
 	private IAuthorController authorInterface;
 	private IGenreController genreInterface;
 	private IUserController userInterface;
+	private IComprasController comprasInterface;
+	private IAuthorBookController authorBookInterface;
 	private JTabbedPane tabbedPane;
 	private JPanel libros;
 	private JPanel autores;
@@ -61,11 +65,13 @@ public class WAdmin extends JDialog implements MouseListener {
 	private JLabel lblIconoCerrar;
 
 	public WAdmin(User user, IBookController bookInterface, IAuthorController authorInterface,
-			IGenreController genreInterface, IUserController userInterface) {
+			IGenreController genreInterface, IUserController userInterface, IAuthorBookController authorBookInterface, IComprasController comprasInterface) {
 		this.authorInterface = authorInterface;
 		this.bookInterface = bookInterface;
 		this.genreInterface = genreInterface;
 		this.userInterface = userInterface;
+		this.comprasInterface = comprasInterface;
+		this.authorBookInterface = authorBookInterface;
 
 		getContentPane().setBackground(Color.DARK_GRAY);
 		setBounds(100, 100, 1047, 680);
@@ -152,7 +158,7 @@ public class WAdmin extends JDialog implements MouseListener {
 		int seleccion = JOptionPane.showConfirmDialog(libros, "Estas seguro que quieres cerrar sesion?", "Aviso", 0);
 		if(seleccion == 0) {
 			this.dispose();
-			WLogIn login = new WLogIn(userInterface, authorInterface, genreInterface, bookInterface);
+			WLogIn login = new WLogIn(userInterface, authorInterface, genreInterface, bookInterface, authorBookInterface, comprasInterface);
 			login.setVisible(true);
 		}
 	}

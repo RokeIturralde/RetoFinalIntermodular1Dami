@@ -341,7 +341,7 @@ public class IBookControllerDBImplementation implements IBookController {
 		String sentence = "SELECT isbn, sum(quantity) as quantity FROM purchase group by isbn order by sum(quantity) desc limit 5";
 
 		try {
-			this.openConnection();
+			con = connection.openConnection();
 			stmt = con.prepareStatement(sentence);
 			rs = stmt.executeQuery();
 			if (rs.next()) {
@@ -355,7 +355,7 @@ public class IBookControllerDBImplementation implements IBookController {
 			throw exception;
 		} finally {
 			try {
-				this.closeConnection();
+				connection.closeConnection(stmt, con);
 			} catch (SQLException e1) {
 				String error = "Error al cerrar la base de datos";
 				GestorException exception = new GestorException(error);

@@ -166,7 +166,7 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 				if (user != null) {
 					this.dispose();
 					if(user instanceof Administrator) {
-						WAdmin admin = new WAdmin(user, bookInterface, authorInterface, genreInterface, userInterface);
+						WAdmin admin = new WAdmin(user, bookInterface, authorInterface, genreInterface, userInterface, authorBookInterface, comprasInterface);
 						admin.setVisible(true);
 					} else {
 						WMenu menu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface, authorBookInterface, comprasInterface, user);
