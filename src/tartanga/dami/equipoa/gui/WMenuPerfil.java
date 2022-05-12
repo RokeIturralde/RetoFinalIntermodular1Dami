@@ -18,11 +18,13 @@ import javax.swing.ListModel;
 import javax.swing.table.JTableHeader;
 
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
+import tartanga.dami.equipoa.dataAccess.IBookController;
 import tartanga.dami.equipoa.dataAccess.IComprasController;
 import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IUserController;
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
+import tartanga.dami.equipoa.model.Book;
 import tartanga.dami.equipoa.model.Compra;
 import tartanga.dami.equipoa.model.Partner;
 import tartanga.dami.equipoa.model.User;
@@ -39,6 +41,7 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 	private JTextField txtTelefono;
 	private JTextField txtNumCuenta;
 	private IUserController userInterface;
+	private IBookController bookInterface;
 
 	private JButton btnGuardarCambios;
 	private JButton btnModificarDatos;
@@ -195,13 +198,27 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 		 */
 
 		// Creacion tabla del historial de compra
+		String nombreApellidos = "";
 		try {
 			ArrayList<Compra> compras = comprasInterface.historialCompras(user.getUserName());
 			if (compras.size() > 0) {
 				String matrizTabla[][] = new String[compras.size()][5];
 				for (int i = 0; i < compras.size(); i++) {
+						Book book;
+						try {
+							book = bookInterface.buscarBook(compras.get(i).getIsbn());
+							for(int j = 0; i<book.getAuthors().size();j++) {
+								Author author = authorInterface.buscarAuthor(book.getAuthors().get(j));
+								nombreApellidos += author.getName();
+								nombreApellidos+=" "+author.getSurname();
+								if(j<book.getAuthors().size())
+									nombreApellidos+=", ";}
+							}  catch (GestorException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 					matrizTabla[i][0] = compras.get(i).getFechaCompra().toString();
-					matrizTabla[i][1] = compras.get(i).getNombreAutor() + " " + compras.get(i).getApellidoAutor();
+					matrizTabla[i][1] = nombreApellidos;
 					matrizTabla[i][2] = Integer.toString(compras.get(i).getIsbn());
 					matrizTabla[i][3] = Integer.toString(compras.get(i).getCantidadLibros());
 					matrizTabla[i][4] = Float.toString(compras.get(i).getPrecioCompra());
@@ -309,4 +326,7 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 			e.getMessage();
 		}
 	}
+	
+	
+	
 }
