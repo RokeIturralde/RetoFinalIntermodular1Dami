@@ -50,13 +50,13 @@ public class IComprasDBImplementation implements IComprasController {
 		// from author a, book b, purchase p, discount d,partnerAuthor pa where
 		// p.username= ? and pa.username=p.username and p.isbn=b.isbn and
 		// pa.codAuthor=a.codAuthor and b.idDiscount=d.idDiscount";
-		String listadoCompras = "select p.purchaseDate,GROUP_CONCAT(distinct a.name,\" \",a.surname) as authors,p.isbn,p.quantity,(p.quantity*b.price)-((p.quantity*b.price)*d.discount)/100 from author a, book b, purchase p, discount d,partnerAuthor pa where p.username=? and pa.username=p.username and p.isbn=b.isbn and pa.codAuthor=a.codAuthor and b.idDiscount=d.idDiscount";
+		String listadoCompras = "select p.purchaseDate,GROUP_CONCAT(distinct a.name,\" \",a.surname) as authors,p.isbn,p.quantity,(p.quantity*b.price)-((p.quantity*b.price)*d.discount)/100 from author a, book b, purchase p, discount d,bookAuthor ba where p.username=? and p.isbn=ba.isbn and p.isbn=b.isbn and ba.codAuthor=a.codAuthor and b.idDiscount=d.idDiscount;";
 		try {
 			this.openConnection();
 			stmt = con.prepareStatement(listadoCompras);
 			stmt.setString(1, username);
-			rs = stmt.executeQuery();			
-			if(rs.next()) {
+			rs = stmt.executeQuery();
+			if (rs.next()) {
 
 				compra = new Compra();
 				compra.setFechaCompra(rs.getDate("p.purchaseDate"));
@@ -86,16 +86,16 @@ public class IComprasDBImplementation implements IComprasController {
 	public float calcularPrecio(int isbn) throws GestorException {
 		String sentencia = "select b.price-(b.price*d.discount)/100 as price from book b, discount d where b.isbn = ? and b.idDiscount = d.idDiscount";
 		ResultSet rs;
-		float precio=0;
+		float precio = 0;
 		try {
 			this.openConnection();
 			stmt = con.prepareStatement(sentencia);
 			stmt.setInt(1, isbn);
 			rs = stmt.executeQuery();
-			if(rs.next()) {
-				precio= rs.getInt("price");
+			if (rs.next()) {
+				precio = rs.getInt("price");
 			}
-		}  catch (SQLException e) {
+		} catch (SQLException e) {
 			String error = "Error en la agregacion de datos al Array";
 			GestorException exception = new GestorException(error);
 			throw exception;
@@ -114,7 +114,7 @@ public class IComprasDBImplementation implements IComprasController {
 	@Override
 	public void escribirCompra(Compra compra, String user) throws GestorException {
 		String sentencia = "insert into compra values ?, ?, ?, ?";
-		
+
 		try {
 			this.openConnection();
 			stmt = con.prepareStatement(sentencia);

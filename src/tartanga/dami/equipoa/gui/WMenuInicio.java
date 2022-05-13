@@ -6,6 +6,8 @@ import javax.swing.JScrollPane;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
@@ -32,11 +34,12 @@ import tartanga.dami.equipoa.model.User;
 import javax.swing.JTable;
 import javax.swing.JButton;
 
-public class WMenuInicio extends JPanel implements MouseListener {
+public class WMenuInicio extends JPanel implements MouseListener, ComponentListener {
 	private JTable soloParaTi;
 	private IUserController userInterface;
 	private IBookController bookInterface;
 	private IAuthorController authorInterface;
+	private IAuthorBookController authorBookInterface;
 	private User user;
 	private JTable tableFav;
 	private ArrayList<AuthorBook> listLikedBooks;
@@ -50,6 +53,7 @@ public class WMenuInicio extends JPanel implements MouseListener {
 	public WMenuInicio(IUserController userInterface, IBookController bookInterface, IAuthorController authorInterface,
 			User user, IAuthorBookController authorBookInterface, ArrayList<Compra> compras) {
 		setLayout(null);
+		this.authorBookInterface = authorBookInterface;
 
 		setBounds(100, 300, 520, 12);
 
@@ -85,35 +89,32 @@ public class WMenuInicio extends JPanel implements MouseListener {
 				matrizTabla[i][1] = listLikedBooks.get(i).getName() + listLikedBooks.get(i).getSurname();
 				matrizTabla[i][2] = listLikedBooks.get(i).getDescription();
 				matrizTabla[i][3] = Float.toString(listLikedBooks.get(i).getPrice());
-			}
+				scrollFav = new JScrollPane();
+				scrollFav.setBounds(25, 100, 420, 325);
 
-			scrollFav = new JScrollPane();
-			scrollFav.setBounds(25, 100, 420, 325);
+				this.add(scrollFav);
 
-			this.add(scrollFav);
+				String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
 
-			String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
+				// Estilo de la tabla
+				tableFav = new JTable(matrizTabla, columNames) {
 
-			// Estilo de la tabla
-			tableFav = new JTable(matrizTabla, columNames) {
-				/*
-				 * 
-				 */
-				private static final long serialVersionUID = 1L;
+					private static final long serialVersionUID = 1L;
 
-				// ***********************METODO PARA HACER QUE LA TABLA NO SEA EDITABLE, Y ASI
-				// HACER DOBLE CLICK************************************
-				// Para ello sobreescribimos el metodo que ya tiene la clase
-				// JTable.isCellEditable
-				public boolean isCellEditable(int row, int column) {
-					for (int i = 0; i < tableFav.getRowCount(); i++) {
-						if (row == i) {
-							return false;
+					// ***********************METODO PARA HACER QUE LA TABLA NO SEA EDITABLE, Y ASI
+					// HACER DOBLE CLICK************************************
+					// Para ello sobreescribimos el metodo que ya tiene la clase
+					// JTable.isCellEditable
+					public boolean isCellEditable(int row, int column) {
+						for (int i = 0; i < tableFav.getRowCount(); i++) {
+							if (row == i) {
+								return false;
+							}
 						}
+						return true;
 					}
-					return true;
-				}
-			};
+				};
+			}
 
 			RowsRenderer rRowsRenderer = new RowsRenderer(3);
 			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -138,7 +139,29 @@ public class WMenuInicio extends JPanel implements MouseListener {
 			tableHeader.setEnabled(false);
 
 		} else {
-			JOptionPane.showMessageDialog(this, "Usuario sin libros");
+			// Crear una tabla vacia
+			String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
+
+			// Estilo de la tabla
+			tableFav = new JTable(null, columNames);
+			RowsRenderer rRowsRenderer = new RowsRenderer(3);
+			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+			tableFav.setDefaultRenderer(Object.class, rRowsRenderer);
+
+			tableFav.setSelectionBackground(new Color(0, 230, 168));
+			tableFav.setSelectionForeground(Color.WHITE);
+			tableFav.setRowMargin(0);
+			tableFav.setRowHeight(70);
+			tableFav.setShowHorizontalLines(true);
+			tableFav.setShowVerticalLines(true);
+
+			tableFav.addMouseListener(this);
+			// Estilo del header
+			JTableHeader tableHeader = tableFav.getTableHeader();
+			tableHeader.setBackground(new Color(0, 191, 140));
+			tableHeader.setForeground(Color.WHITE);
+			tableHeader.setBorder(null);
+			tableHeader.setEnabled(false);
 		}
 
 		// Tabla de Best Sellers
@@ -167,7 +190,7 @@ public class WMenuInicio extends JPanel implements MouseListener {
 		}
 
 		String matrizTablaSales[][] = new String[ventas.size()][5];
-		String autores="";
+		String autores = "";
 		for (int i = 0; i < libros.size(); i++) {
 			try {
 				autores = bookInterface.listAuthorsIsbn(libros.get(i).getIsbn());
@@ -184,10 +207,6 @@ public class WMenuInicio extends JPanel implements MouseListener {
 		String[] columNames = { "Posicion", "Titulo", "Autor", "Descripcion", "¿Te interesa?" };
 
 		tableSales = new JTable(matrizTablaSales, columNames) {
-
-			/*
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 
 			// ***********************METODO PARA HACER QUE LA TABLA NO SEA EDITABLE, Y ASI
@@ -195,7 +214,7 @@ public class WMenuInicio extends JPanel implements MouseListener {
 			// Para ello sobreescribimos el metodo que ya tiene la clase
 			// JTable.isCellEditable
 			public boolean isCellEditable(int row, int column) {
-				for (int i = 0; i < tableFav.getRowCount(); i++) {
+				for (int i = 0; i < tableSales.getRowCount(); i++) {
 					if (row == i) {
 						return false;
 					}
@@ -214,7 +233,7 @@ public class WMenuInicio extends JPanel implements MouseListener {
 		tableSales.setDefaultRenderer(Object.class, rRowsRenderer);
 		tableSales.isCellEditable(listLikedBooks.size(), 4);
 
-		tableSales.setSelectionBackground(new Color(0, 230, 168));
+		tableSales.setSelectionBackground(new Color(0, 191, 140));
 		tableSales.setSelectionForeground(Color.WHITE);
 		tableSales.setRowMargin(0);
 		tableSales.setRowHeight(20);
@@ -263,7 +282,7 @@ public class WMenuInicio extends JPanel implements MouseListener {
 				int cantidad = Integer.parseInt(
 						JOptionPane.showInputDialog(null, "Introduce el numero de ejemplares que deseas comprar",
 								"Confirma la compra", JOptionPane.PLAIN_MESSAGE));
-				Book book = libros.get(cual+1);
+				Book book = libros.get(cual + 1);
 				Compra compra = new Compra();
 				compra.setIsbn(book.getIsbn());
 				compra.setCantidadLibros(cantidad);
@@ -302,5 +321,123 @@ public class WMenuInicio extends JPanel implements MouseListener {
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void refrescarTablaSoloParaTi() {
+		// Tabla de preferencias personales
+		try {
+			listLikedBooks = authorBookInterface.listAuthorBook(user.getUserName());
+		} catch (GestorException e) {
+			e.printStackTrace();
+		}
+
+		if (listLikedBooks.size() > 0) {
+			String matrizTabla[][] = new String[listLikedBooks.size()][4];
+			for (int i = 0; i < listLikedBooks.size(); i++) {
+				matrizTabla[i][0] = listLikedBooks.get(i).getTitle();
+				matrizTabla[i][1] = listLikedBooks.get(i).getName() + listLikedBooks.get(i).getSurname();
+				matrizTabla[i][2] = listLikedBooks.get(i).getDescription();
+				matrizTabla[i][3] = Float.toString(listLikedBooks.get(i).getPrice());
+				scrollFav = new JScrollPane();
+				scrollFav.setBounds(25, 100, 420, 325);
+
+				this.add(scrollFav);
+
+				String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
+
+				// Estilo de la tabla
+				tableFav = new JTable(matrizTabla, columNames) {
+					/*
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
+
+					// ***********************METODO PARA HACER QUE LA TABLA NO SEA EDITABLE, Y ASI
+					// HACER DOBLE CLICK************************************
+					// Para ello sobreescribimos el metodo que ya tiene la clase
+					// JTable.isCellEditable
+					public boolean isCellEditable(int row, int column) {
+						for (int i = 0; i < tableFav.getRowCount(); i++) {
+							if (row == i) {
+								return false;
+							}
+						}
+						return true;
+					}
+				};
+			}
+
+			RowsRenderer rRowsRenderer = new RowsRenderer(3);
+			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+			tableFav.setDefaultRenderer(Object.class, rRowsRenderer);
+			tableFav.isCellEditable(listLikedBooks.size(), 4);
+
+			tableFav.setSelectionBackground(new Color(0, 230, 168));
+			tableFav.setSelectionForeground(Color.WHITE);
+			tableFav.setRowMargin(0);
+			tableFav.setRowHeight(70);
+			tableFav.setShowHorizontalLines(true);
+			tableFav.setShowVerticalLines(true);
+			scrollFav.setViewportView(tableFav);
+
+			tableFav.addMouseListener(this);
+
+			// Estilo del header
+			JTableHeader tableHeader = tableFav.getTableHeader();
+			tableHeader.setBackground(new Color(0, 191, 140));
+			tableHeader.setForeground(Color.WHITE);
+			tableHeader.setBorder(null);
+			tableHeader.setEnabled(false);
+
+		} else {
+			// Crear una tabla vacia
+			String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
+
+			// Estilo de la tabla
+			tableFav = new JTable(null, columNames);
+			RowsRenderer rRowsRenderer = new RowsRenderer(3);
+			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+			tableFav.setDefaultRenderer(Object.class, rRowsRenderer);
+
+			tableFav.setSelectionBackground(new Color(0, 230, 168));
+			tableFav.setSelectionForeground(Color.WHITE);
+			tableFav.setRowMargin(0);
+			tableFav.setRowHeight(70);
+			tableFav.setShowHorizontalLines(true);
+			tableFav.setShowVerticalLines(true);
+
+			tableFav.addMouseListener(this);
+			// Estilo del header
+			JTableHeader tableHeader = tableFav.getTableHeader();
+			tableHeader.setBackground(new Color(0, 191, 140));
+			tableHeader.setForeground(Color.WHITE);
+			tableHeader.setBorder(null);
+			tableHeader.setEnabled(false);
+		}
+	}
+
+	@Override
+	public void componentResized(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentShown(ComponentEvent e) {
+		if(e.getSource().equals(this)) {
+			refrescarTablaSoloParaTi();
+		}
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
