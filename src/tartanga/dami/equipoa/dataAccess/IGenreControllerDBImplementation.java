@@ -258,4 +258,64 @@ public class IGenreControllerDBImplementation implements IGenreController {
 		return cambio;
 	}
 
+	@Override
+	public String listarGenresIsbn(int isbn) throws GestorException {
+		String genres="";
+		String listGenres = "select GROUP_CONCAT(genreName)as genres from bookGenre where isbn = ? group by isbn";
+		ResultSet rs = null;
+		try {
+			con = connection.openConnection();
+			stmt = con.prepareStatement(listGenres);
+			stmt.setInt(1, isbn);
+			rs = stmt.executeQuery();
+			if(rs.next()) {
+				genres = rs.getString("genres");
+			}
+		 } catch (SQLException e1) {
+			String error = "Error en la conexion con la base de datos";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				connection.closeConnection(stmt, con);
+			} catch (SQLException e1) {
+				String error = "Error al cerrar la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		/*
+		 *String autores="";
+		String listGenres = "select GROUP_CONCAT(distinct a.name,\" \",a.surname) as authors from bookauthor ba, author a where ba.isbn =? and  ba.codAuthor=a.codAuthor;";
+		ResultSet rs = null;
+
+		try {
+			con = connection.openConnection();
+
+			stmt = con.prepareStatement(listGenres);
+
+			stmt.setInt(1, isbn);
+
+			rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				autores = rs.getString("authors");
+			}
+		} catch (SQLException e1) {
+			String error = "Error en la conexion con la base de datos";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				connection.closeConnection(stmt, con);
+			} catch (SQLException e1) {
+				String error = "Error al cerrar la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		 */
+		return null;
+	}
+
 }

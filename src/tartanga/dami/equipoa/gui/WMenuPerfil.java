@@ -8,7 +8,9 @@ import java.awt.Font;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.awt.event.MouseListener;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -33,7 +35,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.JComboBox;
 
-public class WMenuPerfil extends JPanel implements ActionListener {
+public class WMenuPerfil extends JPanel implements ActionListener, MouseListener {
 	private JTextField txtNombre;
 	private JTextField txtContrasenna;
 	private JTextField txtEmail;
@@ -263,7 +265,25 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 
 				String titulos[] = { "Fecha", "Autor", "Isbn", "Cantidad", "Precio" };
 
-				tableHistorialCompras = new JTable(matrizTabla, titulos);
+				tableHistorialCompras = new JTable(matrizTabla, titulos) {
+					/*
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
+
+					// ***********************METODO PARA HACER QUE LA TABLA NO SEA EDITABLE, Y ASI
+					// HACER DOBLE CLICK************************************
+					// Para ello sobreescribimos el metodo que ya tiene la clase
+					// JTable.isCellEditable
+					public boolean isCellEditable(int row, int column) {
+						for (int i = 0; i < tableHistorialCompras.getRowCount(); i++) {
+							if (row == i) {
+								return false;
+							}
+						}
+						return true;
+					}
+				};
 
 				tableHistorialCompras.setSelectionBackground(new Color(0, 230, 168));
 				tableHistorialCompras.setSelectionForeground(Color.WHITE);
@@ -294,7 +314,7 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 			modificarDatos();
 		}
 		if (e.getSource().equals(btnGuardarCambios)) {
-			guardarCambios();
+			guardarCambios(user);
 		}
 		if (e.getSource().equals(btnAnnadirPreferencia)) {
 			annadirPreferencia();
@@ -505,8 +525,8 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 		txtNumCuenta.setEditable(true);
 	}
 
-	private void guardarCambios() {
-		User user;
+	private void guardarCambios(User user) {
+		User userModificado;
 		txtNombre.setEditable(false);
 		txtApellido.setEditable(false);
 		txtContrasenna.setEditable(false);
@@ -514,23 +534,26 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 		txtDireccion.setEditable(false);
 		txtTelefono.setEditable(false);
 		txtNumCuenta.setEditable(false);
+		btnGuardarCambios.setEnabled(false);
 		btnAnnadirPreferencia.setEnabled(false);
 		btnBorrarPreferencias.setEnabled(false);
 
-		user = new Partner();
-		user.setName(txtNombre.getText());
-		user.setSurname(txtApellido.getText());
-		user.setPassword(txtContrasenna.getText());
-		user.setEmail(txtEmail.getText());
-		user.setAddress(txtDireccion.getText());
-		user.setPhone(Integer.parseInt(txtTelefono.getText()));
-		((Partner) user).setNumAccount(Integer.parseInt(txtNumCuenta.getText()));
+		userModificado = new Partner();
+		userModificado.setUserName(user.getUserName());
+		userModificado.setName(txtNombre.getText());
+		userModificado.setSurname(txtApellido.getText());
+		userModificado.setPassword(txtContrasenna.getText());
+		userModificado.setEmail(txtEmail.getText());
+		userModificado.setAddress(txtDireccion.getText());
+		userModificado.setPhone(Integer.parseInt(txtTelefono.getText()));
+		((Partner) userModificado).setNumAccount(Integer.parseInt(txtNumCuenta.getText()));
 
 		try {
-			int modificacion = userInterface.modificarUser(user);
+			int modificacion = userInterface.modificarUser(userModificado);
 
 			if (modificacion == 1) {
 				JOptionPane.showMessageDialog(this, "La modificacion se ha hecho satisfactoriamente");
+
 			} else {
 				JOptionPane.showMessageDialog(this, "Modificacion no realizada");
 			}
@@ -540,4 +563,41 @@ public class WMenuPerfil extends JPanel implements ActionListener {
 		}
 	}
 
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// Mostrar descripcion del libro
+		if (e.getSource().equals(tableHistorialCompras)) {
+			if (e.getClickCount() == 2) {
+				if (tableHistorialCompras.getSelectedColumn() == 3) {
+					int cual = tableHistorialCompras.getSelectedRow();
+					JOptionPane.showMessageDialog(this, listLikedBooks.get(cual).getDescription(),
+							"Descripcion de la obra", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
 }

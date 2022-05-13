@@ -23,4 +23,5 @@ public interface IGenreController {
 
 	public int insertarGeneroPreferido(String username, String genreName) throws GestorException;
 
+	public String listarGenresIsbn(int isbn) throws GestorException;
 }
