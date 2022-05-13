@@ -60,14 +60,6 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 	private JTextField textAutorLibro3;
 	private JTextField textGeneroLibro2;
 	private JTextField textGeneroLibro3;
-	private boolean textoAutor1;
-	private boolean textoAutor2;
-	private boolean textoAutor3;
-	private boolean textoGenero1;
-	private boolean textoGenero2;
-	private boolean textoGenero3;
-	// private JButton btnAnadirAutor;
-	// private JButton btnAnadirGenero;
 
 	public WAdminLibro(IAuthorController authorInterface, IGenreController genreInterface,
 			IBookController bookInterface, JTabbedPane tabbedPane) {
@@ -272,20 +264,6 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 		this.add(lblIconoLibro);
 		btnCancelarLibro.addActionListener(this);
 
-		/*
-		 * btnAnadirGenero = new JButton("A\u00F1adir Genero");
-		 * btnAnadirGenero.setForeground(Color.WHITE);
-		 * btnAnadirGenero.setFocusPainted(false); btnAnadirGenero.setBorder(null);
-		 * btnAnadirGenero.setBackground(Color.GRAY); btnAnadirGenero.setBounds(293,
-		 * 268, 137, 23); add(btnAnadirGenero); btnAnadirGenero.addActionListener(this);
-		 * 
-		 * btnAnadirAutor = new JButton("A\u00F1adir Autor");
-		 * btnAnadirAutor.setForeground(Color.WHITE);
-		 * btnAnadirAutor.setFocusPainted(false); btnAnadirAutor.setBorder(null);
-		 * btnAnadirAutor.setBackground(Color.GRAY); btnAnadirAutor.setBounds(293, 100,
-		 * 137, 23); add(btnAnadirAutor); btnAnadirAutor.addActionListener(this);
-		 */
-
 	}
 
 	@Override
@@ -293,7 +271,10 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 		if (e.getSource().equals(btnRegistrarLibro)) {
 			if (textEditorial.getText().isEmpty() || textIsbn.getText().isEmpty() || textTitulo.getText().isEmpty()
 					|| textStock.getText().isEmpty() || textPrecio.getText().isEmpty()
-					|| (textoAutor1 || textoAutor2 || textoAutor3) || (textoGenero1 || textoGenero2 || textoGenero3)
+					|| (textAutorLibro1.getText().isEmpty() && textAutorLibro2.getText().isEmpty()
+							&& textAutorLibro3.getText().isEmpty())
+					|| (textGeneroLibro1.getText().isEmpty() && textGeneroLibro2.getText().isEmpty()
+							&& textGeneroLibro3.getText().isEmpty())
 					|| comboBoxDescuento.getSelectedIndex() == -1 || textDescripcion.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(this, "Uno de los campos esta vacio", "Error",
 						JOptionPane.WARNING_MESSAGE);
@@ -359,7 +340,10 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 		if (e.getSource().equals(btnModificarLibro)) {
 			if (textEditorial.getText().isEmpty() || textIsbn.getText().isEmpty() || textTitulo.getText().isEmpty()
 					|| textStock.getText().isEmpty() || textPrecio.getText().isEmpty()
-					|| textAutorLibro1.getText().isEmpty() || textGeneroLibro1.getText().isEmpty()
+					|| (textAutorLibro1.getText().isEmpty() && textAutorLibro2.getText().isEmpty()
+							&& textAutorLibro3.getText().isEmpty())
+					|| (textGeneroLibro1.getText().isEmpty() && textGeneroLibro2.getText().isEmpty()
+							&& textGeneroLibro3.getText().isEmpty())
 					|| comboBoxDescuento.getSelectedIndex() == -1 || textDescripcion.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(this, "Uno de los campos esta vacio", "Error",
 						JOptionPane.WARNING_MESSAGE);
@@ -483,22 +467,6 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 				textIsbn.setEnabled(true);
 			}
 		}
-		/*
-		 * if(e.getSource().equals(btnAnadirAutor)) { Author author; try { author =
-		 * authorInterface.buscarAuthor(textAutorLibro.getText()); if (author != null &&
-		 * !textAutorLibro.getText().isEmpty()) {
-		 * authorList.add(textAutorLibro.getText()); } } catch (GestorException e1) {
-		 * e1.printStackTrace(); }
-		 * 
-		 * 
-		 * } if(e.getSource().equals(btnAnadirGenero)) { try { Genre genre =
-		 * genreInterface.buscarGenre(textGeneroLibro.getText()); if (genre != null &&
-		 * !textGeneroLibro.getText().isEmpty()) {
-		 * genreList.add(textGeneroLibro.getText()); } } catch (GestorException e1) {
-		 * e1.printStackTrace(); }
-		 * 
-		 * }
-		 */
 	}
 
 	@Override
@@ -550,7 +518,7 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 							textTitulo.setText(book.getTitle());
 							comboBoxDescuento.setSelectedItem(book.getIdDiscount());
 							calendarioLibro.setDate(book.getPubDate());
-							if(authorList.size() == 1) {
+							if (authorList.size() == 1) {
 								textAutorLibro1.setText(authorList.get(0));
 							} else if (authorList.size() == 2) {
 								textAutorLibro1.setText(authorList.get(0));
@@ -560,7 +528,7 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 								textAutorLibro2.setText(authorList.get(1));
 								textAutorLibro3.setText(authorList.get(2));
 							}
-							if(genreList.size() == 1) {
+							if (genreList.size() == 1) {
 								textGeneroLibro1.setText(genreList.get(0));
 							} else if (genreList.size() == 2) {
 								textGeneroLibro1.setText(genreList.get(0));
@@ -623,66 +591,36 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 				textAutorLibro1.setText("");
 			}
 			textAutorLibro1.setText(encontrarAutor(textAutorLibro1.getText()));
-			/*if(textAutorLibro1.getText().isEmpty()) {
-				textoAutor1 = false;
-			} else {
-				textoAutor1 = true;
-			}*/
 		}
 		if (e.getSource().equals(textAutorLibro2)) {
 			if (insertString(50, textAutorLibro2.getText())) {
 				textAutorLibro2.setText("");
 			}
 			textAutorLibro2.setText(encontrarAutor(textAutorLibro2.getText()));
-			/*if(textAutorLibro2.getText().isEmpty()) {
-				textoAutor2 = false;
-			} else {
-				textoAutor2 = true;
-			}*/
 		}
 		if (e.getSource().equals(textAutorLibro3)) {
 			if (insertString(50, textAutorLibro3.getText())) {
 				textAutorLibro3.setText("");
 			}
 			textAutorLibro3.setText(encontrarAutor(textAutorLibro3.getText()));
-			/*if(textAutorLibro3.getText().isEmpty()) {
-				textoAutor3 = false;
-			} else {
-				textoAutor3 = true;
-			}*/
 		}
 		if (e.getSource().equals(textGeneroLibro1)) {
 			if (insertString(50, textGeneroLibro1.getText())) {
 				textGeneroLibro1.setText("");
 			}
 			textGeneroLibro1.setText(encontrarGenero(textGeneroLibro1.getText()));
-			/*if(textGeneroLibro1.getText().isEmpty()) {
-				textoGenero1 = false;
-			} else {
-				textoGenero1 = true;
-			}*/
 		}
 		if (e.getSource().equals(textGeneroLibro2)) {
 			if (insertString(50, textGeneroLibro2.getText())) {
 				textGeneroLibro2.setText("");
 			}
 			textGeneroLibro2.setText(encontrarGenero(textGeneroLibro2.getText()));
-			/*if(textGeneroLibro2.getText().isEmpty()) {
-				textoGenero2 = false;
-			} else {
-				textoGenero2 = true;
-			}*/
 		}
 		if (e.getSource().equals(textGeneroLibro3)) {
 			if (insertString(50, textGeneroLibro3.getText())) {
 				textGeneroLibro3.setText("");
 			}
 			textGeneroLibro3.setText(encontrarGenero(textGeneroLibro3.getText()));
-			/*if(textGeneroLibro3.getText().isEmpty()) {
-				textoGenero3 = false;
-			} else {
-				textoGenero3 = true;
-			}*/
 		}
 		if (e.getSource().equals(textTitulo)) {
 			if (insertString(50, textTitulo.getText())) {
@@ -715,8 +653,7 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 		try {
 			Author author = authorInterface.buscarAuthor(codAutor);
 			if (author == null && !codAutor.isEmpty()) {
-				int seleccion = JOptionPane.showConfirmDialog(libros, "Ese autor no existe quieres añadirlo?", "Aviso",
-						0);
+				int seleccion = JOptionPane.showConfirmDialog(libros, "Ese autor no existe quieres añadirlo?", "Aviso", 0);
 				if (seleccion == 0) {
 					tabbedPane.setSelectedIndex(1);
 				}
@@ -732,8 +669,7 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 		try {
 			Genre genre = genreInterface.buscarGenre(genero);
 			if (genre == null && !genero.isEmpty()) {
-				int seleccion = JOptionPane.showConfirmDialog(libros, "Ese genero no existe quieres añadirlo?", "Aviso",
-						0);
+				int seleccion = JOptionPane.showConfirmDialog(libros, "Ese genero no existe quieres añadirlo?", "Aviso", 0);
 				if (seleccion == 0) {
 					tabbedPane.setSelectedIndex(1);
 				}

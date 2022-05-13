@@ -73,7 +73,7 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 		textUsuario.addKeyListener(this);
 		textUsuario.addFocusListener(this);
 
-		JLabel lblNombreEmail = new JLabel("Nombre o email de la cuenta:");
+		JLabel lblNombreEmail = new JLabel("Nombre de usuario o email de la cuenta:");
 		lblNombreEmail.setForeground(Color.WHITE);
 		lblNombreEmail.setBackground(Color.WHITE);
 		lblNombreEmail.setFont(new Font("Tahoma", Font.PLAIN, 13));

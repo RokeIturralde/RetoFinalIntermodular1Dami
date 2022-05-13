@@ -113,6 +113,7 @@ public class IUserControllerDBImplementation implements IUserController {
 
 			stmt.executeUpdate();
 		} catch (SQLException e1) {
+			e1.printStackTrace();
 			String error = "Error con la conexion con la base de datos";
 			GestorException exception = new GestorException(error);
 			throw exception;
@@ -239,20 +240,22 @@ public class IUserControllerDBImplementation implements IUserController {
 
 	@Override
 	public void anadirAutor(String userName, String autor) throws GestorException {
-		String anadirAutor = "CALL anadirAutor(?,?)";
+		String anadirAutor = "insert into partnerauthor values(?,?)";
 		
 		try {
 			con = connection.openConnection();
 			
 			stmt = con.prepareStatement(anadirAutor);
 			
-			stmt.setString(1, autor);
-			stmt.setString(2, userName);
+			stmt.setString(1, userName);
+			stmt.setString(2, autor);
 			
 			stmt.executeUpdate();
 		} catch (SQLException e1) {
+			e1.printStackTrace();
 			String error = "Error con la conexion con la base de datos";
 			GestorException exception = new GestorException(error);
+			e1.printStackTrace();
 			throw exception;
 		} finally {
 			try {
@@ -279,6 +282,7 @@ public class IUserControllerDBImplementation implements IUserController {
 			
 			stmt.executeUpdate();
 		} catch (SQLException e1) {
+			e1.printStackTrace();
 			String error = "Error con la conexion con la base de datos";
 			GestorException exception = new GestorException(error);
 			throw exception;
