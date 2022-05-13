@@ -19,6 +19,7 @@ import javax.swing.border.EmptyBorder;
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
 import tartanga.dami.equipoa.dataAccess.IBookController;
 import tartanga.dami.equipoa.dataAccess.IComprasController;
+import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
 import tartanga.dami.equipoa.model.Book;
@@ -29,46 +30,42 @@ public class WCarrito extends JDialog implements ActionListener{
 	private IBookController bookInterface;
 	private IAuthorController authorInterface;
 	private IComprasController comprasInterface;
+	private IGenreController genreInterface;
 	private ArrayList<Compra> compras;
 	private JTable tablaCarrito;
 	private JScrollPane scrollCarrito;
 	private User user;
 	private JButton bComprar;
 
-	public WCarrito(IBookController bookInterface, IAuthorController authorInterface, IComprasController comprasInterface, ArrayList<Compra> compras, User user) {
+	public WCarrito(IBookController bookInterface, IAuthorController authorInterface, IComprasController comprasInterface, ArrayList<Compra> compras, IGenreController genreInterface, User user) {
 		setBounds(100, 100, 1047, 680);
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.DARK_GRAY);
 		
 		this.bookInterface = bookInterface;
 		this.authorInterface = authorInterface;
+		this.genreInterface = genreInterface;
 		this.compras = compras;
 		this.comprasInterface = comprasInterface;
 		String nombreApellidos = "";
 		String genres = "";
 		
-		if(compras.size()>0) {
+
+
+			String autores="";
 			String matrizTabla[][] = new String[compras.size()][5];
 			for(int i=0; i<compras.size();i++) {
 				Book book;
+				
 				try {
 					book = bookInterface.buscarBook(compras.get(i).getIsbn());
-					for(int j = 0; i<book.getAuthors().size();j++) {
-						Author author = authorInterface.buscarAuthor(book.getAuthors().get(j));
-						nombreApellidos += author.getName();
-						nombreApellidos+=" "+author.getSurname();
-						if(j<book.getAuthors().size())
-							nombreApellidos+=", ";
-					}
+				
+					autores = bookInterface.listAuthorsIsbn(book.getIsbn());
 					
-					for(int j=0; i<book.getGenres().size();j++) {
-						genres += book.getGenres().get(j);
-						if(j<book.getAuthors().size())
-							genres+=", ";
-					}
+					genres = genreInterface.listarGenresIsbn(book.getIsbn());
 					
 					matrizTabla[i][0] = book.getTitle();
-					matrizTabla[i][1] = nombreApellidos;
+					matrizTabla[i][1] = autores;
 					matrizTabla[i][2] = genres;
 					matrizTabla[i][3] = Integer.toString(compras.get(i).getCantidadLibros());
 					float precioTotal = compras.get(i).getCantidadLibros()*comprasInterface.calcularPrecio(book.getIsbn());

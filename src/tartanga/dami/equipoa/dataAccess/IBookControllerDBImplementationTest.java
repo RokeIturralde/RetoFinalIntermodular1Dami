@@ -49,7 +49,7 @@ public class IBookControllerDBImplementationTest {
 		}
 	}
 
-	@Test
+/*	@Test
 	public void testModificarBook() {
 		try {
 			book = new Book(1232, "ROKE EL ROKERO", "descripcion", "El barco de papel", 7, 3, 1, fecha);
@@ -59,7 +59,7 @@ public class IBookControllerDBImplementationTest {
 		} catch (GestorException e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	@Test
 	public void testEliminarBook() {

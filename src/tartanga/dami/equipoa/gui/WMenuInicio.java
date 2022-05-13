@@ -257,16 +257,16 @@ public class WMenuInicio extends JPanel implements MouseListener {
 
 		// Anadir libro al carrito
 		if (e.getSource().equals(tableSales)) {
+			ArrayList<Compra> compras = new ArrayList();
 			if (tableSales.getSelectedColumn() == 4) {
 				int cual = tableFav.getSelectedRow();
 				int cantidad = Integer.parseInt(
 						JOptionPane.showInputDialog(null, "Introduce el numero de ejemplares que deseas comprar",
 								"Confirma la compra", JOptionPane.PLAIN_MESSAGE));
-				Book book = libros.get(cual);
+				Book book = libros.get(cual+1);
 				Compra compra = new Compra();
 				compra.setIsbn(book.getIsbn());
-
-				compra.setCantidadLibros(1);
+				compra.setCantidadLibros(cantidad);
 				compra.setPrecioCompra(book.getPrice());
 				compra.setCantidadLibros(cantidad);
 				compras.add(compra);
@@ -276,7 +276,8 @@ public class WMenuInicio extends JPanel implements MouseListener {
 	}
 
 	public ArrayList<Compra> enviarCompras() {
-		return compras;
+		ArrayList<Compra> enviarCompras = compras;
+		return enviarCompras;
 	}
 
 	@Override
