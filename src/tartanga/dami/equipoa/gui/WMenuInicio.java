@@ -166,45 +166,71 @@ public class WMenuInicio extends JPanel implements MouseListener {
 			}
 		}
 
-			String matrizTablaSales[][] = new String[ventas.size()][5];
-			for (int i = 0; i < libros.size(); i++) {
-				matrizTablaSales[i][0] = Integer.toString(i + 1) + " " + ventas.get(i);
-				matrizTablaSales[i][1] = libros.get(i).getTitle();
-				matrizTablaSales[i][2] = libros.get(i).getAuthors().toString();
-				matrizTablaSales[i][3] = libros.get(i).getDescription();
-				matrizTablaSales[i][4] = "comprar";
+		String matrizTablaSales[][] = new String[ventas.size()][5];
+		String autores = "";
+		for (int i = 0; i < libros.size(); i++) {
+			try {
+				autores = bookInterface.listAuthorsIsbn(libros.get(i).getIsbn());
+			} catch (GestorException e) {
+				e.printStackTrace();
 			}
-			
-			String[] columNames = { "Posicion", "Titulo", "Autor", "Descripcion", "¿Te interesa?" };
-			
-	tableSales = new JTable(matrizTablaSales, columNames) {
 
-	private static final long serialVersionUID = 1L;
+			matrizTablaSales[i][0] = Integer.toString(i + 1) + " " + ventas.get(i);
+			matrizTablaSales[i][1] = libros.get(i).getTitle();
+			matrizTablaSales[i][2] = autores;
+			matrizTablaSales[i][3] = libros.get(i).getDescription();
+			matrizTablaSales[i][4] = "comprar";
+		}
 
-	public boolean isCellEditable(int row, int column) {
-			for (int i = 0; i < tableFav.getRowCount(); i++) {
-				if (row == i) {
-					return false;
+		String[] columNames = { "Posicion", "Titulo", "Autor", "Descripcion", "¿Te interesa?" };
+
+		tableSales = new JTable(matrizTablaSales, columNames) {
+
+			/*
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			// ***********************METODO PARA HACER QUE LA TABLA NO SEA EDITABLE, Y ASI
+			// HACER DOBLE CLICK************************************
+			// Para ello sobreescribimos el metodo que ya tiene la clase
+			// JTable.isCellEditable
+			public boolean isCellEditable(int row, int column) {
+				for (int i = 0; i < tableFav.getRowCount(); i++) {
+					if (row == i) {
+						return false;
+					}
 				}
+				return true;
 			}
-			return true;
-		}};
+		};
 
-	scrollSellers=new JScrollPane();scrollSellers.setBounds(470,100,520,325);
+		scrollSellers = new JScrollPane();
+		scrollSellers.setBounds(470, 100, 520, 325);
 
-	this.add(scrollSellers);
+		this.add(scrollSellers);
 
-	RowsRenderer rRowsRenderer = new RowsRenderer(3);
-	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();tableSales.setDefaultRenderer(Object.class,rRowsRenderer);tableSales.isCellEditable(listLikedBooks.size(),4);
+		RowsRenderer rRowsRenderer = new RowsRenderer(3);
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		tableSales.setDefaultRenderer(Object.class, rRowsRenderer);
+		tableSales.isCellEditable(listLikedBooks.size(), 4);
 
-	tableSales.setSelectionBackground(new Color(0,230,168));tableSales.setSelectionForeground(Color.WHITE);tableSales.setRowMargin(0);tableSales.setRowHeight(20);tableSales.setShowHorizontalLines(true);tableSales.setShowVerticalLines(true);scrollSellers.setViewportView(tableSales);
+		tableSales.setSelectionBackground(new Color(0, 230, 168));
+		tableSales.setSelectionForeground(Color.WHITE);
+		tableSales.setRowMargin(0);
+		tableSales.setRowHeight(20);
+		tableSales.setShowHorizontalLines(true);
+		tableSales.setShowVerticalLines(true);
+		scrollSellers.setViewportView(tableSales);
 
-	tableSales.addMouseListener(this);
+		tableSales.addMouseListener(this);
 
-	// Estilo del header
-	JTableHeader tableHeader = tableSales
-			.getTableHeader();tableHeader.setBackground(new Color(0,191,140));tableHeader.setForeground(Color.WHITE);tableHeader.setBorder(null);tableHeader.setEnabled(false);
-
+		// Estilo del header
+		JTableHeader tableHeader = tableSales.getTableHeader();
+		tableHeader.setBackground(new Color(0, 191, 140));
+		tableHeader.setForeground(Color.WHITE);
+		tableHeader.setBorder(null);
+		tableHeader.setEnabled(false);
 	}
 
 	@Override
@@ -228,12 +254,14 @@ public class WMenuInicio extends JPanel implements MouseListener {
 				}
 			}
 		}
-		
-		//Anadir libro al carrito
-		if(e.getSource().equals(tableSales)){
-			if(tableSales.getSelectedColumn()==4) {
+
+		// Anadir libro al carrito
+		if (e.getSource().equals(tableSales)) {
+			if (tableSales.getSelectedColumn() == 4) {
 				int cual = tableFav.getSelectedRow();
-				int cantidad = Integer.parseInt(JOptionPane.showInputDialog(null, "Introduce el numero de ejemplares que deseas comprar", "Confirma la compra", JOptionPane.PLAIN_MESSAGE));
+				int cantidad = Integer.parseInt(
+						JOptionPane.showInputDialog(null, "Introduce el numero de ejemplares que deseas comprar",
+								"Confirma la compra", JOptionPane.PLAIN_MESSAGE));
 				Book book = libros.get(cual);
 				Compra compra = new Compra();
 				compra.setIsbn(book.getIsbn());
@@ -244,14 +272,12 @@ public class WMenuInicio extends JPanel implements MouseListener {
 				compras.add(compra);
 			}
 		}
-		
-		
 
 	}
 
-	public ArrayList<Compra> enviarCompras(){
-			return compras; 
-		}
+	public ArrayList<Compra> enviarCompras() {
+		return compras;
+	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
