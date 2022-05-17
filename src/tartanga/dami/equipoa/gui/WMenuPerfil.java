@@ -62,6 +62,9 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 	// Listas para el JList
 	private ArrayList<Author> autores;
 	private ArrayList<String> generos;
+	private ArrayList<String> generosComboBox;
+	private ArrayList<String> generosNoPreferidos;
+
 	private User user;
 	private DefaultListModel modelo2, modelo;
 
@@ -254,7 +257,6 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 		}
 
 		// Creacion tabla del historial de compra
-		String nombreApellidos = "";
 		try {
 			ArrayList<Compra> compras = comprasInterface.historialCompras(user.getUserName());
 			if (compras.size() > 0) {
@@ -308,7 +310,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 				tableHeader.setBorder(null);
 				tableHeader.setEnabled(false);
 			} else {
-				// JOptionPane.showMessageDialog(this, "No hay preferencias personales");
+				JOptionPane.showMessageDialog(this, "No hay preferencias personales");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -439,21 +441,20 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 	}
 
 	private void cargarGeneros() {
-		ArrayList<String> generos;
 		boolean esta;
 		try {
-			generos = genreInterface.listarGeneros();
+			generosComboBox = genreInterface.listarGeneros();
 			ArrayList<String> generosPref = genreInterface.listarGenerosPreferidos(user.getUserName());
-			for (int i = 0; i < generos.size(); i++) {
+			for (int i = 0; i < generosComboBox.size(); i++) {
 				esta = false;
 				for (int j = 0; j < generosPref.size(); j++) {
-					if (generosPref.get(j).equals(generos.get(i))) {
+					if (generosPref.get(j).equals(generosComboBox.get(i))) {
 						esta = true;
 						j = generosPref.size();
 					}
 				}
 				if (!esta) {
-					cbxGeneros.addItem(generos.get(i));
+					cbxGeneros.addItem(generosComboBox.get(i));
 				}
 
 			}
@@ -466,7 +467,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 	}
 
 	private void annadirPreferencia() {
-		int cantidadAutores, cantidadGeneros;
+		int cantidadAutores, cantidadGeneros, longitudCombobox;
 		ArrayList<Author> autoresCombo;
 		ArrayList<String> generosCombo;
 		try {
@@ -492,8 +493,15 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 				autoresCombo = authorInterface.listarAutores();
 				generosCombo = genreInterface.listarGeneros();
 				if (cbxAutores.getSelectedIndex() == -1 && cbxGeneros.getSelectedIndex() != -1) {
-					genreInterface.insertarGeneroPreferido(user.getUserName(),
-							generosCombo.get(cbxGeneros.getSelectedIndex()));
+					longitudCombobox = cantidadComboBoxGeneros();
+					if (cbxGeneros.getSelectedIndex() == 0 && longitudCombobox > 1) {
+						genreInterface.insertarGeneroPreferido(user.getUserName(),
+								generosCombo.get(cbxGeneros.getSelectedIndex() + 1));
+					} else {
+						genreInterface.insertarGeneroPreferido(user.getUserName(),
+								generosCombo.get(cbxGeneros.getSelectedIndex()));
+					}
+
 				} else if (cbxGeneros.getSelectedIndex() == -1 && cbxAutores.getSelectedIndex() != -1) {
 					Author a = authorInterface.buscarAuthor(cbxAutores.getSelectedItem().toString()
 							.substring(cbxAutores.getSelectedItem().toString().indexOf(" ") + 1));
@@ -609,5 +617,30 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public int cantidadComboBoxGeneros() {
+		boolean esta;
+		int cuantos = 0;
+		try {
+			generosComboBox = genreInterface.listarGeneros();
+			ArrayList<String> generosPref = genreInterface.listarGenerosPreferidos(user.getUserName());
+			for (int i = 0; i < generosComboBox.size(); i++) {
+				esta = false;
+				for (int j = 0; j < generosPref.size(); j++) {
+					if (generosPref.get(j).equals(generosComboBox.get(i))) {
+						esta = true;
+						j = generosPref.size();
+					}
+				}
+				if (!esta) {
+					cuantos++;
+				}
+
+			}
+		} catch (GestorException e) {
+			e.printStackTrace();
+		}
+		return cuantos;
 	}
 }

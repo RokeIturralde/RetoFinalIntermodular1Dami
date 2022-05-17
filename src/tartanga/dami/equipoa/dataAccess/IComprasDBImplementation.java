@@ -43,20 +43,13 @@ public class IComprasDBImplementation implements IComprasController {
 		ResultSet rs;
 		Compra compra = null;
 		ArrayList<Compra> compras = new ArrayList();
-
-		// Abrir conexion con BD
-		// String listadoCompras = "select
-		// p.purchaseDate,p.isbn,p.quantity,(p.quantity*b.price)-((p.quantity*b.price)*d.discount)/100
-		// from author a, book b, purchase p, discount d,partnerAuthor pa where
-		// p.username= ? and pa.username=p.username and p.isbn=b.isbn and
-		// pa.codAuthor=a.codAuthor and b.idDiscount=d.idDiscount";
 		String listadoCompras = "select p.purchaseDate,GROUP_CONCAT(distinct a.name,\" \",a.surname) as authors,p.isbn,p.quantity,(p.quantity*b.price)-((p.quantity*b.price)*d.discount)/100 from author a, book b, purchase p, discount d,bookAuthor ba where p.username=? and p.isbn=ba.isbn and p.isbn=b.isbn and ba.codAuthor=a.codAuthor and b.idDiscount=d.idDiscount;";
 		try {
 			this.openConnection();
 			stmt = con.prepareStatement(listadoCompras);
 			stmt.setString(1, username);
 			rs = stmt.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 
 				compra = new Compra();
 				compra.setFechaCompra(rs.getDate("p.purchaseDate"));

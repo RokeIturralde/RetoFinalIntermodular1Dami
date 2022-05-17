@@ -529,7 +529,7 @@ public class IBookControllerDBImplementation implements IBookController {
 
 	@Override
 	public String listAuthorsIsbn(int isbn) throws GestorException {
-		String autores="";
+		String autores = "";
 		String listGenres = "select GROUP_CONCAT(distinct a.name,\" \",a.surname) as authors from bookauthor ba, author a where ba.isbn =? and  ba.codAuthor=a.codAuthor;";
 		ResultSet rs = null;
 
@@ -560,5 +560,58 @@ public class IBookControllerDBImplementation implements IBookController {
 		}
 
 		return autores;
+	}
+
+	public ArrayList<String> listarConsulta() throws GestorException {
+		ArrayList<String> listado = new ArrayList<>();
+		String listarAutores = "select Concat(name,\" \",surname) as authors from author";
+		String listarTitulos = "select title from book";
+		String listarGeneros = "select genreName from genre";
+		ResultSet rs = null;
+
+		try {
+			con = connection.openConnection();
+
+			// Listado autores
+			stmt = con.prepareStatement(listarAutores);
+
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				listado.add(rs.getString("authors"));
+			}
+
+			// Listado Titulos
+			stmt = con.prepareStatement(listarTitulos);
+
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				listado.add(rs.getString("title"));
+			}
+
+			// Listado Generos
+			stmt = con.prepareStatement(listarGeneros);
+
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				listado.add(rs.getString("genreName"));
+			}
+
+		} catch (SQLException e1) {
+			String error = "Error en la conexion con la base de datos";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				connection.closeConnection(stmt, con);
+			} catch (SQLException e1) {
+				String error = "Error al cerrar la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		return listado;
 	}
 }

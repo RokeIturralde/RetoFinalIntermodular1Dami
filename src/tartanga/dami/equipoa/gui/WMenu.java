@@ -16,6 +16,7 @@ import tartanga.dami.equipoa.dataAccess.IAuthorBookController;
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
 import tartanga.dami.equipoa.dataAccess.IBookController;
 import tartanga.dami.equipoa.dataAccess.IComprasController;
+import tartanga.dami.equipoa.dataAccess.IConsultaController;
 import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IUserController;
 import tartanga.dami.equipoa.gestorException.GestorException;
@@ -36,7 +37,7 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 
-public class WMenu extends JDialog implements MouseListener{
+public class WMenu extends JDialog implements MouseListener {
 	private ArrayList<AuthorBook> listLikedBooks;
 	private JTable tableFav;
 	private JScrollPane scrollFav;
@@ -44,51 +45,53 @@ public class WMenu extends JDialog implements MouseListener{
 	private IBookController bookInterface;
 	private IAuthorController authorInterface;
 	private IGenreController genreInterface;
+	private IConsultaController consultaInterface;
 	private IAuthorBookController authorBookInterface;
 	private IComprasController comprasInterface;
 	private User user;
 	private WMenuInicio panelInicio;
 	private WMenuPerfil panelPerfil;
+	private WMenuConsultas panelConsultas;
 	private JTabbedPane tabbedPane;
 	private JLabel lblCarrito;
 	private JLabel lblCerrar;
 	private ArrayList<Compra> compras;
-	
 
 	public WMenu(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface,
 			IBookController bookInterface, IAuthorBookController authorBookInterface,
-			IComprasController comprasInterface, User user) {
+			IComprasController comprasInterface, User user, IConsultaController consultaInterface) {
 		setBounds(100, 100, 1047, 680);
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.DARK_GRAY);
 
-		this.userInterface= userInterface;
+		this.userInterface = userInterface;
 		this.bookInterface = bookInterface;
 		this.authorInterface = authorInterface;
 		this.genreInterface = genreInterface;
 		this.authorBookInterface = authorBookInterface;
 		this.comprasInterface = comprasInterface;
-		//userInterface, authorInterface, genreInterface, bookInterface, authorBookInterface, comprasInterface
-		
-		
+		this.consultaInterface = consultaInterface;
+		// userInterface, authorInterface, genreInterface, bookInterface,
+		// authorBookInterface, comprasInterface
+
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(27, 27, 1005, 683);
 		getContentPane().add(tabbedPane);
-		
+
 		JLabel usuario = new JLabel("");
 		usuario.setVerticalAlignment(SwingConstants.TOP);
 		usuario.setForeground(new Color(255, 255, 255));
 		usuario.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		usuario.setBounds(630, 20, 230, 23);
 		getContentPane().add(usuario);
-		usuario.setText("Usuario: "+user.getUserName());
-		
+		usuario.setText("Usuario: " + user.getUserName());
+
 		lblCarrito = new JLabel("");
 		lblCarrito.setIcon(new ImageIcon(WMenu.class.getResource("/tartanga/dami/equipoa/resources/carritoIcono.png")));
 		lblCarrito.setBounds(850, 10, 53, 33);
 		getContentPane().add(lblCarrito);
 		lblCarrito.addMouseListener(this);
-		
+
 		lblCerrar = new JLabel("");
 		lblCerrar.setIcon(new ImageIcon(WMenu.class.getResource("/tartanga/dami/equipoa/resources/iconoSalir.png")));
 		lblCerrar.setBounds(948, 10, 53, 33);
@@ -96,19 +99,23 @@ public class WMenu extends JDialog implements MouseListener{
 		lblCerrar.addMouseListener(this);
 
 		iniciarComponentes(userInterface, authorInterface, bookInterface, user, authorBookInterface, comprasInterface,
-				genreInterface);
+				genreInterface, consultaInterface);
 
 	}
 
 	private void iniciarComponentes(IUserController userInterface, IAuthorController authorInterface,
 			IBookController bookInterface, User user, IAuthorBookController authorBookInterface,
-			IComprasController comprasInterface, IGenreController genreInterface) {
+			IComprasController comprasInterface, IGenreController genreInterface,
+			IConsultaController consultaInterface) {
 
 		panelPerfil = new WMenuPerfil(userInterface, authorInterface, genreInterface, comprasInterface, user);
-		panelInicio = new WMenuInicio(userInterface, bookInterface, authorInterface, user, authorBookInterface, compras);
+		panelInicio = new WMenuInicio(userInterface, bookInterface, authorInterface, user, authorBookInterface,
+				compras);
+		panelConsultas = new WMenuConsultas(genreInterface, bookInterface, consultaInterface);
 
 		tabbedPane.add("Inicio", panelInicio);
 		tabbedPane.add("Perfil", panelPerfil);
+		tabbedPane.add("Consulta", panelConsultas);
 
 		getContentPane().add(tabbedPane);
 
@@ -116,38 +123,40 @@ public class WMenu extends JDialog implements MouseListener{
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if(e.getSource().equals(lblCerrar)) {
-			WLogIn login = new WLogIn(userInterface, authorInterface, genreInterface, bookInterface, authorBookInterface, comprasInterface);
+		if (e.getSource().equals(lblCerrar)) {
+			WLogIn login = new WLogIn(userInterface, authorInterface, genreInterface, bookInterface,
+					authorBookInterface, comprasInterface, consultaInterface);
 			login.setVisible(true);
 			this.dispose();
-		}		
-		if(e.getSource().equals(lblCarrito)) {
+		}
+		if (e.getSource().equals(lblCarrito)) {
 			ArrayList<Compra> compras = panelInicio.enviarCompras();
-			WCarrito carrito = new WCarrito(bookInterface, authorInterface, comprasInterface, compras, genreInterface, user);
+			WCarrito carrito = new WCarrito(bookInterface, authorInterface, comprasInterface, compras, genreInterface,
+					user);
 		}
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

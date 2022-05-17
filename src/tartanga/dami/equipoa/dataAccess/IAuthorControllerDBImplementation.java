@@ -10,34 +10,13 @@ import java.util.ArrayList;
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
 import tartanga.dami.equipoa.model.ConnectionOpenClose;
+import tartanga.dami.equipoa.model.Consulta;
 
 public class IAuthorControllerDBImplementation implements IAuthorController {
 
 	private Connection con;
 	private PreparedStatement stmt;
 	private ConnectionOpenClose connection = new ConnectionOpenClose();
-
-	// Abrir conexion con nuestra base de datos
-	/*private void openConnection() {
-		try {
-			con = connection.openConnection();
-		} catch (SQLException e) {
-			System.out.println("No se puede acceder a la base de Datos");
-		} catch (GestorException e) {
-			e.printStackTrace();
-		}
-	}
-	*/
-
-	// Cerrar conexion con la base de datos
-	/*private void closeConnection() throws SQLException {
-		if (stmt != null) {
-			stmt.close();
-		}
-		if (con != null)
-			con.close();
-	}
-	*/
 
 	// Insertar un nuevo Autor en la base de Datos
 	@Override
@@ -180,7 +159,7 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 		ArrayList<Author> autores = new ArrayList<>();
 		ResultSet rs = null;
 		Author autor = null;
-		
+
 		String busquedaProp = "select a.name,a.surname,a.codAuthor from author a, partnerauthor pa where pa.username=? and pa.codAuthor=a.codAuthor";
 		try {
 			// Abrir conexion con BD
