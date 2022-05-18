@@ -3,7 +3,7 @@ package tartanga.dami.equipoa.model;
 import java.sql.Date;
 
 public class Consulta {
-	private Date fechaNacim;
+	private Date fechaPub;
 	private String titulo;
 	private String description;
 	private float precio;
@@ -11,11 +11,11 @@ public class Consulta {
 	private String autores;
 
 	public Date getFechaNacim() {
-		return fechaNacim;
+		return fechaPub;
 	}
 
 	public void setFechaNacim(Date fechaNacim) {
-		this.fechaNacim = fechaNacim;
+		this.fechaPub = fechaNacim;
 	}
 
 	public String getTitulo() {

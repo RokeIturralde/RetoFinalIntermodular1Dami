@@ -63,19 +63,20 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 	private ArrayList<Author> autores;
 	private ArrayList<String> generos;
 	private ArrayList<String> generosComboBox;
-	private ArrayList<String> generosNoPreferidos;
+	private WMenuInicio menuInicio;
 
 	private User user;
 	private DefaultListModel modelo2, modelo;
 
 	public WMenuPerfil(IUserController userInterface, IAuthorController authorInterface,
-			IGenreController genreInterface, IComprasController comprasInterface, User user) {
+			IGenreController genreInterface, IComprasController comprasInterface, User user, WMenuInicio panelInicio) {
 		setLayout(null);
 		this.userInterface = userInterface;
 		this.authorInterface = authorInterface;
 		this.user = user;
 		this.genreInterface = genreInterface;
 		this.comprasInterface = comprasInterface;
+		this.menuInicio = panelInicio;
 
 		setBounds(100, 300, 520, 12);
 
@@ -131,7 +132,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 		add(lblNumCuenta);
 
 		JLabel lblNewLabel = new JLabel("Preferencias Personales");
-		lblNewLabel.setBounds(107, 360, 118, 35);
+		lblNewLabel.setBounds(90, 360, 158, 35);
 		add(lblNewLabel);
 
 		txtNombre = new JTextField();
@@ -355,6 +356,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 		} catch (GestorException e) {
 			e.printStackTrace();
 		}
+		menuInicio.crearTablaFavoritos(user);
 
 	}
 

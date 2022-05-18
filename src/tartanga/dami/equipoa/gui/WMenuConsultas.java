@@ -16,10 +16,12 @@ import java.awt.event.KeyEvent;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import com.mxrck.autocompleter.TextAutoCompleter;
 
+import tartanga.dami.equipoa.dataAccess.IAuthorController;
 import tartanga.dami.equipoa.dataAccess.IBookController;
 import tartanga.dami.equipoa.dataAccess.IConsultaController;
 import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.gestorException.GestorException;
+import tartanga.dami.equipoa.model.Author;
 import tartanga.dami.equipoa.model.Consulta;
 
 import javax.swing.JTextField;
@@ -40,19 +42,21 @@ public class WMenuConsultas extends JPanel implements ActionListener {
 	private IGenreController genreInterface;
 	private IBookController bookInterface;
 	private IConsultaController consultaInterface;
+	private IAuthorController authorInterface;
 	private JComboBox cbxBusqueda;
 	private JTextField txteditorComp;
 	private ArrayList<String> listadoConsulta;
+	private ArrayList<Author> autores;
 	private JTable tableConsultas;
 	private JScrollPane scrollPane;
 
 	public WMenuConsultas(IGenreController genreInterface, IBookController bookInterface,
-			IConsultaController consultaInterface) {
+			IConsultaController consultaInterface, IAuthorController authorInterface) {
 		setLayout(null);
 		this.genreInterface = genreInterface;
 		this.bookInterface = bookInterface;
 		this.consultaInterface = consultaInterface;
-
+		this.authorInterface = authorInterface;
 		JLabel lblInformacion = new JLabel("Busca informacion en la base de datos:");
 		lblInformacion.setHorizontalAlignment(SwingConstants.CENTER);
 		lblInformacion.setBounds(10, 21, 223, 52);
@@ -91,29 +95,39 @@ public class WMenuConsultas extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(btnBuscar)) {
+			boolean autorEsta = false;
 			ArrayList<Consulta> consultas;
 			try {
-				if (txteditorComp.getText().equals(null)) {
-					consultas = consultaInterface.listarTodosLosDatos();
-				} else {
+				autores = authorInterface.listarAutores();
+				for (int i = 0; i < autores.size(); i++) {
+					if ((autores.get(i).getName() + " " + autores.get(i).getSurname())
+							.equalsIgnoreCase(txteditorComp.getText())) {
+						autorEsta = true;
+						i = autores.size();
+					}
+				}
+				if (autorEsta) {
 					consultas = consultaInterface
 							.tablaConsulta(txteditorComp.getText().substring(txteditorComp.getText().indexOf(" ") + 1));
+				} else {
+					consultas = consultaInterface.tablaConsulta(txteditorComp.getText());
 				}
+
 				txteditorComp.setText("");
 				txteditorComp.setEditable(true);
 
 				if (consultas.size() > 0) {
 					String matrizTabla[][] = new String[consultas.size()][6];
 					for (int i = 0; i < consultas.size(); i++) {
-						matrizTabla[i][0] = consultas.get(i).getAutores();
-						matrizTabla[i][1] = consultas.get(i).getFechaNacim().toString();
-						matrizTabla[i][2] = consultas.get(i).getTitulo();
+						matrizTabla[i][0] = consultas.get(i).getTitulo();
+						matrizTabla[i][1] = consultas.get(i).getAutores();
+						matrizTabla[i][2] = consultas.get(i).getFechaNacim().toString();
 						matrizTabla[i][3] = consultas.get(i).getDescription();
 						matrizTabla[i][4] = consultas.get(i).getGeneros();
 						matrizTabla[i][5] = Float.toString(consultas.get(i).getPrecio());
 					}
 
-					String titulos[] = { "Autor/es", "Fecha Nacimiento", "Titulo", "Descripcion", "Genero/s",
+					String titulos[] = { "Titulo", "Autor/es", "Fecha Publicacion", "Descripcion", "Genero/s",
 							"Precio" };
 
 					tableConsultas = new JTable(matrizTabla, titulos) {

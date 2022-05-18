@@ -76,93 +76,7 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 		this.add(txtrPromociones);
 
 		// Tabla de preferencias personales
-		try {
-			listLikedBooks = authorBookInterface.listAuthorBook(user.getUserName());
-		} catch (GestorException e) {
-			e.printStackTrace();
-		}
-
-		if (listLikedBooks.size() > 0) {
-			String matrizTabla[][] = new String[listLikedBooks.size()][4];
-			for (int i = 0; i < listLikedBooks.size(); i++) {
-				matrizTabla[i][0] = listLikedBooks.get(i).getTitle();
-				matrizTabla[i][1] = listLikedBooks.get(i).getName() + listLikedBooks.get(i).getSurname();
-				matrizTabla[i][2] = listLikedBooks.get(i).getDescription();
-				matrizTabla[i][3] = Float.toString(listLikedBooks.get(i).getPrice());
-				scrollFav = new JScrollPane();
-				scrollFav.setBounds(25, 100, 420, 325);
-
-				this.add(scrollFav);
-
-				String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
-
-				// Estilo de la tabla
-				tableFav = new JTable(matrizTabla, columNames) {
-
-					private static final long serialVersionUID = 1L;
-
-					// ***********************METODO PARA HACER QUE LA TABLA NO SEA EDITABLE, Y ASI
-					// HACER DOBLE CLICK************************************
-					// Para ello sobreescribimos el metodo que ya tiene la clase
-					// JTable.isCellEditable
-					public boolean isCellEditable(int row, int column) {
-						for (int i = 0; i < tableFav.getRowCount(); i++) {
-							if (row == i) {
-								return false;
-							}
-						}
-						return true;
-					}
-				};
-			}
-
-			RowsRenderer rRowsRenderer = new RowsRenderer(3);
-			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-			tableFav.setDefaultRenderer(Object.class, rRowsRenderer);
-			tableFav.isCellEditable(listLikedBooks.size(), 4);
-
-			tableFav.setSelectionBackground(new Color(0, 230, 168));
-			tableFav.setSelectionForeground(Color.WHITE);
-			tableFav.setRowMargin(0);
-			tableFav.setRowHeight(70);
-			tableFav.setShowHorizontalLines(true);
-			tableFav.setShowVerticalLines(true);
-			scrollFav.setViewportView(tableFav);
-
-			tableFav.addMouseListener(this);
-
-			// Estilo del header
-			JTableHeader tableHeader = tableFav.getTableHeader();
-			tableHeader.setBackground(new Color(0, 191, 140));
-			tableHeader.setForeground(Color.WHITE);
-			tableHeader.setBorder(null);
-			tableHeader.setEnabled(false);
-
-		} else {
-			// Crear una tabla vacia
-			String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
-
-			// Estilo de la tabla
-			tableFav = new JTable(null, columNames);
-			RowsRenderer rRowsRenderer = new RowsRenderer(3);
-			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-			tableFav.setDefaultRenderer(Object.class, rRowsRenderer);
-
-			tableFav.setSelectionBackground(new Color(0, 230, 168));
-			tableFav.setSelectionForeground(Color.WHITE);
-			tableFav.setRowMargin(0);
-			tableFav.setRowHeight(70);
-			tableFav.setShowHorizontalLines(true);
-			tableFav.setShowVerticalLines(true);
-
-			tableFav.addMouseListener(this);
-			// Estilo del header
-			JTableHeader tableHeader = tableFav.getTableHeader();
-			tableHeader.setBackground(new Color(0, 191, 140));
-			tableHeader.setForeground(Color.WHITE);
-			tableHeader.setBorder(null);
-			tableHeader.setEnabled(false);
-		}
+		crearTablaFavoritos(user);
 
 		// Tabla de Best Sellers
 
@@ -419,18 +333,18 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 	@Override
 	public void componentResized(ComponentEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void componentMoved(ComponentEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void componentShown(ComponentEvent e) {
-		if(e.getSource().equals(this)) {
+		if (e.getSource().equals(this)) {
 			refrescarTablaSoloParaTi();
 		}
 	}
@@ -438,6 +352,98 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 	@Override
 	public void componentHidden(ComponentEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
+
+	public void crearTablaFavoritos(User user) {
+		// Tabla de preferencias personales
+		try {
+			listLikedBooks = authorBookInterface.listAuthorBook(user.getUserName());
+		} catch (GestorException e) {
+			e.printStackTrace();
+		}
+
+		if (listLikedBooks.size() > 0) {
+			String matrizTabla[][] = new String[listLikedBooks.size()][4];
+			for (int i = 0; i < listLikedBooks.size(); i++) {
+				matrizTabla[i][0] = listLikedBooks.get(i).getTitle();
+				matrizTabla[i][1] = listLikedBooks.get(i).getName() + listLikedBooks.get(i).getSurname();
+				matrizTabla[i][2] = listLikedBooks.get(i).getDescription();
+				matrizTabla[i][3] = Float.toString(listLikedBooks.get(i).getPrice());
+				scrollFav = new JScrollPane();
+				scrollFav.setBounds(25, 100, 420, 325);
+
+				this.add(scrollFav);
+
+				String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
+
+				// Estilo de la tabla
+				tableFav = new JTable(matrizTabla, columNames) {
+
+					private static final long serialVersionUID = 1L;
+
+					// ***********************METODO PARA HACER QUE LA TABLA NO SEA EDITABLE, Y ASI
+					// HACER DOBLE CLICK************************************
+					// Para ello sobreescribimos el metodo que ya tiene la clase
+					// JTable.isCellEditable
+					public boolean isCellEditable(int row, int column) {
+						for (int i = 0; i < tableFav.getRowCount(); i++) {
+							if (row == i) {
+								return false;
+							}
+						}
+						return true;
+					}
+				};
+			}
+
+			RowsRenderer rRowsRenderer = new RowsRenderer(3);
+			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+			tableFav.setDefaultRenderer(Object.class, rRowsRenderer);
+			tableFav.isCellEditable(listLikedBooks.size(), 4);
+
+			tableFav.setSelectionBackground(new Color(0, 230, 168));
+			tableFav.setSelectionForeground(Color.WHITE);
+			tableFav.setRowMargin(0);
+			tableFav.setRowHeight(70);
+			tableFav.setShowHorizontalLines(true);
+			tableFav.setShowVerticalLines(true);
+			scrollFav.setViewportView(tableFav);
+
+			tableFav.addMouseListener(this);
+
+			// Estilo del header
+			JTableHeader tableHeader = tableFav.getTableHeader();
+			tableHeader.setBackground(new Color(0, 191, 140));
+			tableHeader.setForeground(Color.WHITE);
+			tableHeader.setBorder(null);
+			tableHeader.setEnabled(false);
+
+		} else {
+			// Crear una tabla vacia
+			String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
+
+			// Estilo de la tabla
+			tableFav = new JTable(null, columNames);
+			RowsRenderer rRowsRenderer = new RowsRenderer(3);
+			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+			tableFav.setDefaultRenderer(Object.class, rRowsRenderer);
+
+			tableFav.setSelectionBackground(new Color(0, 230, 168));
+			tableFav.setSelectionForeground(Color.WHITE);
+			tableFav.setRowMargin(0);
+			tableFav.setRowHeight(70);
+			tableFav.setShowHorizontalLines(true);
+			tableFav.setShowVerticalLines(true);
+
+			tableFav.addMouseListener(this);
+			// Estilo del header
+			JTableHeader tableHeader = tableFav.getTableHeader();
+			tableHeader.setBackground(new Color(0, 191, 140));
+			tableHeader.setForeground(Color.WHITE);
+			tableHeader.setBorder(null);
+			tableHeader.setEnabled(false);
+		}
+	}
+
 }
