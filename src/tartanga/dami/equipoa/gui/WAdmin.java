@@ -106,6 +106,14 @@ public class WAdmin extends JDialog implements MouseListener {
 
 	}
 
+	/**
+	 * Metodo para iniciar los componentes de la ventana
+	 * @param userInterface Interfaz de usuario
+	 * @param authorInterface Interfaz de autor
+	 * @param genreInterface Interfaz de genero
+	 * @param bookInterface Interfaz de libro
+	 * @param tabbedPane donde se guardan los paneles
+	 */
 	private void iniciarComponentes(IUserController userInterface, IAuthorController authorInterface,
 			IGenreController genreInterface, IBookController bookInterface, JTabbedPane tabbedPane) {
 		libros = new WAdminLibro(authorInterface, genreInterface, bookInterface, tabbedPane);
@@ -154,6 +162,9 @@ public class WAdmin extends JDialog implements MouseListener {
 		
 	}
 	
+	/**
+	 * Metodo para cerrar sesion en el programa
+	 */
 	public void cerrarSesion() {
 		int seleccion = JOptionPane.showConfirmDialog(libros, "Estas seguro que quieres cerrar sesion?", "Aviso", 0);
 		if(seleccion == 0) {

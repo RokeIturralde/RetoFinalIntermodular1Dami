@@ -35,8 +35,16 @@ import javax.swing.SwingConstants;
 
 
 
+/**
+ * @author Sendoa
+ *
+ */
 public class WLogIn extends JFrame implements ActionListener, KeyListener, FocusListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField textUsuario;
 	private JPasswordField passwordField;
 	private JButton btnRegistrar;
@@ -49,6 +57,14 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 	private IComprasController comprasInterface;
 
 
+	/**
+	 * @param userInterface interfaz de usuarios
+	 * @param authorInterface interfaz de autores
+	 * @param genreInterface interfaz de generos
+	 * @param bookInterface interfaz de libros
+	 * @param authorBookInterface interfaz auxiliar
+	 * @param comprasInterface interfaz de compras
+	 */
 	public WLogIn(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface, IBookController bookInterface, IAuthorBookController authorBookInterface, IComprasController comprasInterface) {
 		this.userInterface = userInterface;
 		this.authorInterface = authorInterface;
@@ -130,6 +146,7 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		// Abrimos la ventana registro
 		if (e.getSource().equals(btnRegistrar)) {
 			WRegistro registro = new WRegistro(userInterface, authorInterface, genreInterface);
 			registro.setVisible(true);
@@ -158,10 +175,15 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 
 	}
 
+	/**
+	 * Metodo para inicar sesion en el programa
+	 */
 	public void iniciarSesion() {
+		//Pasamos la contraseña a string y comprobamos que el username y la password no esten vacios
 		String pass = new String(passwordField.getPassword());
 		if (!(textUsuario.getText().isEmpty() || pass.isEmpty())) {
 			try {
+				// Comprobamos que las credenciales estan correctas
 				User user = userInterface.userLogIn(textUsuario.getText(), pass);
 				if (user != null) {
 					this.dispose();
@@ -175,6 +197,8 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 				} else {
 					JOptionPane.showMessageDialog(this, "El nombre de la cuenta y/o la contraseña son incorrectos",
 							"Error", JOptionPane.WARNING_MESSAGE);
+					passwordField.setText("");
+					passwordField.grabFocus();
 				}
 			} catch (GestorException e1) {
 				e1.printStackTrace();
@@ -205,6 +229,12 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 		}
 	}
 	
+	/**
+	 * Metodo para comprobar que el texto introducido no es mayor de lo permitido
+	 * @param maximo el numero maximo de caracteres permitido
+	 * @param texto el texto que quieres comprobar
+	 * @return un boolean, en caso de que tenga mas caracteres de lo permitido sera <b>true</b>, en caso contrario <b>false</b>
+	 */
 	public boolean insertString(int maximo, String texto) {
 		if(texto.length() > maximo) {
 			JOptionPane.showMessageDialog(this, "Excedido el limite de caracteres ("+maximo+")","Error", JOptionPane.WARNING_MESSAGE);

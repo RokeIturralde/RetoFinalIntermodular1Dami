@@ -32,6 +32,10 @@ import tartanga.dami.equipoa.model.Author;
 import tartanga.dami.equipoa.model.Book;
 import tartanga.dami.equipoa.model.Genre;
 
+/**
+ * @author Sendoa
+ *
+ */
 public class WAdminLibro extends JPanel implements ActionListener, FocusListener {
 
 	private IBookController bookInterface;
@@ -61,6 +65,12 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 	private JTextField textGeneroLibro2;
 	private JTextField textGeneroLibro3;
 
+	/**
+	 * @param authorInterface Interfaz de autores
+	 * @param genreInterface Interfaz de generos
+	 * @param bookInterface Interfaz de libros
+	 * @param tabbedPane lo que almacena todos los panes
+	 */
 	public WAdminLibro(IAuthorController authorInterface, IGenreController genreInterface,
 			IBookController bookInterface, JTabbedPane tabbedPane) {
 		this.authorInterface = authorInterface;
@@ -141,6 +151,7 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 		comboBoxDescuento = new JComboBox<Integer>();
 		comboBoxDescuento.setBounds(36, 351, 137, 22);
 		this.add(comboBoxDescuento);
+		// Esto es para añadir todos los id de descuentos al combo box
 		try {
 			for (Integer i : bookInterface.listDiscount()) {
 				comboBoxDescuento.addItem(i);
@@ -412,7 +423,7 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 			}
 		}
 		if (e.getSource().equals(btnEliminarLibro)) {
-			int seleccion = JOptionPane.showConfirmDialog(libros, "Quieres eliminar este libro?", "Aviso", 0);
+			int seleccion = JOptionPane.showConfirmDialog(libros, "Quieres eliminar este libro con el isbn: "+textIsbn.getText()+" ?", "Aviso", 0);
 			if (seleccion == 0) {
 				try {
 					bookInterface.eliminarBook(Integer.valueOf(textIsbn.getText()));
@@ -446,6 +457,7 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 			}
 		}
 		if (e.getSource().equals(btnCancelarLibro)) {
+			// Cancela el modo modificacion y borra todos los textos
 			textIsbn.setText("");
 			textTitulo.setText("");
 			textDescripcion.setText("");
@@ -481,6 +493,7 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 			boolean b = false;
 			if (insertString(50, textIsbn.getText())) {
 				textIsbn.setText("");
+				textIsbn.grabFocus();
 				b = true;
 			}
 			try {
@@ -489,12 +502,14 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 						JOptionPane.showMessageDialog(this, "No se puede introducir un numero negativo", "Error",
 								JOptionPane.WARNING_MESSAGE);
 						textIsbn.setText("");
+						textIsbn.grabFocus();
 					}
 				}
 			} catch (NumberFormatException e1) {
 				JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros", "Error",
 						JOptionPane.WARNING_MESSAGE);
 				textIsbn.setText("");
+				textIsbn.grabFocus();
 			}
 			if (!b && textIsbn.getText().length() > 0) {
 				try {
@@ -540,12 +555,14 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 							}
 						} else {
 							textIsbn.setText("");
+							textIsbn.grabFocus();
 						}
 					}
 				} catch (NumberFormatException | GestorException e1) {
 					JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros", "Error",
 							JOptionPane.WARNING_MESSAGE);
 					textIsbn.setText("");
+					textIsbn.grabFocus();
 					e1.printStackTrace();
 				}
 			}
@@ -557,15 +574,18 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 						JOptionPane.showMessageDialog(this, "No se puede introducir un numero negativo", "Error",
 								JOptionPane.WARNING_MESSAGE);
 						textStock.setText("");
+						textStock.grabFocus();
 					}
 				}
 			} catch (NumberFormatException e1) {
 				JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros enteros", "Error",
 						JOptionPane.WARNING_MESSAGE);
 				textStock.setText("");
+				textStock.grabFocus();
 			}
 			if (insertString(50, textIsbn.getText())) {
 				textIsbn.setText("");
+				textStock.grabFocus();
 			}
 		}
 		if (e.getSource().equals(textPrecio)) {
@@ -575,71 +595,90 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 						JOptionPane.showMessageDialog(this, "No se puede introducir un numero negativo", "Error",
 								JOptionPane.WARNING_MESSAGE);
 						textPrecio.setText("");
+						textPrecio.grabFocus();
 					}
 				}
 			} catch (NumberFormatException e1) {
 				JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros", "Error",
 						JOptionPane.WARNING_MESSAGE);
 				textPrecio.setText("");
+				textPrecio.grabFocus();
 			}
 			if (insertString(50, textPrecio.getText())) {
 				textPrecio.setText("");
+				textPrecio.grabFocus();
 			}
 		}
 		if (e.getSource().equals(textAutorLibro1)) {
 			if (insertString(50, textAutorLibro1.getText())) {
 				textAutorLibro1.setText("");
+				textAutorLibro1.grabFocus();
 			}
 			textAutorLibro1.setText(encontrarAutor(textAutorLibro1.getText()));
 		}
 		if (e.getSource().equals(textAutorLibro2)) {
 			if (insertString(50, textAutorLibro2.getText())) {
 				textAutorLibro2.setText("");
+				textAutorLibro2.grabFocus();
 			}
 			textAutorLibro2.setText(encontrarAutor(textAutorLibro2.getText()));
 		}
 		if (e.getSource().equals(textAutorLibro3)) {
 			if (insertString(50, textAutorLibro3.getText())) {
 				textAutorLibro3.setText("");
+				textAutorLibro3.grabFocus();
 			}
 			textAutorLibro3.setText(encontrarAutor(textAutorLibro3.getText()));
 		}
 		if (e.getSource().equals(textGeneroLibro1)) {
 			if (insertString(50, textGeneroLibro1.getText())) {
 				textGeneroLibro1.setText("");
+				textGeneroLibro1.grabFocus();
 			}
 			textGeneroLibro1.setText(encontrarGenero(textGeneroLibro1.getText()));
 		}
 		if (e.getSource().equals(textGeneroLibro2)) {
 			if (insertString(50, textGeneroLibro2.getText())) {
 				textGeneroLibro2.setText("");
+				textGeneroLibro2.grabFocus();
 			}
 			textGeneroLibro2.setText(encontrarGenero(textGeneroLibro2.getText()));
 		}
 		if (e.getSource().equals(textGeneroLibro3)) {
 			if (insertString(50, textGeneroLibro3.getText())) {
 				textGeneroLibro3.setText("");
+				textGeneroLibro3.grabFocus();
 			}
 			textGeneroLibro3.setText(encontrarGenero(textGeneroLibro3.getText()));
 		}
 		if (e.getSource().equals(textTitulo)) {
 			if (insertString(50, textTitulo.getText())) {
 				textTitulo.setText("");
+				textTitulo.grabFocus();
 			}
 		}
 		if (e.getSource().equals(textEditorial)) {
 			if (insertString(50, textEditorial.getText())) {
 				textEditorial.setText("");
+				textEditorial.grabFocus();
 			}
 		}
 		if (e.getSource().equals(textDescripcion)) {
 			if (insertString(1000, textDescripcion.getText())) {
 				textDescripcion.setText("");
+				textDescripcion.grabFocus();
 			}
 		}
 
 	}
 
+	
+	/**
+	 * Metodo para comprobar que el texto introducido no es mayor de lo permitido
+	 * @param maximo el numero maximo de caracteres permitido
+	 * @param texto el texto que quieres comprobar
+	 * @return un boolean, en caso de que tenga mas caracteres de lo permitido sera <b>true</b>, en caso contrario <b>false</b>
+	 */
 	public boolean insertString(int maximo, String texto) {
 		if (texto.length() > maximo) {
 			JOptionPane.showMessageDialog(this, "Excedido el limite de caracteres (" + maximo + ")", "Error",
@@ -649,6 +688,11 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 		return false;
 	}
 
+	/**
+	 * Metodo para cuando no existe un autor introducido se cambie de panel para introducirlo
+	 * @param codAutor el codigo del autor
+	 * @return un texto vacio si el autor no existe o el codigo del autor si existe
+	 */
 	public String encontrarAutor(String codAutor) {
 		try {
 			Author author = authorInterface.buscarAuthor(codAutor);
@@ -665,6 +709,11 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 		return codAutor;
 	}
 
+	/**
+	 * Metodo para cuando no existe un genero introducido se cambie de panel para introducirlo
+	 * @param genero el nombre del genero
+	 * @return un texto vacio si el genero no existe o el nombre si existe
+	 */
 	public String encontrarGenero(String genero) {
 		try {
 			Genre genre = genreInterface.buscarGenre(genero);

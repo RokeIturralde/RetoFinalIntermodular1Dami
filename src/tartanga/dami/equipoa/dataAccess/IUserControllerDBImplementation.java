@@ -13,35 +13,19 @@ import tartanga.dami.equipoa.model.User;
 import tartanga.dami.equipoa.model.Administrator;
 import tartanga.dami.equipoa.model.ConnectionOpenClose;
 import tartanga.dami.equipoa.model.Partner;
-import java.sql.DriverManager;
-
+/**
+ * 
+ * @author Sendoa
+ *
+ */
 public class IUserControllerDBImplementation implements IUserController {
+
 
 	private Connection con;
 	private PreparedStatement stmt;
 	private ConnectionOpenClose connection = new ConnectionOpenClose();
 
-	// Metodo para abrir la conexion con la base de datos
-	/*private void openConnection() {
-		try {
-			String url = "jdbc:mysql://localhost:3306/irakurle?serverTimezone=Europe/Madrid&useSSL=false";
-			con = DriverManager.getConnection(url, "root", "abcd*1234");
-		} catch (SQLException e) {
-			System.out.println("Error al intentar abrir la BD");
-		}
-	}
 
-	// Metodo para cerrar la conexion con la base de datos
-	private void closeConnection() throws SQLException {
-		System.out.println("Conexion Cerrada.");
-		if (stmt != null)
-			stmt.close();
-		if (con != null)
-			con.close();
-		System.out.println("------------------------");
-	}*/
-
-	// Metodo para comprobar si el login es correcto
 	@Override
 	public User userLogIn(String userName, String password) throws GestorException {
 		ResultSet rs;
@@ -92,7 +76,7 @@ public class IUserControllerDBImplementation implements IUserController {
 		return user;
 	}
 
-	// Metodo para añadir un usuario a la base de datos
+
 	@Override
 	public void altaUsuario(User user) throws GestorException {
 
@@ -127,6 +111,7 @@ public class IUserControllerDBImplementation implements IUserController {
 			}
 		}
 	}
+
 
 	@Override
 	public User buscarUser(String userName) throws GestorException {
@@ -171,6 +156,7 @@ public class IUserControllerDBImplementation implements IUserController {
 		return user;
 	}
 
+
 	@Override
 	public int modificarUser(User user) throws GestorException {
 		int cambios = 0;
@@ -207,6 +193,7 @@ public class IUserControllerDBImplementation implements IUserController {
 		}
 		return cambios;
 	}
+
 
 	@Override
 	public int eliminarUser(String userName) throws GestorException {
@@ -252,10 +239,8 @@ public class IUserControllerDBImplementation implements IUserController {
 			
 			stmt.executeUpdate();
 		} catch (SQLException e1) {
-			e1.printStackTrace();
 			String error = "Error con la conexion con la base de datos";
 			GestorException exception = new GestorException(error);
-			e1.printStackTrace();
 			throw exception;
 		} finally {
 			try {
@@ -299,7 +284,7 @@ public class IUserControllerDBImplementation implements IUserController {
 
 	@Override
 	public ArrayList<String> userGenero(String username) throws GestorException {
-		ArrayList<String> userGenero = new ArrayList();
+		ArrayList<String> userGenero = new ArrayList<String>();
 		String buscarGenero = "select genreName from partnerGenre where username = ?";
 		ResultSet rs = null;
 		
@@ -332,7 +317,7 @@ public class IUserControllerDBImplementation implements IUserController {
 
 	@Override
 	public ArrayList<String> userAuthor (String username) throws GestorException {
-		ArrayList<String> userTitulo = new ArrayList();
+		ArrayList<String> userTitulo = new ArrayList<String>();
 		String buscarTitulo = "call userTitulo(?)";
 		ResultSet rs = null;
 		

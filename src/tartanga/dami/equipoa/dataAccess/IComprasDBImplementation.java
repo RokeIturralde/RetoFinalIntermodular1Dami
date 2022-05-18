@@ -13,36 +13,23 @@ import java.util.Calendar;
 
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Compra;
+import tartanga.dami.equipoa.model.ConnectionOpenClose;
 
+/**
+ * @author Eneko
+ *
+ */
 public class IComprasDBImplementation implements IComprasController {
 	private Connection con;
 	private PreparedStatement stmt;
-
-	// Abrir conexion con nuestra base de datos
-	private void openConnection() {
-		try {
-			String url = "jdbc:mysql://localhost:3306/irakurle?serverTimezone=Europe/Madrid&useSSL=false";
-			con = DriverManager.getConnection(url, "root", "abcd*1234");
-		} catch (SQLException e) {
-			System.out.println("No se puede acceder a la base de Datos: " + e.getMessage());
-		}
-	}
-
-	// Cerrar conexion con la base de datos
-	private void closeConnection() throws SQLException {
-		if (stmt != null) {
-			stmt.close();
-		}
-		if (con != null)
-			con.close();
-	}
+	private ConnectionOpenClose connection = new ConnectionOpenClose();
 
 	// Sacar informacion de la compra, menos los autores
 	@Override
 	public ArrayList<Compra> historialCompras(String username) throws GestorException {
 		ResultSet rs;
 		Compra compra = null;
-		ArrayList<Compra> compras = new ArrayList();
+		ArrayList<Compra> compras = new ArrayList<Compra>();
 
 		// Abrir conexion con BD
 		// String listadoCompras = "select
@@ -52,7 +39,7 @@ public class IComprasDBImplementation implements IComprasController {
 		// pa.codAuthor=a.codAuthor and b.idDiscount=d.idDiscount";
 		String listadoCompras = "select p.purchaseDate,GROUP_CONCAT(distinct a.name,a.surname) as authors,p.isbn,p.quantity,(p.quantity*b.price)-((p.quantity*b.price)*d.discount)/100 from author a, book b, purchase p, discount d,partnerAuthor pa where p.username=? and pa.username=p.username and p.isbn=b.isbn and pa.codAuthor=a.codAuthor and b.idDiscount=d.idDiscount";
 		try {
-			this.openConnection();
+			con = connection.openConnection();
 			stmt = con.prepareStatement(listadoCompras);
 			stmt.setString(1, username);
 			rs = stmt.executeQuery();			
@@ -72,7 +59,7 @@ public class IComprasDBImplementation implements IComprasController {
 			throw exception;
 		} finally {
 			try {
-				this.closeConnection();
+				connection.closeConnection(stmt, con);
 			} catch (SQLException e) {
 				String error = "Error al cerrar conexion con la base de datos";
 				GestorException exception = new GestorException(error);
@@ -88,7 +75,7 @@ public class IComprasDBImplementation implements IComprasController {
 		ResultSet rs;
 		float precio=0;
 		try {
-			this.openConnection();
+			con = connection.openConnection();
 			stmt = con.prepareStatement(sentencia);
 			stmt.setInt(1, isbn);
 			rs = stmt.executeQuery();
@@ -101,7 +88,7 @@ public class IComprasDBImplementation implements IComprasController {
 			throw exception;
 		} finally {
 			try {
-				this.closeConnection();
+				connection.closeConnection(stmt, con);
 			} catch (SQLException e) {
 				String error = "Error al cerrar conexion con la base de datos";
 				GestorException exception = new GestorException(error);
@@ -116,7 +103,7 @@ public class IComprasDBImplementation implements IComprasController {
 		String sentencia = "insert into compra values ?, ?, ?, ?";
 		
 		try {
-			this.openConnection();
+			con = connection.openConnection();
 			stmt = con.prepareStatement(sentencia);
 			stmt.setString(1, user);
 			stmt.setInt(2, compra.getIsbn());
@@ -129,7 +116,7 @@ public class IComprasDBImplementation implements IComprasController {
 			throw exception;
 		} finally {
 			try {
-				this.closeConnection();
+				connection.closeConnection(stmt, con);
 			} catch (SQLException e) {
 				String error = "Error al cerrar conexion con la base de datos";
 				GestorException exception = new GestorException(error);

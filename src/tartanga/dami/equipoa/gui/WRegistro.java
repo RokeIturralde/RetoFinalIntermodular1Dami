@@ -28,6 +28,10 @@ import tartanga.dami.equipoa.model.User;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 
+/**
+ * @author Sendoa
+ *
+ */
 public class WRegistro extends JDialog implements ActionListener, FocusListener {
 	private JTextField textNombreUsr;
 	private JTextField textEmail;
@@ -57,6 +61,11 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 	private IAuthorController authorInterface;
 	private IGenreController genreInterface;
 
+	/**
+	 * @param userInterface Interfaz de usuario
+	 * @param authorInterface Interfaz de autor
+	 * @param genreInterface Interfaz de genero
+	 */
 	public WRegistro(IUserController userInterface, IAuthorController authorInterface,
 			IGenreController genreInterface) {
 		this.userInterface = userInterface;
@@ -230,9 +239,11 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(btnAutores)) {
+			// Comprobamos que no alcance el maximo de autores permitidos
 			if (authorList.size() <= 2) {
 				boolean esta = false;
 				try {
+					// Buscamos si el autor buscado ya a sido introducido y si no es asi se añade al arraylist
 					Author autor = authorInterface.buscarAuthor(textAutor.getText());
 					if (autor != null) {
 						for (int i = 0; i < authorList.size(); i++) {
@@ -260,9 +271,11 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 			}
 		}
 		if (e.getSource().equals(btnGenero)) {
+			// Comprobamos que no alcance el maximo de generos permitidos
 			if (genreList.size() <= 2) {
 				boolean esta = false;
 				try {
+					// Buscamos si el genero buscado ya a sido introducido y si no es asi se añade al arraylist
 					Genre genero = genreInterface.buscarGenre(textGenero.getText());
 					if (genero != null) {
 						for (int i = 0; i < genreList.size(); i++) {
@@ -291,6 +304,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 		}
 		if (e.getSource().equals(btnRegistrar)) {
 			String pass = new String(passwordField.getPassword());
+			// Comprobamos que ninguno de los campos que nos interesa esta vacio
 			if (!(textDireccion.getText().isEmpty() || textEmail.getText().isEmpty() || textNombre.getText().isEmpty()
 					|| pass.isEmpty() || textApellidos.getText().isEmpty() || textNombreUsr.getText().isEmpty()
 					|| textCuenta.getText().isEmpty())) {
@@ -308,10 +322,12 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 					user.setUserName(textNombreUsr.getText());
 					((Partner) user).setNumAccount(Integer.valueOf(textCuenta.getText()));
 
+					// Añadimos sus autores favoritos
 					userInterface.altaUsuario(user);
 					for (int i = 0; i < authorList.size(); i++) {
 						userInterface.anadirAutor(user.getUserName(), authorList.get(i).getCodAuthor());
 					}
+					// Añadimos sus generos favoritos
 					for (int i = 0; i < genreList.size(); i++) {
 						userInterface.anadirGenero(user.getUserName(), genreList.get(i).getGenreName());
 					}
@@ -334,6 +350,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 	@Override
 	public void focusGained(FocusEvent e) {
 		if (e.getSource().equals(confPasswordField)) {
+			// Que no pueda introducir una contraseña de confirmacion sin antes introducir la contraseña normal
 			String contr = new String(passwordField.getPassword());
 			if (contr.isEmpty()) {
 				confPasswordField.transferFocusBackward();
@@ -471,6 +488,12 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 		}
 	}
 
+	/**
+	 * Metodo para comprobar que el texto introducido no es mayor de lo permitido
+	 * @param maximo el numero maximo de caracteres permitido
+	 * @param texto el texto que quieres comprobar
+	 * @return un boolean, en caso de que tenga mas caracteres de lo permitido sera <b>true</b>, en caso contrario <b>false</b>
+	 */
 	public boolean insertString(int maximo, String texto) {
 		if (texto.length() > maximo) {
 			JOptionPane.showMessageDialog(this, "Excedido el limite de caracteres (" + maximo + ")", "Error",

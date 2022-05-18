@@ -2,6 +2,8 @@ package tartanga.dami.equipoa.dataAccess;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +37,8 @@ public class IUserControllerDBImplementationTest {
 			user.setUserName("erandio10");
 			
 			pruebaInterfaz.altaUsuario(user);
+			pruebaInterfaz.anadirAutor("erandio", "A001");
+			pruebaInterfaz.anadirGenero("erandio", "fantasia");
 			User prueba = pruebaInterfaz.buscarUser(user.getUserName());
 			assertNotEquals(prueba, null);
 		} catch (GestorException e) {
@@ -70,4 +74,16 @@ public class IUserControllerDBImplementationTest {
 		assertEquals(prueba, 1);
 	}
 
+	@Test
+	public void testUserGenero() throws GestorException {
+		ArrayList<String> prueba = pruebaInterfaz.userGenero("gitanito77");
+		assertNotEquals(prueba, null);
+	}
+	
+	@Test
+	public void testUserAuthor() throws GestorException {
+		ArrayList<String> prueba = pruebaInterfaz.userAuthor("gitanito77");
+		assertNotEquals(prueba, null);
+	}
+	
 }

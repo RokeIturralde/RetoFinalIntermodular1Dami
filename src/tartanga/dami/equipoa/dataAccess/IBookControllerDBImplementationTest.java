@@ -13,13 +13,13 @@ import tartanga.dami.equipoa.model.Book;
 public class IBookControllerDBImplementationTest {
 
 	private Date fecha = new Date(2006 - 04 - 05);
-	private Date fechaPrueba = new Date(2014 - 05 - 06);
 	private Book book;
 	IBookController pruebaLibros = new IBookControllerDBImplementation();
 	ArrayList<String> codAuthor;
 	ArrayList<String> genreName;
 
-	/*@Test
+	
+	@Test
 	public void testAltaBookYBusqueda() throws GestorException {
 		codAuthor = new ArrayList<String>();
 		genreName = new ArrayList<String>();
@@ -32,72 +32,74 @@ public class IBookControllerDBImplementationTest {
 		Book libroPrueba = pruebaLibros.buscarBook(book.getIsbn());
 		System.out.println(libroPrueba.toString());
 		assertEquals(libroPrueba.getIsbn(), book.getIsbn());
-	}*/
+	}
 
 	@Test
 	public void testModificarBook() throws GestorException {
 		codAuthor = new ArrayList<String>();
 		genreName = new ArrayList<String>();
 		int isbn = 1236;
-		book = new Book(isbn, "El señor de los anillos 2", "descripcion", "Elhuyar", 7, 2, 1, fecha);
+		book = new Book(isbn, "El señor de los anillos 3", "descripcion", "Elhuyar", 7, 2, 1, fecha);
 		codAuthor.add("A001");
 		genreName.add("ficcion");
-		pruebaLibros.modificarBook(book, codAuthor, genreName);
+		int prueba = pruebaLibros.modificarBook(book, codAuthor, genreName);
+		assertSame(prueba, 1);
 	}
 
 	@Test
-	public void testEliminarBook() {
-		
+	public void testEliminarBookYBusqueda() throws GestorException {
+		pruebaLibros.eliminarBook(1235);
+		Book libroPrueba = pruebaLibros.buscarBook(1235);
+		assertEquals(libroPrueba, null);
+	}
+	
+
+	@Test
+	public void testListaBookGenre() throws GestorException {
+		ArrayList<Book> prueba = pruebaLibros.listaBookGenre("fantasia");
+		assertNotEquals(prueba, null);
 	}
 
 	@Test
-	public void testListaBookGenre() {
-		
+	public void testListaBookAuthor() throws GestorException {
+		ArrayList<Book> prueba = pruebaLibros.listaBookAuthor("Tolkien");
+		assertNotEquals(prueba, null);
 	}
 
 	@Test
-	public void testListaBookAuthor() {
-		
+	public void testListBookAuthorGenre() throws GestorException {
+		ArrayList<Book> prueba = pruebaLibros.listBookAuthorGenre("Tolkien", "fantasia");
+		assertNotEquals(prueba, null);
 	}
 
 	@Test
-	public void testListBookAuthorGenre() {
-		
+	public void testListAllBooks() throws GestorException {
+		ArrayList<Book> prueba = pruebaLibros.listAllBooks();
+		assertNotEquals(prueba, null);
 	}
 
 	@Test
-	public void testListAllBooks() {
-		
+	public void testListTopSales() throws GestorException {
+		ArrayList<Integer> prueba = pruebaLibros.listTopSales();
+		assertNotEquals(prueba, null);
 	}
 
 	@Test
-	public void testListTopSales() {
-		
+	public void testListDiscount() throws GestorException {
+		ArrayList<Integer> prueba = pruebaLibros.listDiscount();
+		assertNotEquals(prueba, null);
 	}
 
 	@Test
-	public void testListDiscount() {
-		
+	public void testListAuthors() throws GestorException {
+		ArrayList<String> prueba = pruebaLibros.listAuthors(1);
+		assertNotEquals(prueba, null);
 	}
 
 	@Test
-	public void testAnadirAuthor() {
-		
-	}
-
-	@Test
-	public void testAnadirGenre() {
-		
-	}
-
-	@Test
-	public void testListAuthors() {
-		
-	}
-
-	@Test
-	public void testListGenres() {
-		
+	public void testListGenres() throws GestorException {
+		ArrayList<String> prueba = pruebaLibros.listGenres(1);
+		assertNotEquals(prueba, null);
 	}
 
 }

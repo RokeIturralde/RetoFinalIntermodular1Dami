@@ -11,33 +11,15 @@ import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
 import tartanga.dami.equipoa.model.ConnectionOpenClose;
 
+/**
+ * @author Roke
+ *
+ */
 public class IAuthorControllerDBImplementation implements IAuthorController {
 
 	private Connection con;
 	private PreparedStatement stmt;
 	private ConnectionOpenClose connection = new ConnectionOpenClose();
-
-	// Abrir conexion con nuestra base de datos
-	/*private void openConnection() {
-		try {
-			con = connection.openConnection();
-		} catch (SQLException e) {
-			System.out.println("No se puede acceder a la base de Datos");
-		} catch (GestorException e) {
-			e.printStackTrace();
-		}
-	}
-	*/
-
-	// Cerrar conexion con la base de datos
-	/*private void closeConnection() throws SQLException {
-		if (stmt != null) {
-			stmt.close();
-		}
-		if (con != null)
-			con.close();
-	}
-	*/
 
 	// Insertar un nuevo Autor en la base de Datos
 	@Override

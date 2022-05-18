@@ -14,7 +14,7 @@ import tartanga.dami.equipoa.model.Genre;
 public class IGenreControllerDBImplementation implements IGenreController {
 	private Connection con;
 	private PreparedStatement stmt;
-	final String insertarGenero = "INSERT INTO genre VALUES( ?,?)";
+	private final String insertarGenero = "INSERT INTO genre VALUES( ?,?)";
 	private ConnectionOpenClose connection = new ConnectionOpenClose();
 
 	@Override
