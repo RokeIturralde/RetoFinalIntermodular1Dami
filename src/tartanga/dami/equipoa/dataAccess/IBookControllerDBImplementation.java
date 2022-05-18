@@ -565,7 +565,7 @@ public class IBookControllerDBImplementation implements IBookController {
 	@Override
 	public ArrayList<Integer> listaFavoritos(String username) throws GestorException {
 		ArrayList<Integer> likedBooks = new ArrayList();
-		String sentencia = "select distinct b.title,b.description,a.name,a.surname,b.price,b.isbn from author a, book b, bookauthor ba, partnerauthor pa,bookgenre bg, partnergenre pg where (pa.username=? and pa.codauthor=ba.codauthor and ba.isbn=b.isbn and ba.codAuthor=a.codAuthor) or (pg.username=? and pg.genreName=bg.genreName and bg.isbn=b.isbn and bg.isbn=ba.isbn and ba.codAuthor=a.codAuthor)";
+		String sentencia = "select distinct b.title,b.description,b.price,b.isbn from author a, book b, bookauthor ba, partnerauthor pa,bookgenre bg, partnergenre pg where (pa.username=? and pa.codauthor=ba.codauthor and ba.isbn=b.isbn and ba.codAuthor=a.codAuthor) or (pg.username=? and pg.genreName=bg.genreName and bg.isbn=b.isbn and bg.isbn=ba.isbn and ba.codAuthor=a.codAuthor)";
 		ResultSet rs = null;
 		
 		try {
