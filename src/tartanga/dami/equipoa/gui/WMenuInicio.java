@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -39,18 +40,23 @@ public class WMenuInicio extends JPanel implements MouseListener {
 	private IAuthorController authorInterface;
 	private User user;
 	private JTable tableFav;
-	private ArrayList<AuthorBook> listLikedBooks;
+	private ArrayList<Integer> listLikedIsbn;
 	private JTable tableSales;
 	private JScrollPane scrollFav;
 	private JScrollPane scrollSellers;
 	private ArrayList<Integer> bookSales;
 	private ArrayList<Book> libros;
 	private ArrayList<Compra> compras;
+	private ArrayList<Book> listLikedBooks;
 
 	public WMenuInicio(IUserController userInterface, IBookController bookInterface, IAuthorController authorInterface,
 			User user, IAuthorBookController authorBookInterface, ArrayList<Compra> compras) {
 		setLayout(null);
 
+		this.compras=compras;
+		this.user=user;
+		this.listLikedBooks = listLikedBooks;
+		
 		setBounds(100, 300, 520, 12);
 
 		JLabel lblNewLabel = new JLabel("Solo para ti");
@@ -72,8 +78,14 @@ public class WMenuInicio extends JPanel implements MouseListener {
 		this.add(txtrPromociones);
 
 		// Tabla de preferencias personales
+		listLikedBooks = new ArrayList();
 		try {
-			listLikedBooks = authorBookInterface.listAuthorBook(user.getUserName());
+			Book book;
+			listLikedIsbn = bookInterface.listaFavoritos(user.getUserName());
+			for(int i =0; i<listLikedIsbn.size();i++) {
+				book = bookInterface.buscarBook(listLikedIsbn.get(i));
+				listLikedBooks.add(book);
+			}
 		} catch (GestorException e) {
 			e.printStackTrace();
 		}
@@ -82,14 +94,18 @@ public class WMenuInicio extends JPanel implements MouseListener {
 			String matrizTabla[][] = new String[listLikedBooks.size()][4];
 			for (int i = 0; i < listLikedBooks.size(); i++) {
 				matrizTabla[i][0] = listLikedBooks.get(i).getTitle();
-				matrizTabla[i][1] = listLikedBooks.get(i).getName() + listLikedBooks.get(i).getSurname();
+				try {
+					matrizTabla[i][1] = bookInterface.listAuthorsIsbn(listLikedBooks.get(i).getIsbn());
+				} catch (GestorException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				matrizTabla[i][2] = listLikedBooks.get(i).getDescription();
-				matrizTabla[i][3] = Float.toString(listLikedBooks.get(i).getPrice());
+				matrizTabla[i][3] = " Comprar \n"+Float.toString(listLikedBooks.get(i).getPrice())+"€";
 			}
 
 			scrollFav = new JScrollPane();
 			scrollFav.setBounds(25, 100, 420, 325);
-
 			this.add(scrollFav);
 
 			String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
@@ -167,22 +183,21 @@ public class WMenuInicio extends JPanel implements MouseListener {
 		}
 
 		String matrizTablaSales[][] = new String[ventas.size()][5];
-		String autores = "";
 		for (int i = 0; i < libros.size(); i++) {
 			try {
-				autores = bookInterface.listAuthorsIsbn(libros.get(i).getIsbn());
+				libros.get(i).setAuthors(bookInterface.listAuthorsIsbn(libros.get(i).getIsbn()));
 			} catch (GestorException e) {
 				e.printStackTrace();
 			}
 
 			matrizTablaSales[i][0] = Integer.toString(i + 1) + " " + ventas.get(i);
 			matrizTablaSales[i][1] = libros.get(i).getTitle();
-			matrizTablaSales[i][2] = autores;
+			matrizTablaSales[i][2] = libros.get(i).getAuthors();
 			matrizTablaSales[i][3] = libros.get(i).getDescription();
-			matrizTablaSales[i][4] = "comprar";
+			matrizTablaSales[i][4] = "Comprar "+ libros.get(i).getPrice()+"€";
 		}
 
-		String[] columNames = { "Posicion", "Titulo", "Autor", "Descripcion", "Â¿Te interesa?" };
+		String[] columNames = { "Posicion", "Titulo", "Autor", "Descripcion", "¿Te interesa?" };
 
 		tableSales = new JTable(matrizTablaSales, columNames) {
 
@@ -218,7 +233,7 @@ public class WMenuInicio extends JPanel implements MouseListener {
 		tableSales.setSelectionBackground(new Color(0, 230, 168));
 		tableSales.setSelectionForeground(Color.WHITE);
 		tableSales.setRowMargin(0);
-		tableSales.setRowHeight(20);
+		tableSales.setRowHeight(70);
 		tableSales.setShowHorizontalLines(true);
 		tableSales.setShowVerticalLines(true);
 		scrollSellers.setViewportView(tableSales);
@@ -245,6 +260,38 @@ public class WMenuInicio extends JPanel implements MouseListener {
 				}
 			}
 		}
+		
+		if(e.getSource().equals(tableFav)) {
+			if (tableFav.getSelectedColumn() == 3) {
+				int cual = tableFav.getSelectedRow();
+				int cantidad;
+				try {
+					Book book = listLikedBooks.get(cual);
+					cantidad = Integer.parseInt(
+						JOptionPane.showInputDialog(null, "Introduce el numero de ejemplares que deseas comprar. Stock: "+book.getStock(),
+								"Confirma la compra", JOptionPane.PLAIN_MESSAGE));
+				if(cantidad>0 && cantidad<=book.getStock()) {
+					Compra compra = new Compra();
+					compra.setIsbn(book.getIsbn());
+					compra.setCantidadLibros(cantidad);
+					compra.setPrecioCompra(book.getPrice());
+					compras.add(compra);
+				}
+				else {
+					JOptionPane.showMessageDialog(this, "Sin stock", "Error",
+							JOptionPane.WARNING_MESSAGE);
+				}
+				} catch(NumberFormatException a) {
+						JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros", "Error",
+						JOptionPane.WARNING_MESSAGE);
+					
+					
+				}
+				
+				
+			}
+		}
+		
 		if (e.getSource().equals(tableFav)) {
 			if (e.getClickCount() == 2) {
 				if (tableFav.getSelectedColumn() == 2) {
@@ -257,27 +304,30 @@ public class WMenuInicio extends JPanel implements MouseListener {
 
 		// Anadir libro al carrito
 		if (e.getSource().equals(tableSales)) {
-			ArrayList<Compra> compras = new ArrayList();
 			if (tableSales.getSelectedColumn() == 4) {
-				int cual = tableFav.getSelectedRow();
-				int cantidad = Integer.parseInt(
-						JOptionPane.showInputDialog(null, "Introduce el numero de ejemplares que deseas comprar",
+				int cual = tableSales.getSelectedRow();
+				try {
+					Book book = libros.get(cual);
+					int cantidad = Integer.parseInt(
+						JOptionPane.showInputDialog(null, "Introduce el numero de ejemplares que deseas comprar. Stock: "+book.getStock(),
 								"Confirma la compra", JOptionPane.PLAIN_MESSAGE));
-				Book book = libros.get(cual+1);
-				Compra compra = new Compra();
-				compra.setIsbn(book.getIsbn());
-				compra.setCantidadLibros(cantidad);
-				compra.setPrecioCompra(book.getPrice());
-				compra.setCantidadLibros(cantidad);
-				compras.add(compra);
+					if(cantidad>0 && cantidad<=book.getStock()) {
+						Compra compra = new Compra();
+						compra.setIsbn(book.getIsbn());
+						compra.setCantidadLibros(cantidad);
+						compra.setPrecioCompra(book.getPrice());
+						compra.setCantidadLibros(cantidad);
+						compras.add(compra);
+					}
+				} catch(NumberFormatException a) {
+					JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros", "Error",
+							JOptionPane.WARNING_MESSAGE);
+				}
+				
+				
+				
 			}
 		}
-
-	}
-
-	public ArrayList<Compra> enviarCompras() {
-		ArrayList<Compra> enviarCompras = compras;
-		return enviarCompras;
 	}
 
 	@Override

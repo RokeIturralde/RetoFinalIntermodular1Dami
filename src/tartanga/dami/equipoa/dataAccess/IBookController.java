@@ -27,6 +27,8 @@ public interface IBookController {
 	public void eliminarBook(int isbn) throws GestorException;
 
 	public ArrayList<Book> listaBookGenre(String genre) throws GestorException;
+	
+	public ArrayList<Integer> listaFavoritos(String username) throws GestorException;
 
 	public ArrayList<Book> listaBookAuthor(String author) throws GestorException;
 
@@ -38,6 +40,6 @@ public interface IBookController {
 
 	public ArrayList<Integer> listDiscount() throws GestorException;
 
-	String listAuthorsIsbn(int isbn) throws GestorException;
+	public String listAuthorsIsbn(int isbn) throws GestorException;
   
 }

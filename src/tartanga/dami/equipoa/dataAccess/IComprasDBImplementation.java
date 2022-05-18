@@ -6,8 +6,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -113,7 +116,8 @@ public class IComprasDBImplementation implements IComprasController {
 
 	@Override
 	public void escribirCompra(Compra compra, String user) throws GestorException {
-		String sentencia = "insert into compra values ?, ?, ?, ?";
+		String sentencia = "insert into purchase values (?, ?, ?, ?)";
+		String sentencia2 = "update book set stock = stock - ? where isbn = ?;";
 		
 		try {
 			this.openConnection();
@@ -121,8 +125,15 @@ public class IComprasDBImplementation implements IComprasController {
 			stmt.setString(1, user);
 			stmt.setInt(2, compra.getIsbn());
 			stmt.setInt(3, compra.getCantidadLibros());
-			stmt.setDate(4, Date.valueOf(LocalDateTime.now().toString()));
-			stmt.executeQuery();
+			Timestamp tsNow = Timestamp.valueOf(LocalDateTime.now());
+			stmt.setTimestamp(4, tsNow);
+			stmt.executeUpdate();
+			
+			stmt = con.prepareStatement(sentencia2);
+			stmt.setInt(1, compra.getCantidadLibros());
+			stmt.setInt(2, compra.getIsbn());
+			stmt.executeUpdate();
+			
 		} catch (SQLException e) {
 			String error = "Error en el registro de compra";
 			GestorException exception = new GestorException(error);

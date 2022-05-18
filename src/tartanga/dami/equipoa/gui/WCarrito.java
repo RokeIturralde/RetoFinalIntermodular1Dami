@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
 import tartanga.dami.equipoa.dataAccess.IBookController;
@@ -24,6 +25,7 @@ import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
 import tartanga.dami.equipoa.model.Book;
 import tartanga.dami.equipoa.model.Compra;
+import tartanga.dami.equipoa.model.RowsRenderer;
 import tartanga.dami.equipoa.model.User;
 
 public class WCarrito extends JDialog implements ActionListener{
@@ -47,11 +49,12 @@ public class WCarrito extends JDialog implements ActionListener{
 		this.genreInterface = genreInterface;
 		this.compras = compras;
 		this.comprasInterface = comprasInterface;
+		this.user=user;
 		String nombreApellidos = "";
 		String genres = "";
 		
 
-
+		if(compras.size()>0) {
 			String autores="";
 			String matrizTabla[][] = new String[compras.size()][5];
 			for(int i=0; i<compras.size();i++) {
@@ -74,9 +77,23 @@ public class WCarrito extends JDialog implements ActionListener{
 					scrollCarrito = new JScrollPane();
 					scrollCarrito.setBounds(25, 100, 420, 325);
 					this.add(scrollCarrito);
-
+					
 					String[] columNames = { "Titulo", "Autor(es)", "Genero(s)", "Cantidad", "Precio"};
+					tablaCarrito = new JTable(matrizTabla, columNames);
+					
+					RowsRenderer rRowsRenderer = new RowsRenderer(4);
+					DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+					tablaCarrito.setDefaultRenderer(Object.class, rRowsRenderer);
+					tablaCarrito.isCellEditable(compras.size(), 4);
 
+					tablaCarrito.setSelectionBackground(new Color(0, 230, 168));
+					tablaCarrito.setSelectionForeground(Color.WHITE);
+					tablaCarrito.setRowMargin(0);
+					tablaCarrito.setRowHeight(70);
+					tablaCarrito.setShowHorizontalLines(true);
+					tablaCarrito.setShowVerticalLines(true);
+					scrollCarrito.setViewportView(tablaCarrito);
+					
 				} catch (GestorException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -88,14 +105,17 @@ public class WCarrito extends JDialog implements ActionListener{
 			//Mostrar mensaje de carrito vacio
 		}
 		
-		JButton bComprar = new JButton();
+		bComprar = new JButton();
+		bComprar.setBounds(500, 500, 125, 75);
+		getContentPane().add(bComprar);
+		bComprar.setIcon(new ImageIcon(WMenu.class.getResource("/tartanga/dami/equipoa/resources/ejecutarCompra.png")));
 		bComprar.addActionListener(this);
-		bComprar.setIcon(new ImageIcon(WMenu.class.getResource("/tartanga/dami/equipoa/resources/carritoVacioIcono.png")));
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(bComprar)) {
+			System.out.println("das");
 			for(int i = 0; i<compras.size();i++) {
 				try {
 					comprasInterface.escribirCompra(compras.get(i), user.getUserName());

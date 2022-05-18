@@ -13,5 +13,6 @@ public interface IComprasController {
 	public float calcularPrecio(int isbn) throws GestorException;
 	
 	public void escribirCompra(Compra compra, String user) throws GestorException;
+	
 
 }
