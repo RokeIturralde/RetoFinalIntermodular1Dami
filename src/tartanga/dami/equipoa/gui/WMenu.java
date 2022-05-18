@@ -73,7 +73,10 @@ public class WMenu extends JDialog implements MouseListener {
 		this.consultaInterface = consultaInterface;
 		// userInterface, authorInterface, genreInterface, bookInterface,
 		// authorBookInterface, comprasInterface
-
+		this.user = user;
+		// userInterface, authorInterface, genreInterface, bookInterface,
+		// authorBookInterface, comprasInterface
+		compras = new ArrayList<Compra>();
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(27, 27, 1005, 683);
 		getContentPane().add(tabbedPane);
@@ -131,9 +134,10 @@ public class WMenu extends JDialog implements MouseListener {
 			this.dispose();
 		}
 		if (e.getSource().equals(lblCarrito)) {
-			ArrayList<Compra> compras = panelInicio.enviarCompras();
+
 			WCarrito carrito = new WCarrito(bookInterface, authorInterface, comprasInterface, compras, genreInterface,
 					user);
+			carrito.setVisible(true);
 		}
 	}
 

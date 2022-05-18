@@ -344,7 +344,7 @@ public class IBookControllerDBImplementation implements IBookController {
 			con = connection.openConnection();
 			stmt = con.prepareStatement(sentence);
 			rs = stmt.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				listTopSales.add(rs.getInt("isbn"));
 				listTopSales.add(rs.getInt("quantity"));
 			}
@@ -613,5 +613,40 @@ public class IBookControllerDBImplementation implements IBookController {
 			}
 		}
 		return listado;
+	}
+
+	@Override
+	public ArrayList<Integer> listaFavoritos(String username) throws GestorException {
+		ArrayList<Integer> likedBooks = new ArrayList();
+		String sentencia = "select distinct b.title,b.description,b.price,b.isbn from author a, book b, bookauthor ba, partnerauthor pa,bookgenre bg, partnergenre pg where (pa.username=? and pa.codauthor=ba.codauthor and ba.isbn=b.isbn and ba.codAuthor=a.codAuthor) or (pg.username=? and pg.genreName=bg.genreName and bg.isbn=b.isbn and bg.isbn=ba.isbn and ba.codAuthor=a.codAuthor)";
+		ResultSet rs = null;
+
+		try {
+			con = connection.openConnection();
+
+			stmt = con.prepareStatement(sentencia);
+			stmt.setString(1, username);
+			stmt.setString(2, username);
+			rs = stmt.executeQuery();
+			Book book;
+			while (rs.next()) {
+				book = new Book();
+				book.setIsbn(rs.getInt("b.isbn"));
+				likedBooks.add(book.getIsbn());
+			}
+		} catch (SQLException e1) {
+			String error = "Error en la conexion con la base de datos";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				connection.closeConnection(stmt, con);
+			} catch (SQLException e1) {
+				String error = "Error al cerrar la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		return likedBooks;
 	}
 }
