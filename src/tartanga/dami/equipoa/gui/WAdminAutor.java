@@ -210,7 +210,7 @@ public class WAdminAutor extends JPanel implements ActionListener, FocusListener
 						calendarAutorNac.setCalendar(Calendar.getInstance());
 						calendarioAutorMuer.setCalendar(Calendar.getInstance());
 					} catch (GestorException e1) {
-						e1.printStackTrace();
+						JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 					}
 
 				}
@@ -257,7 +257,7 @@ public class WAdminAutor extends JPanel implements ActionListener, FocusListener
 						btnRegistrarAutor.setEnabled(true);
 						textAutor.setEnabled(true);
 					} catch (GestorException e1) {
-						e1.printStackTrace();
+						JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 					}
 
 				}
@@ -284,7 +284,7 @@ public class WAdminAutor extends JPanel implements ActionListener, FocusListener
 					btnRegistrarAutor.setEnabled(true);
 					textAutor.setEnabled(true);
 				} catch (GestorException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
@@ -346,7 +346,7 @@ public class WAdminAutor extends JPanel implements ActionListener, FocusListener
 					}
 				}
 			} catch (GestorException e1) {
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		if (e.getSource().equals(textApellido)) {

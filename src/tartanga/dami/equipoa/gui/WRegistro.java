@@ -262,7 +262,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 								JOptionPane.WARNING_MESSAGE);
 					}
 				} catch (GestorException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
 				JOptionPane.showMessageDialog(this, "Solo se pueden introducir un maximo de 3 autores", "Error",
@@ -294,7 +294,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 								JOptionPane.WARNING_MESSAGE);
 					}
 				} catch (GestorException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
 				JOptionPane.showMessageDialog(this, "Solo se pueden introducir un maximo de 3 generos", "Error",
@@ -337,7 +337,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 
 					this.dispose();
 				} catch (GestorException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
 				JOptionPane.showMessageDialog(this, "Uno de los campos esta vacio", "Error",
@@ -376,7 +376,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 							JOptionPane.WARNING_MESSAGE);
 				}
 			} catch (GestorException e1) {
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		if (e.getSource().equals(passwordField)) {

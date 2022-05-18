@@ -11,7 +11,6 @@ import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import javax.swing.UIManager;
 
-
 import tartanga.dami.equipoa.dataAccess.IAuthorBookController;
 
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
@@ -32,8 +31,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.SwingConstants;
-
-
 
 /**
  * @author Sendoa
@@ -56,23 +53,23 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 	private IAuthorBookController authorBookInterface;
 	private IComprasController comprasInterface;
 
-
 	/**
-	 * @param userInterface interfaz de usuarios
-	 * @param authorInterface interfaz de autores
-	 * @param genreInterface interfaz de generos
-	 * @param bookInterface interfaz de libros
+	 * @param userInterface       interfaz de usuarios
+	 * @param authorInterface     interfaz de autores
+	 * @param genreInterface      interfaz de generos
+	 * @param bookInterface       interfaz de libros
 	 * @param authorBookInterface interfaz auxiliar
-	 * @param comprasInterface interfaz de compras
+	 * @param comprasInterface    interfaz de compras
 	 */
-	public WLogIn(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface, IBookController bookInterface, IAuthorBookController authorBookInterface, IComprasController comprasInterface) {
+	public WLogIn(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface,
+			IBookController bookInterface, IAuthorBookController authorBookInterface,
+			IComprasController comprasInterface) {
 		this.userInterface = userInterface;
 		this.authorInterface = authorInterface;
 		this.genreInterface = genreInterface;
 		this.bookInterface = bookInterface;
 		this.authorBookInterface = authorBookInterface;
 		this.comprasInterface = comprasInterface;
-		
 
 		setIconImage(Toolkit.getDefaultToolkit()
 				.getImage(WLogIn.class.getResource("/tartanga/dami/equipoa/resources/Logo.png")));
@@ -179,7 +176,8 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 	 * Metodo para inicar sesion en el programa
 	 */
 	public void iniciarSesion() {
-		//Pasamos la contraseña a string y comprobamos que el username y la password no esten vacios
+		// Pasamos la contraseña a string y comprobamos que el username y la password no
+		// esten vacios
 		String pass = new String(passwordField.getPassword());
 		if (!(textUsuario.getText().isEmpty() || pass.isEmpty())) {
 			try {
@@ -187,13 +185,15 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 				User user = userInterface.userLogIn(textUsuario.getText(), pass);
 				if (user != null) {
 					this.dispose();
-					if(user instanceof Administrator) {
-						WAdmin admin = new WAdmin(user, bookInterface, authorInterface, genreInterface, userInterface, authorBookInterface, comprasInterface);
+					if (user instanceof Administrator) {
+						WAdmin admin = new WAdmin(user, bookInterface, authorInterface, genreInterface, userInterface,
+								authorBookInterface, comprasInterface);
 						admin.setVisible(true);
 					} else {
-						WMenu menu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface, authorBookInterface, comprasInterface, user);
+						WMenu menu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface,
+								authorBookInterface, comprasInterface, user);
 						menu.setVisible(true);
-					}					
+					}
 				} else {
 					JOptionPane.showMessageDialog(this, "El nombre de la cuenta y/o la contraseña son incorrectos",
 							"Error", JOptionPane.WARNING_MESSAGE);
@@ -201,43 +201,45 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 					passwordField.grabFocus();
 				}
 			} catch (GestorException e1) {
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		} else {
-			JOptionPane.showMessageDialog(this, "Uno de los campos esta vacio","Error", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Uno de los campos esta vacio", "Error", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 
 	@Override
 	public void focusGained(FocusEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		if(e.getSource().equals(textUsuario)) {
-			if(insertString(50, textUsuario.getText())) {
+		if (e.getSource().equals(textUsuario)) {
+			if (insertString(50, textUsuario.getText())) {
 				textUsuario.setText("");
 			}
 		}
-		if(e.getSource().equals(passwordField)) {
+		if (e.getSource().equals(passwordField)) {
 			String pass = new String(passwordField.getPassword());
-			if(insertString(50, pass)) {
+			if (insertString(50, pass)) {
 				passwordField.setText("");
 			}
 		}
 	}
-	
+
 	/**
 	 * Metodo para comprobar que el texto introducido no es mayor de lo permitido
+	 * 
 	 * @param maximo el numero maximo de caracteres permitido
-	 * @param texto el texto que quieres comprobar
+	 * @param texto  el texto que quieres comprobar
 	 * @return un boolean, en caso de que tenga mas caracteres de lo permitido sera <b>true</b>, en caso contrario <b>false</b>
 	 */
 	public boolean insertString(int maximo, String texto) {
-		if(texto.length() > maximo) {
-			JOptionPane.showMessageDialog(this, "Excedido el limite de caracteres ("+maximo+")","Error", JOptionPane.WARNING_MESSAGE);
+		if (texto.length() > maximo) {
+			JOptionPane.showMessageDialog(this, "Excedido el limite de caracteres (" + maximo + ")", "Error",
+					JOptionPane.WARNING_MESSAGE);
 			return true;
 		}
 		return false;

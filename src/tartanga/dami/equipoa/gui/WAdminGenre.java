@@ -137,7 +137,7 @@ public class WAdminGenre extends JPanel implements ActionListener, FocusListener
 					textGenero.setText("");
 					textDescripcion.setText("");
 				} catch (GestorException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
@@ -162,7 +162,7 @@ public class WAdminGenre extends JPanel implements ActionListener, FocusListener
 					btnModificarGenero.setEnabled(false);
 					btnRegistrarGenero.setEnabled(true);
 				} catch (GestorException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
@@ -182,7 +182,7 @@ public class WAdminGenre extends JPanel implements ActionListener, FocusListener
 					btnModificarGenero.setEnabled(false);
 					btnRegistrarGenero.setEnabled(true);
 				} catch (GestorException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
@@ -230,7 +230,7 @@ public class WAdminGenre extends JPanel implements ActionListener, FocusListener
 					}
 				}
 			} catch (GestorException e1) {
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		if(e.getSource().equals(textDescripcion)) {

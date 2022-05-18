@@ -67,9 +67,9 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 
 	/**
 	 * @param authorInterface Interfaz de autores
-	 * @param genreInterface Interfaz de generos
-	 * @param bookInterface Interfaz de libros
-	 * @param tabbedPane lo que almacena todos los panes
+	 * @param genreInterface  Interfaz de generos
+	 * @param bookInterface   Interfaz de libros
+	 * @param tabbedPane      lo que almacena todos los panes
 	 */
 	public WAdminLibro(IAuthorController authorInterface, IGenreController genreInterface,
 			IBookController bookInterface, JTabbedPane tabbedPane) {
@@ -343,7 +343,6 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 					} catch (GestorException e1) {
 						JOptionPane.showMessageDialog(this, "Error al registrar el libro", "Error",
 								JOptionPane.ERROR_MESSAGE);
-						e1.printStackTrace();
 					}
 				}
 			}
@@ -416,14 +415,14 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 						} catch (GestorException e1) {
 							JOptionPane.showMessageDialog(this, "Error al modificar el libro", "Error",
 									JOptionPane.ERROR_MESSAGE);
-							e1.printStackTrace();
 						}
 					}
 				}
 			}
 		}
 		if (e.getSource().equals(btnEliminarLibro)) {
-			int seleccion = JOptionPane.showConfirmDialog(libros, "Quieres eliminar este libro con el isbn: "+textIsbn.getText()+" ?", "Aviso", 0);
+			int seleccion = JOptionPane.showConfirmDialog(libros,
+					"Quieres eliminar este libro con el isbn: " + textIsbn.getText() + " ?", "Aviso", 0);
 			if (seleccion == 0) {
 				try {
 					bookInterface.eliminarBook(Integer.valueOf(textIsbn.getText()));
@@ -452,7 +451,6 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 				} catch (NumberFormatException | GestorException e1) {
 					JOptionPane.showMessageDialog(this, "Error al eliminar el libro", "Error",
 							JOptionPane.ERROR_MESSAGE);
-					e1.printStackTrace();
 				}
 			}
 		}
@@ -563,7 +561,6 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 							JOptionPane.WARNING_MESSAGE);
 					textIsbn.setText("");
 					textIsbn.grabFocus();
-					e1.printStackTrace();
 				}
 			}
 		}
@@ -672,12 +669,13 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 
 	}
 
-	
 	/**
 	 * Metodo para comprobar que el texto introducido no es mayor de lo permitido
+	 * 
 	 * @param maximo el numero maximo de caracteres permitido
-	 * @param texto el texto que quieres comprobar
-	 * @return un boolean, en caso de que tenga mas caracteres de lo permitido sera <b>true</b>, en caso contrario <b>false</b>
+	 * @param texto  el texto que quieres comprobar
+	 * @return un boolean, en caso de que tenga mas caracteres de lo permitido sera
+	 *         <b>true</b>, en caso contrario <b>false</b>
 	 */
 	public boolean insertString(int maximo, String texto) {
 		if (texto.length() > maximo) {
@@ -689,7 +687,9 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 	}
 
 	/**
-	 * Metodo para cuando no existe un autor introducido se cambie de panel para introducirlo
+	 * Metodo para cuando no existe un autor introducido se cambie de panel para
+	 * introducirlo
+	 * 
 	 * @param codAutor el codigo del autor
 	 * @return un texto vacio si el autor no existe o el codigo del autor si existe
 	 */
@@ -697,20 +697,23 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 		try {
 			Author author = authorInterface.buscarAuthor(codAutor);
 			if (author == null && !codAutor.isEmpty()) {
-				int seleccion = JOptionPane.showConfirmDialog(libros, "Ese autor no existe quieres añadirlo?", "Aviso", 0);
+				int seleccion = JOptionPane.showConfirmDialog(libros, "Ese autor no existe quieres añadirlo?", "Aviso",
+						0);
 				if (seleccion == 0) {
 					tabbedPane.setSelectedIndex(1);
 				}
 				codAutor = "";
 			}
 		} catch (GestorException e1) {
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return codAutor;
 	}
 
 	/**
-	 * Metodo para cuando no existe un genero introducido se cambie de panel para introducirlo
+	 * Metodo para cuando no existe un genero introducido se cambie de panel para
+	 * introducirlo
+	 * 
 	 * @param genero el nombre del genero
 	 * @return un texto vacio si el genero no existe o el nombre si existe
 	 */
@@ -718,14 +721,15 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 		try {
 			Genre genre = genreInterface.buscarGenre(genero);
 			if (genre == null && !genero.isEmpty()) {
-				int seleccion = JOptionPane.showConfirmDialog(libros, "Ese genero no existe quieres añadirlo?", "Aviso", 0);
+				int seleccion = JOptionPane.showConfirmDialog(libros, "Ese genero no existe quieres añadirlo?", "Aviso",
+						0);
 				if (seleccion == 0) {
 					tabbedPane.setSelectedIndex(1);
 				}
 				genero = "";
 			}
 		} catch (GestorException e1) {
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return genero;
 	}
