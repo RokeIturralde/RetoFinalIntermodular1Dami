@@ -51,7 +51,6 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 			User user, IAuthorBookController authorBookInterface, ArrayList<Compra> compras) {
 		setLayout(null);
 		this.authorBookInterface = authorBookInterface;
-
 		this.compras = compras;
 		this.user = user;
 
@@ -141,26 +140,33 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 		this.add(scrollSellers);
 
 		RowsRenderer rRowsRenderer = new RowsRenderer(3);
-		// DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-		tableSales.setDefaultRenderer(Object.class, rRowsRenderer);
-		tableSales.isCellEditable(listLikedBooks.size(), 4);
+		ArrayList<AuthorBook> listLikedBooks;
+		try {
+			listLikedBooks = authorBookInterface.listAuthorBook(user.getUserName());
+			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+			tableSales.setDefaultRenderer(Object.class, rRowsRenderer);
+			tableSales.isCellEditable(listLikedBooks.size(), 4);
+			tableSales.setSelectionBackground(new Color(0, 191, 140));
+			tableSales.setSelectionForeground(Color.WHITE);
+			tableSales.setRowMargin(0);
+			tableSales.setRowHeight(70);
+			tableSales.setShowHorizontalLines(true);
+			tableSales.setShowVerticalLines(true);
+			scrollSellers.setViewportView(tableSales);
 
-		tableSales.setSelectionBackground(new Color(0, 191, 140));
-		tableSales.setSelectionForeground(Color.WHITE);
-		tableSales.setRowMargin(0);
-		tableSales.setRowHeight(70);
-		tableSales.setShowHorizontalLines(true);
-		tableSales.setShowVerticalLines(true);
-		scrollSellers.setViewportView(tableSales);
+			tableSales.addMouseListener(this);
 
-		tableSales.addMouseListener(this);
+			// Estilo del header
+			JTableHeader tableHeader = tableSales.getTableHeader();
+			tableHeader.setBackground(new Color(0, 191, 140));
+			tableHeader.setForeground(Color.WHITE);
+			tableHeader.setBorder(null);
+			tableHeader.setEnabled(false);
+		} catch (GestorException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		// Estilo del header
-		JTableHeader tableHeader = tableSales.getTableHeader();
-		tableHeader.setBackground(new Color(0, 191, 140));
-		tableHeader.setForeground(Color.WHITE);
-		tableHeader.setBorder(null);
-		tableHeader.setEnabled(false);
 	}
 
 	@Override
@@ -383,7 +389,7 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 
 	public void crearTablaFavoritos(User user) {
 		// Tabla de preferencias personales
-		try {
+		try { 
 			ArrayList<AuthorBook> listLikedBooks;
 			listLikedBooks = authorBookInterface.listAuthorBook(user.getUserName());
 			if (listLikedBooks.size() > 0) {
@@ -393,33 +399,33 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 					matrizTabla[i][1] = listLikedBooks.get(i).getName() + listLikedBooks.get(i).getSurname();
 					matrizTabla[i][2] = listLikedBooks.get(i).getDescription();
 					matrizTabla[i][3] = Float.toString(listLikedBooks.get(i).getPrice());
-					scrollFav = new JScrollPane();
-					scrollFav.setBounds(25, 100, 420, 325);
-
-					this.add(scrollFav);
-
-					String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
-
-					// Estilo de la tabla
-					tableFav = new JTable(matrizTabla, columNames) {
-
-						private static final long serialVersionUID = 1L;
-
-						// ***********************METODO PARA HACER QUE LA TABLA NO SEA EDITABLE, Y ASI
-						// HACER DOBLE CLICK************************************
-						// Para ello sobreescribimos el metodo que ya tiene la clase
-						// JTable.isCellEditable
-						public boolean isCellEditable(int row, int column) {
-							for (int i = 0; i < tableFav.getRowCount(); i++) {
-								if (row == i) {
-									return false;
-								}
-							}
-							return true;
-						}
-					};
+					
 				}
+				scrollFav = new JScrollPane();
+				scrollFav.setBounds(25, 100, 420, 325);
 
+				this.add(scrollFav);
+
+				String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
+
+				// Estilo de la tabla
+				tableFav = new JTable(matrizTabla, columNames) {
+
+					private static final long serialVersionUID = 1L;
+
+					// ***********************METODO PARA HACER QUE LA TABLA NO SEA EDITABLE, Y ASI
+					// HACER DOBLE CLICK************************************
+					// Para ello sobreescribimos el metodo que ya tiene la clase
+					// JTable.isCellEditable
+					public boolean isCellEditable(int row, int column) {
+						for (int i = 0; i < tableFav.getRowCount(); i++) {
+							if (row == i) {
+								return false;
+							}
+						}
+						return true;
+					}
+				};
 				RowsRenderer rRowsRenderer = new RowsRenderer(3);
 				DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 				tableFav.setDefaultRenderer(Object.class, rRowsRenderer);

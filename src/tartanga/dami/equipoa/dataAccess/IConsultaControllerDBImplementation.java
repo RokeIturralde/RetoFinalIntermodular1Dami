@@ -74,7 +74,7 @@ public class IConsultaControllerDBImplementation implements IConsultaController 
 				consulta.setTitulo(rs.getString("b.title"));
 				consulta.setDescription(rs.getString("b.description"));
 				consulta.setPrecio(rs.getFloat("b.price"));
-				consulta.setGeneros(rs.getString("g.genrename"));
+				consulta.setGeneros(rs.getString("generos"));
 				consulta.setAutores(rs.getString("authors"));
 				listaConsulta.add(consulta);
 			}

@@ -111,10 +111,11 @@ public class WMenu extends JDialog implements MouseListener {
 			IComprasController comprasInterface, IGenreController genreInterface,
 			IConsultaController consultaInterface) {
 
-		panelPerfil = new WMenuPerfil(userInterface, authorInterface, genreInterface, comprasInterface, user,
-				panelInicio);
+		
 		panelInicio = new WMenuInicio(userInterface, bookInterface, authorInterface, user, authorBookInterface,
 				compras);
+		panelPerfil = new WMenuPerfil(userInterface, authorInterface, genreInterface, comprasInterface, user,
+				panelInicio);
 		panelConsultas = new WMenuConsultas(genreInterface, bookInterface, consultaInterface, authorInterface);
 
 		tabbedPane.add("Inicio", panelInicio);

@@ -112,6 +112,10 @@ public class WMenuConsultas extends JPanel implements ActionListener {
 				} else {
 					consultas = consultaInterface.tablaConsulta(txteditorComp.getText());
 				}
+				// Si no escribe nada, aparecen todos los datos en la table
+				if (txteditorComp.getText().equalsIgnoreCase("")) {
+					consultas = consultaInterface.listarTodosLosDatos();
+				}
 
 				txteditorComp.setText("");
 				txteditorComp.setEditable(true);
