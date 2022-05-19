@@ -48,6 +48,10 @@ import javax.swing.JTable;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 
+/**
+ * @author Sendoa
+ * Ventana en la que se almacenaran a modo de pestañas todos los paneles para la gestion administrativa de la libreria
+ */
 public class WAdmin extends JDialog implements MouseListener {
 
 	private IBookController bookInterface;

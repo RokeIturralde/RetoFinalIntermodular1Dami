@@ -7,7 +7,7 @@ import tartanga.dami.equipoa.model.User;
 
 /**
  * @author Sendoa
- *
+ * Interfaz para la gestion de usuarios
  */
 public interface IUserController {
 	

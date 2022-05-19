@@ -25,7 +25,7 @@ import javax.swing.JButton;
 
 /**
  * @author Sendoa
- *
+ * Panel para la gestion administrativa de los generos, se podran añadir modificar y/o eliminar
  */
 public class WAdminGenre extends JPanel implements ActionListener, FocusListener{
 	

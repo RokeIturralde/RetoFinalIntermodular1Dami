@@ -7,7 +7,7 @@ import tartanga.dami.equipoa.model.Author;
 
 /**
  * @author Roke
- *
+ * Interfaz para la gestion de autores
  */
 public interface IAuthorController {
 

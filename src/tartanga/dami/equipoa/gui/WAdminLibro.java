@@ -1,7 +1,6 @@
 package tartanga.dami.equipoa.gui;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,7 +33,7 @@ import tartanga.dami.equipoa.model.Genre;
 
 /**
  * @author Sendoa
- *
+ * Panel para la gestion administrativa de los libros, se podran añadir modificar y/o eliminar
  */
 public class WAdminLibro extends JPanel implements ActionListener, FocusListener {
 
@@ -55,7 +54,7 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 	private Book book;
 	private JCalendar calendarioLibro;
 	private JTabbedPane tabbedPane;
-	private JPanel libros;;
+	private JPanel libros;
 	private JButton btnEliminarLibro;
 	private JButton btnCancelarLibro;
 	private ArrayList<String> authorList;

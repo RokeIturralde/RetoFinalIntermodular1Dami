@@ -26,7 +26,7 @@ import tartanga.dami.equipoa.model.Author;
 
 /**
  * @author Sendoa
- *
+ * Panel para la gestion administrativa de los autores, se podran añadir modificar y/o eliminar
  */
 public class WAdminAutor extends JPanel implements ActionListener, FocusListener {
 

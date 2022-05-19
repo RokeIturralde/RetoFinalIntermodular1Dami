@@ -10,7 +10,7 @@ import tartanga.dami.equipoa.model.Genre;
 
 /**
  * @author Eneko
- *
+ * Interfaz para la gestion de libros
  */
 public interface IBookController {
 

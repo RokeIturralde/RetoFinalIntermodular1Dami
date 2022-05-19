@@ -8,7 +8,7 @@ import tartanga.dami.equipoa.model.User;
 
 /**
  * @author Eneko
- *
+ * Interfaz para la gestion de compras
  */
 public interface IComprasController {
 

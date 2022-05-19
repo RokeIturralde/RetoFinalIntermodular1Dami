@@ -7,7 +7,7 @@ import tartanga.dami.equipoa.model.Genre;
 
 /**
  * @author Roke
- *
+ * Interfaz para la gestion de generos
  */
 public interface IGenreController {
 
