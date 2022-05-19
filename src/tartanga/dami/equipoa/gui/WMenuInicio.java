@@ -53,10 +53,10 @@ public class WMenuInicio extends JPanel implements MouseListener {
 			User user, IAuthorBookController authorBookInterface, ArrayList<Compra> compras) {
 		setLayout(null);
 
-		this.compras=compras;
-		this.user=user;
+		this.compras = compras;
+		this.user = user;
 		this.listLikedBooks = listLikedBooks;
-		
+
 		setBounds(100, 300, 520, 12);
 
 		JLabel lblNewLabel = new JLabel("Solo para ti");
@@ -82,7 +82,7 @@ public class WMenuInicio extends JPanel implements MouseListener {
 		try {
 			Book book;
 			listLikedIsbn = bookInterface.listaFavoritos(user.getUserName());
-			for(int i =0; i<listLikedIsbn.size();i++) {
+			for (int i = 0; i < listLikedIsbn.size(); i++) {
 				book = bookInterface.buscarBook(listLikedIsbn.get(i));
 				listLikedBooks.add(book);
 			}
@@ -101,7 +101,7 @@ public class WMenuInicio extends JPanel implements MouseListener {
 					e.printStackTrace();
 				}
 				matrizTabla[i][2] = listLikedBooks.get(i).getDescription();
-				matrizTabla[i][3] = " Comprar \n"+Float.toString(listLikedBooks.get(i).getPrice())+"€";
+				matrizTabla[i][3] = " Comprar \n" + Float.toString(listLikedBooks.get(i).getPrice()) + "€";
 			}
 
 			scrollFav = new JScrollPane();
@@ -194,7 +194,7 @@ public class WMenuInicio extends JPanel implements MouseListener {
 			matrizTablaSales[i][1] = libros.get(i).getTitle();
 			matrizTablaSales[i][2] = libros.get(i).getAuthors();
 			matrizTablaSales[i][3] = libros.get(i).getDescription();
-			matrizTablaSales[i][4] = "Comprar "+ libros.get(i).getPrice()+"€";
+			matrizTablaSales[i][4] = "Comprar " + libros.get(i).getPrice() + "€";
 		}
 
 		String[] columNames = { "Posicion", "Titulo", "Autor", "Descripcion", "¿Te interesa?" };
@@ -260,38 +260,49 @@ public class WMenuInicio extends JPanel implements MouseListener {
 				}
 			}
 		}
-		
-		if(e.getSource().equals(tableFav)) {
+
+		if (e.getSource().equals(tableFav)) {
 			if (tableFav.getSelectedColumn() == 3) {
 				int cual = tableFav.getSelectedRow();
+				String canti = null;
 				int cantidad;
+				Book book = listLikedBooks.get(cual);
+				boolean repetido = false;
 				try {
-					Book book = listLikedBooks.get(cual);
-					cantidad = Integer.parseInt(
-						JOptionPane.showInputDialog(null, "Introduce el numero de ejemplares que deseas comprar. Stock: "+book.getStock(),
-								"Confirma la compra", JOptionPane.PLAIN_MESSAGE));
-				if(cantidad>0 && cantidad<=book.getStock()) {
-					Compra compra = new Compra();
-					compra.setIsbn(book.getIsbn());
-					compra.setCantidadLibros(cantidad);
-					compra.setPrecioCompra(book.getPrice());
-					compras.add(compra);
-				}
-				else {
-					JOptionPane.showMessageDialog(this, "Sin stock", "Error",
-							JOptionPane.WARNING_MESSAGE);
-				}
-				} catch(NumberFormatException a) {
+					canti = String.valueOf(JOptionPane.showInputDialog(null,
+							"Introduce el numero de ejemplares que deseas comprar. Stock: " + book.getStock(),
+							"Confirma la compra", JOptionPane.PLAIN_MESSAGE));
+					cantidad = Integer.parseInt(canti);
+					
+					for (int i = 0; i < compras.size(); i++) {
+						if (compras.get(i).getIsbn() == book.getIsbn()) {
+							compras.get(i).setCantidadLibros(compras.get(i).getCantidadLibros() + cantidad);
+							if (compras.get(i).getCantidadLibros()>book.getStock()) {
+								JOptionPane.showMessageDialog(this, "No hay suficiente stock", "Error",
+										JOptionPane.INFORMATION_MESSAGE);
+								compras.get(i).setCantidadLibros(compras.get(i).getCantidadLibros()-cantidad);
+							}
+							repetido = true;
+							i = compras.size();
+						}
+					}
+					if (cantidad > 0 && cantidad <= book.getStock() && repetido ==false) {
+						Compra compra = new Compra();
+						compra.setIsbn(book.getIsbn());
+						compra.setCantidadLibros(cantidad);
+						compra.setPrecioCompra(book.getPrice());
+						compras.add(compra);
+					}
+					
+				} catch (NumberFormatException a) {
+					if (!canti.isEmpty())
 						JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros", "Error",
-						JOptionPane.WARNING_MESSAGE);
-					
-					
+								JOptionPane.ERROR_MESSAGE);
 				}
-				
-				
+
 			}
 		}
-		
+
 		if (e.getSource().equals(tableFav)) {
 			if (e.getClickCount() == 2) {
 				if (tableFav.getSelectedColumn() == 2) {
@@ -306,26 +317,42 @@ public class WMenuInicio extends JPanel implements MouseListener {
 		if (e.getSource().equals(tableSales)) {
 			if (tableSales.getSelectedColumn() == 4) {
 				int cual = tableSales.getSelectedRow();
+				String canti = null;
+				int cantidad;
+				Book book = libros.get(cual);
+				boolean repetido = false;
 				try {
-					Book book = libros.get(cual);
-					int cantidad = Integer.parseInt(
-						JOptionPane.showInputDialog(null, "Introduce el numero de ejemplares que deseas comprar. Stock: "+book.getStock(),
-								"Confirma la compra", JOptionPane.PLAIN_MESSAGE));
-					if(cantidad>0 && cantidad<=book.getStock()) {
+					canti = String.valueOf(JOptionPane.showInputDialog(null,
+							"Introduce el numero de ejemplares que deseas comprar. Stock: " + book.getStock(),
+							"Confirma la compra", JOptionPane.PLAIN_MESSAGE));
+					cantidad = Integer.parseInt(canti);
+
+					for (int i = 0; i < compras.size(); i++) {
+						if (compras.get(i).getIsbn() == book.getIsbn()) {
+							compras.get(i).setCantidadLibros(compras.get(i).getCantidadLibros() + cantidad);
+							if (compras.get(i).getCantidadLibros()>book.getStock()) {
+								JOptionPane.showMessageDialog(this, "No hay suficiente stock", "Error",
+										JOptionPane.INFORMATION_MESSAGE);
+								compras.get(i).setCantidadLibros(compras.get(i).getCantidadLibros()-cantidad);
+							}
+							repetido = true;
+							i = compras.size();
+						}
+					}
+					if (cantidad > 0 && cantidad <= book.getStock() && repetido ==false) {
 						Compra compra = new Compra();
 						compra.setIsbn(book.getIsbn());
 						compra.setCantidadLibros(cantidad);
 						compra.setPrecioCompra(book.getPrice());
-						compra.setCantidadLibros(cantidad);
 						compras.add(compra);
 					}
-				} catch(NumberFormatException a) {
-					JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros", "Error",
-							JOptionPane.WARNING_MESSAGE);
+					
+				} catch (NumberFormatException a) {
+					if (!canti.isEmpty())
+						JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros", "Error",
+								JOptionPane.ERROR_MESSAGE);
 				}
-				
-				
-				
+
 			}
 		}
 	}

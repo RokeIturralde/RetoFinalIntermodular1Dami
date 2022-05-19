@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -38,6 +40,7 @@ public class WCarrito extends JDialog implements ActionListener{
 	private JScrollPane scrollCarrito;
 	private User user;
 	private JButton bComprar;
+	private JLabel lblVacio;
 
 	public WCarrito(IBookController bookInterface, IAuthorController authorInterface, IComprasController comprasInterface, ArrayList<Compra> compras, IGenreController genreInterface, User user) {
 		setBounds(100, 100, 1047, 680);
@@ -75,7 +78,7 @@ public class WCarrito extends JDialog implements ActionListener{
 					matrizTabla[i][4] = Float.toString(precioTotal);
 					
 					scrollCarrito = new JScrollPane();
-					scrollCarrito.setBounds(25, 100, 420, 325);
+					scrollCarrito.setBounds(50, 100, 900, 325);
 					this.add(scrollCarrito);
 					
 					String[] columNames = { "Titulo", "Autor(es)", "Genero(s)", "Cantidad", "Precio"};
@@ -89,20 +92,32 @@ public class WCarrito extends JDialog implements ActionListener{
 					tablaCarrito.setSelectionBackground(new Color(0, 230, 168));
 					tablaCarrito.setSelectionForeground(Color.WHITE);
 					tablaCarrito.setRowMargin(0);
-					tablaCarrito.setRowHeight(70);
+					tablaCarrito.setRowHeight(50);
 					tablaCarrito.setShowHorizontalLines(true);
 					tablaCarrito.setShowVerticalLines(true);
 					scrollCarrito.setViewportView(tablaCarrito);
 					
 				} catch (GestorException e) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(this, e.getMessage(), "Error",
+							JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 				
 			}
 		}
 		else {
-			//Mostrar mensaje de carrito vacio
+			lblVacio = new JLabel();
+			lblVacio.setIcon(new ImageIcon(WMenu.class.getResource("/tartanga/dami/equipoa/resources/carritoVacioIcono.png")));
+			lblVacio.setBounds(50, 100, 900, 325);
+			this.add(lblVacio);
+			
+			/*
+			 * lblCerrar = new JLabel("");
+		lblCerrar.setIcon(new ImageIcon(WMenu.class.getResource("/tartanga/dami/equipoa/resources/iconoSalir.png")));
+		lblCerrar.setBounds(948, 10, 53, 33);
+		getContentPane().add(lblCerrar);
+		lblCerrar.addMouseListener(this);
+			 */
 		}
 		
 		bComprar = new JButton();
