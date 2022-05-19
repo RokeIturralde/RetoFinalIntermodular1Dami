@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.awt.event.MouseListener;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -35,6 +36,7 @@ import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.JComboBox;
+import java.awt.Rectangle;
 
 public class WMenuPerfil extends JPanel implements ActionListener, MouseListener {
 	private JTextField txtNombre;
@@ -70,6 +72,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 
 	public WMenuPerfil(IUserController userInterface, IAuthorController authorInterface,
 			IGenreController genreInterface, IComprasController comprasInterface, User user, WMenuInicio panelInicio) {
+
 		setLayout(null);
 		this.userInterface = userInterface;
 		this.authorInterface = authorInterface;
@@ -311,7 +314,12 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 				tableHeader.setBorder(null);
 				tableHeader.setEnabled(false);
 			} else {
-				JOptionPane.showMessageDialog(this, "No hay preferencias personales");
+				JLabel lblNoHayCompras = new JLabel("");
+
+				lblNoHayCompras.setIcon(new ImageIcon(
+						WMenuPerfil.class.getResource("/tartanga/dami/equipoa/resources/imgNoHayCompras.png")));
+				lblNoHayCompras.setBounds(25, 209, 583, 125);
+				this.add(lblNoHayCompras);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -360,7 +368,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 
 	}
 
-	// Eliminar preferencias personales de la base de datos (JList se ver� igual)
+	// Eliminar preferencias personales de la base de datos
 	private void borrarPreferencia(ArrayList<Author> autores, User user, ArrayList<String> generos) {
 		int cambio, confirmacion, posicion, posicion2;
 

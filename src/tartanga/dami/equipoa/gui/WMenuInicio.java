@@ -81,13 +81,12 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 		try {
 			bookSales = bookInterface.listTopSales();
 		} catch (GestorException e) {
-			JOptionPane.showMessageDialog(this, "Error al cargar la tabla", "Aviso", 0);
+			JOptionPane.showMessageDialog(this, "Error al cargar la tabla");
 			e.printStackTrace();
 		}
 
 		libros = new ArrayList<>();
 		ArrayList<Integer> ventas = new ArrayList<>();
-		System.out.println(bookSales.size());
 		for (int i = 0; i < bookSales.size(); i++) {
 			if (i % 2 == 0) {
 				try {

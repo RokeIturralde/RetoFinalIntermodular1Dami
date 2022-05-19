@@ -348,7 +348,6 @@ public class IBookControllerDBImplementation implements IBookController {
 				listTopSales.add(rs.getInt("isbn"));
 				listTopSales.add(rs.getInt("quantity"));
 			}
-			System.out.println(rs.getFetchSize());
 		} catch (SQLException e1) {
 			String error = "Error en la conexion con la base de datos";
 			GestorException exception = new GestorException(error);
