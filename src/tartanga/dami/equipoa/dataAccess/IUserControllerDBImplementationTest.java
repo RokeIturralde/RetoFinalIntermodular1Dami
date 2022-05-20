@@ -45,11 +45,11 @@ public class IUserControllerDBImplementationTest {
 		user.setPhone(48950);
 		user.setSurname("eran");
 		user.setTipo('P');
-		user.setUserName("erandio10");
+		user.setUserName("daquavious dingleton");
 
 		pruebaInterfaz.altaUsuario(user);
-		pruebaInterfaz.anadirAutor("erandio", "A001");
-		pruebaInterfaz.anadirGenero("erandio", "fantasia");
+		pruebaInterfaz.anadirAutor("daquavious dingleton", "A001");
+		pruebaInterfaz.anadirGenero("daquavious dingleton", "fantasia");
 		User prueba = pruebaInterfaz.buscarUser(user.getUserName());
 		assertNotEquals(prueba, null);
 	}
@@ -101,16 +101,6 @@ public class IUserControllerDBImplementationTest {
 	@Test
 	public void testUserGenero() throws GestorException {
 		ArrayList<String> prueba = pruebaInterfaz.userGenero("gitanito77");
-		assertNotEquals(prueba, null);
-	}
-
-	/**
-	 * Metodo test que lista los autores favoritos de un usuario
-	 * @throws GestorException
-	 */
-	@Test
-	public void testUserAuthor() throws GestorException {
-		ArrayList<String> prueba = pruebaInterfaz.userAuthor("gitanito77");
 		assertNotEquals(prueba, null);
 	}
 

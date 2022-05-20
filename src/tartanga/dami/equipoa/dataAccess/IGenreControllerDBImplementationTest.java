@@ -2,13 +2,8 @@ package tartanga.dami.equipoa.dataAccess;
 
 import static org.junit.Assert.*;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import tartanga.dami.equipoa.gestorException.GestorException;
@@ -111,7 +106,7 @@ public class IGenreControllerDBImplementationTest {
 	 */
 	@Test
 	public void testInsertarGeneroPreferido() throws GestorException {
-		int prueba = pruebaGenero.insertarGeneroPreferido("dingle", "ficcion");
+		int prueba = pruebaGenero.insertarGeneroPreferido("dingle", "prueba");
 		assertEquals(prueba, 1);
 	}
 }

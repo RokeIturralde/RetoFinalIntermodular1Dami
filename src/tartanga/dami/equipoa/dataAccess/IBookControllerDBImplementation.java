@@ -140,8 +140,8 @@ public class IBookControllerDBImplementation implements IBookController {
 		} catch (SQLException e1) {
 			String error = "Error en la conexion con la base de datos";
 			GestorException exception = new GestorException(error);
-			
 			throw exception;
+			
 		} finally {
 			try {
 				connection.closeConnection(stmt, con);
@@ -204,7 +204,6 @@ public class IBookControllerDBImplementation implements IBookController {
 		} catch (SQLException e1) {
 			String error = "Error en la conexion con la base de datos";
 			GestorException exception = new GestorException(error);
-			
 			throw exception;
 		} finally {
 			try {
