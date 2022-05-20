@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.awt.event.MouseListener;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -27,6 +28,7 @@ import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
 import tartanga.dami.equipoa.model.Book;
 import tartanga.dami.equipoa.model.Compra;
+import tartanga.dami.equipoa.model.Genre;
 import tartanga.dami.equipoa.model.Partner;
 import tartanga.dami.equipoa.model.User;
 
@@ -34,6 +36,7 @@ import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.JComboBox;
+import java.awt.Rectangle;
 
 public class WMenuPerfil extends JPanel implements ActionListener, MouseListener {
 	private JTextField txtNombre;
@@ -46,6 +49,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 	private IAuthorController authorInterface;
 	private IGenreController genreInterface;
 	private IBookController bookInterface;
+	private IComprasController comprasInterface;
 
 	private JButton btnGuardarCambios;
 	private JButton btnModificarDatos;
@@ -60,18 +64,24 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 	// Listas para el JList
 	private ArrayList<Author> autores;
 	private ArrayList<String> generos;
+	private ArrayList<String> generosComboBox;
+	private WMenuInicio menuInicio;
+
 	private User user;
 	private DefaultListModel modelo2, modelo;
 
 	public WMenuPerfil(IUserController userInterface, IAuthorController authorInterface,
-			IGenreController genreInterface, IComprasController comprasInterface, User user) {
+			IGenreController genreInterface, IComprasController comprasInterface, User user, WMenuInicio panelInicio) {
+
 		setLayout(null);
 		this.userInterface = userInterface;
 		this.authorInterface = authorInterface;
 		this.user = user;
 		this.genreInterface = genreInterface;
+		this.comprasInterface = comprasInterface;
+		this.menuInicio = panelInicio;
 
-		setBounds(100, 300, 520, 12);
+		setBounds(100, 300, 520, 311);
 
 		btnModificarDatos = new JButton("Modificar Datos");
 		btnModificarDatos.setBounds(32, 25, 118, 35);
@@ -125,7 +135,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 		add(lblNumCuenta);
 
 		JLabel lblNewLabel = new JLabel("Preferencias Personales");
-		lblNewLabel.setBounds(107, 360, 118, 35);
+		lblNewLabel.setBounds(90, 360, 158, 35);
 		add(lblNewLabel);
 
 		txtNombre = new JTextField();
@@ -204,10 +214,11 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 
 			listAutores = new JList();
 			modelo = new DefaultListModel();
-			for (int i = 0; i < autores.size(); i++) {
-				modelo.addElement(autores.get(i).getName() + " " + autores.get(i).getSurname());
+			if (autores.size() > 0) {
+				for (int i = 0; i < autores.size(); i++) {
+					modelo.addElement(autores.get(i).getName() + " " + autores.get(i).getSurname());
+				}
 			}
-
 			listAutores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			listAutores.setBounds(32, 406, 118, 148);
 			listAutores.setModel(modelo);
@@ -216,8 +227,10 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 			// Inicializamos la Lista de Generos Preferidos
 			listGeneros = new JList();
 			modelo2 = new DefaultListModel();
-			for (int i = 0; i < generos.size(); i++) {
-				modelo2.addElement(generos.get(i));
+			if (generos.size() > 0) {
+				for (int i = 0; i < generos.size(); i++) {
+					modelo2.addElement(generos.get(i));
+				}
 			}
 			listGeneros.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			listGeneros.setBounds(183, 406, 118, 148);
@@ -231,6 +244,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 			cbxGeneros = new JComboBox();
 			cbxGeneros.setBounds(652, 476, 158, 29);
 			cargarGeneros();
+			cbxGeneros.setEnabled(false);
 			add(cbxGeneros);
 
 			lblGenero = new JLabel("A\u00F1adir Genero");
@@ -240,13 +254,13 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 			cbxAutores = new JComboBox();
 			cbxAutores.setBounds(351, 476, 158, 29);
 			cargarAutores();
+			cbxAutores.setEnabled(false);
 			add(cbxAutores);
 		} catch (GestorException e1) {
 			e1.printStackTrace();
 		}
 
 		// Creacion tabla del historial de compra
-		String nombreApellidos = "";
 		try {
 			ArrayList<Compra> compras = comprasInterface.historialCompras(user.getUserName());
 			if (compras.size() > 0) {
@@ -300,7 +314,12 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 				tableHeader.setBorder(null);
 				tableHeader.setEnabled(false);
 			} else {
-				// JOptionPane.showMessageDialog(this, "No hay preferencias personales");
+				JLabel lblNoHayCompras = new JLabel("");
+
+				lblNoHayCompras.setIcon(new ImageIcon(
+						WMenuPerfil.class.getResource("/tartanga/dami/equipoa/resources/imgNoHayCompras.png")));
+				lblNoHayCompras.setBounds(25, 209, 583, 125);
+				this.add(lblNoHayCompras);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -345,10 +364,11 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 		} catch (GestorException e) {
 			e.printStackTrace();
 		}
+		menuInicio.crearTablaFavoritos(user, bookInterface);
 
 	}
 
-	// Eliminar preferencias personales de la base de datos (JList se ver� igual)
+	// Eliminar preferencias personales de la base de datos
 	private void borrarPreferencia(ArrayList<Author> autores, User user, ArrayList<String> generos) {
 		int cambio, confirmacion, posicion, posicion2;
 
@@ -362,16 +382,14 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 					cambio = authorInterface.borrarAutorPreferidos(autores.get(posicion).getSurname(),
 							user.getUserName(), autores.get(posicion).getName());
 					if (cambio == 1) {
-						JOptionPane.showMessageDialog(this,
-								"Se han modificado los cambios de Autores preferidos, en el siguiente inicio de sesion los cambios estaran actualizados");
+						JOptionPane.showMessageDialog(this, "Se han modificado los cambios de Autores preferidos");
 						refrescarPreferencias();
 					}
 					// Si solo se ha seleccionado la lista de los Generos
 				} else if (posicion == -1) {
 					cambio = genreInterface.borrarGenerosPreferidos(generos.get(posicion2), user.getUserName());
 					if (cambio == 1) {
-						JOptionPane.showMessageDialog(this,
-								"Se han modificado los cambios de Generos preferidos, en el siguiente inicio de sesion los cambios estaran actualizados");
+						JOptionPane.showMessageDialog(this, "Se han modificado los cambios de Generos preferidos");
 						refrescarPreferencias();
 					}
 					// Si las dos listas han sido seleccionadas
@@ -384,17 +402,17 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 					// Los cambios se efectuan correctamente
 					if (cambioAutor == 1 && cambioGenero == 1) {
 						JOptionPane.showMessageDialog(this,
-								"Se han modificado los cambios de Autores y de Generos preferidos, en el siguiente inicio de sesion los cambios estaran actualizados");
+								"Se han modificado los cambios de Autores y de Generos preferidos");
 						refrescarPreferencias();
 						// Los cambios solo se hacen en Autor
 					} else if (cambioAutor == 1 && cambioGenero == 0) {
 						JOptionPane.showMessageDialog(this,
-								"Se han modificado los cambios de Autores preferidos, pero no de Generos, en el siguiente inicio de sesion los cambios estaran actualizados");
+								"Se han modificado los cambios de Autores preferidos, pero no de Generos");
 						refrescarPreferencias();
 						// Los cambios solo se hacen en Genero
 					} else {
 						JOptionPane.showMessageDialog(this,
-								"Se han modificado los cambios de Generos preferidos, pero no de Autor, en el siguiente inicio de sesion los cambios estaran actualizados");
+								"Se han modificado los cambios de Generos preferidos, pero no de Autor");
 						refrescarPreferencias();
 					}
 				}
@@ -407,19 +425,21 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 
 	private void cargarAutores() {
 		ArrayList<Author> autores;
-		boolean esta = false;
+		boolean esta;
 		try {
 			autores = authorInterface.listarAutores();
 			ArrayList<Author> autoresPref = authorInterface.listarAutoresPreferidos(user.getUserName());
-			for (int i = 0; i < autoresPref.size(); i++) {
-				for (int j = 0; j < autores.size(); j++) {
-					if (autoresPref.get(i).getCodAuthor() != autores.get(j).getCodAuthor()) {
-						cbxAutores.addItem(autores.get(i).getName() + " " + autores.get(i).getSurname());
+			for (int i = 0; i < autores.size(); i++) {
+				esta = false;
+				for (int j = 0; j < autoresPref.size(); j++) {
+					if (autoresPref.get(j).getCodAuthor().equals(autores.get(i).getCodAuthor())) {
 						esta = true;
-					}
-					if (esta) {
 						j = autores.size();
 					}
+
+				}
+				if (!esta) {
+					cbxAutores.addItem(autores.get(i).getName() + " " + autores.get(i).getSurname());
 				}
 			}
 			cbxAutores.setSelectedIndex(-1);
@@ -431,21 +451,22 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 	}
 
 	private void cargarGeneros() {
-		ArrayList<String> generos;
-		boolean esta = false;
+		boolean esta;
 		try {
-			generos = genreInterface.listarGeneros();
+			generosComboBox = genreInterface.listarGeneros();
 			ArrayList<String> generosPref = genreInterface.listarGenerosPreferidos(user.getUserName());
-			for (int i = 0; i < generosPref.size(); i++) {
-				for (int j = 0; j < generos.size(); j++) {
-					if (!(generosPref.get(i).equals(generos.get(j)))) {
-						cbxGeneros.addItem(generos.get(j));
+			for (int i = 0; i < generosComboBox.size(); i++) {
+				esta = false;
+				for (int j = 0; j < generosPref.size(); j++) {
+					if (generosPref.get(j).equals(generosComboBox.get(i))) {
 						esta = true;
-					}
-					if (esta) {
-						j = generos.size();
+						j = generosPref.size();
 					}
 				}
+				if (!esta) {
+					cbxGeneros.addItem(generosComboBox.get(i));
+				}
+
 			}
 			cbxGeneros.setSelectedIndex(-1);
 
@@ -456,8 +477,9 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 	}
 
 	private void annadirPreferencia() {
-		int cantidadAutores, cantidadGeneros, cambioAutor, cambioGenero;
+		int cantidadAutores, cantidadGeneros, longitudCombobox;
 		ArrayList<Author> autoresCombo;
+		ArrayList<String> generosCombo;
 		try {
 			ArrayList<Author> autores = authorInterface.listarAutoresPreferidos(user.getUserName());
 			ArrayList<String> generos = genreInterface.listarGenerosPreferidos(user.getUserName());
@@ -479,32 +501,27 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 				refrescarPreferencias();
 			} else {
 				autoresCombo = authorInterface.listarAutores();
+				generosCombo = genreInterface.listarGeneros();
 				if (cbxAutores.getSelectedIndex() == -1 && cbxGeneros.getSelectedIndex() != -1) {
-					cambioGenero = genreInterface.insertarGeneroPreferido(user.getUserName(),
-							generos.get(cbxGeneros.getSelectedIndex()));
-					if (cambioGenero == 1) {
-						JOptionPane.showMessageDialog(this, "Se ha a�adido un genero favorito");
-						refrescarPreferencias();
+					longitudCombobox = cantidadComboBoxGeneros();
+					if (cbxGeneros.getSelectedIndex() == 0 && longitudCombobox > 1) {
+						genreInterface.insertarGeneroPreferido(user.getUserName(),
+								generosCombo.get(cbxGeneros.getSelectedIndex() + 1));
+					} else {
+						genreInterface.insertarGeneroPreferido(user.getUserName(),
+								generosCombo.get(cbxGeneros.getSelectedIndex()));
 					}
+
 				} else if (cbxGeneros.getSelectedIndex() == -1 && cbxAutores.getSelectedIndex() != -1) {
 					Author a = authorInterface.buscarAuthor(cbxAutores.getSelectedItem().toString()
 							.substring(cbxAutores.getSelectedItem().toString().indexOf(" ") + 1));
-					cambioAutor = authorInterface.insertarAutorPreferido(user.getUserName(), a.getCodAuthor());
-					if (cambioAutor == 1) {
-						JOptionPane.showMessageDialog(this, "Se ha a�adido un autor favorito");
-						refrescarPreferencias();
-					}
+					authorInterface.insertarAutorPreferido(user.getUserName(), a.getCodAuthor());
 				} else {
-					cambioGenero = genreInterface.insertarGeneroPreferido(user.getUserName(),
-							cbxGeneros.getSelectedItem().toString());
-					cambioAutor = authorInterface.insertarAutorPreferido(user.getUserName(),
-							autoresCombo.get(cbxAutores.getSelectedIndex() + 1).getCodAuthor());
-					if (cambioAutor == 1 && cambioGenero == 1) {
-						JOptionPane.showMessageDialog(this, "Se han a�adido tanto un autor como un genero favorito");
-						refrescarPreferencias();
-					}
+					genreInterface.insertarGeneroPreferido(user.getUserName(), cbxGeneros.getSelectedItem().toString());
+					authorInterface.insertarAutorPreferido(user.getUserName(),
+							autoresCombo.get(cbxAutores.getSelectedIndex()).getCodAuthor());
 				}
-
+				refrescarPreferencias();
 			}
 		} catch (GestorException e) {
 			e.printStackTrace();
@@ -523,6 +540,8 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 		txtDireccion.setEditable(true);
 		txtTelefono.setEditable(true);
 		txtNumCuenta.setEditable(true);
+		cbxGeneros.setEnabled(true);
+		cbxAutores.setEnabled(true);
 	}
 
 	private void guardarCambios(User user) {
@@ -537,6 +556,8 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 		btnGuardarCambios.setEnabled(false);
 		btnAnnadirPreferencia.setEnabled(false);
 		btnBorrarPreferencias.setEnabled(false);
+		cbxAutores.setEnabled(false);
+		cbxGeneros.setEnabled(false);
 
 		userModificado = new Partner();
 		userModificado.setUserName(user.getUserName());
@@ -565,16 +586,23 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// Mostrar descripcion del libro
-		if (e.getSource().equals(tableHistorialCompras)) {
-			if (e.getClickCount() == 2) {
-				if (tableHistorialCompras.getSelectedColumn() == 3) {
-					int cual = tableHistorialCompras.getSelectedRow();
-					JOptionPane.showMessageDialog(this, listLikedBooks.get(cual).getDescription(),
-							"Descripcion de la obra", JOptionPane.INFORMATION_MESSAGE);
+		ArrayList<Compra> compras;
+		try {
+			compras = comprasInterface.historialCompras(user.getUserName());
+			// Mostrar descripcion del libro
+			if (e.getSource().equals(tableHistorialCompras)) {
+				if (e.getClickCount() == 2) {
+					if (tableHistorialCompras.getSelectedColumn() == 2) {
+						JOptionPane.showMessageDialog(this,
+								compras.get(tableHistorialCompras.getSelectedRow()).getAuthors(), "Autor/es de la obra",
+								JOptionPane.INFORMATION_MESSAGE);
+					}
 				}
 			}
+		} catch (GestorException e1) {
+			e1.printStackTrace();
 		}
+
 	}
 
 	@Override
@@ -599,5 +627,30 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public int cantidadComboBoxGeneros() {
+		boolean esta;
+		int cuantos = 0;
+		try {
+			generosComboBox = genreInterface.listarGeneros();
+			ArrayList<String> generosPref = genreInterface.listarGenerosPreferidos(user.getUserName());
+			for (int i = 0; i < generosComboBox.size(); i++) {
+				esta = false;
+				for (int j = 0; j < generosPref.size(); j++) {
+					if (generosPref.get(j).equals(generosComboBox.get(i))) {
+						esta = true;
+						j = generosPref.size();
+					}
+				}
+				if (!esta) {
+					cuantos++;
+				}
+
+			}
+		} catch (GestorException e) {
+			e.printStackTrace();
+		}
+		return cuantos;
 	}
 }

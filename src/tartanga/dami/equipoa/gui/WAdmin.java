@@ -9,6 +9,7 @@ import tartanga.dami.equipoa.dataAccess.IAuthorBookController;
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
 import tartanga.dami.equipoa.dataAccess.IBookController;
 import tartanga.dami.equipoa.dataAccess.IComprasController;
+import tartanga.dami.equipoa.dataAccess.IConsultaController;
 import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IUserController;
 import tartanga.dami.equipoa.gestorException.GestorException;
@@ -56,6 +57,7 @@ public class WAdmin extends JDialog implements MouseListener {
 	private IUserController userInterface;
 	private IComprasController comprasInterface;
 	private IAuthorBookController authorBookInterface;
+	private IConsultaController consultaInterface;
 	private JTabbedPane tabbedPane;
 	private JPanel libros;
 	private JPanel autores;
@@ -65,14 +67,15 @@ public class WAdmin extends JDialog implements MouseListener {
 	private JLabel lblIconoCerrar;
 
 	public WAdmin(User user, IBookController bookInterface, IAuthorController authorInterface,
-			IGenreController genreInterface, IUserController userInterface, IAuthorBookController authorBookInterface, IComprasController comprasInterface) {
+			IGenreController genreInterface, IUserController userInterface, IAuthorBookController authorBookInterface,
+			IComprasController comprasInterface, IConsultaController consultaInterface) {
 		this.authorInterface = authorInterface;
 		this.bookInterface = bookInterface;
 		this.genreInterface = genreInterface;
 		this.userInterface = userInterface;
 		this.comprasInterface = comprasInterface;
 		this.authorBookInterface = authorBookInterface;
-
+		this.consultaInterface = consultaInterface;
 		getContentPane().setBackground(Color.DARK_GRAY);
 		setBounds(100, 100, 1047, 680);
 		getContentPane().setLayout(null);
@@ -84,24 +87,25 @@ public class WAdmin extends JDialog implements MouseListener {
 		tabbedPane.setBackground(Color.DARK_GRAY);
 		tabbedPane.setBounds(0, 0, 1031, 641);
 		getContentPane().add(tabbedPane);
-		
-		lblNombreAdmin = new JLabel("Admin: "+user.getUserName());
+
+		lblNombreAdmin = new JLabel("Admin: " + user.getUserName());
 		lblNombreAdmin.setForeground(Color.WHITE);
 		lblNombreAdmin.setBounds(650, 0, 99, 23);
 		getContentPane().add(lblNombreAdmin);
-		
+
 		lblCerrarSesion = new JLabel("Cerrar sesion");
 		lblCerrarSesion.setForeground(Color.WHITE);
 		lblCerrarSesion.setBounds(850, 0, 99, 23);
 		getContentPane().add(lblCerrarSesion);
 		lblCerrarSesion.addMouseListener(this);
-		
+
 		lblIconoCerrar = new JLabel();
-		lblIconoCerrar.setIcon(new ImageIcon(WAdmin.class.getResource("/tartanga/dami/equipoa/resources/iconoSalir30x19.png")));
+		lblIconoCerrar.setIcon(
+				new ImageIcon(WAdmin.class.getResource("/tartanga/dami/equipoa/resources/iconoSalir30x19.png")));
 		lblIconoCerrar.setBounds(930, 0, 99, 23);
 		this.add(lblIconoCerrar);
 		lblIconoCerrar.addMouseListener(this);
-		
+
 		iniciarComponentes(userInterface, authorInterface, genreInterface, bookInterface, tabbedPane);
 
 	}
@@ -111,21 +115,21 @@ public class WAdmin extends JDialog implements MouseListener {
 		libros = new WAdminLibro(authorInterface, genreInterface, bookInterface, tabbedPane);
 		autores = new WAdminAutor(authorInterface);
 		generos = new WAdminGenre(genreInterface);
-		
+
 		tabbedPane.add("Libros", libros);
 		tabbedPane.add("Autores", autores);
 		tabbedPane.add("Generos", generos);
-		
+
 		getContentPane().add(tabbedPane);
-		
+
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if(e.getSource().equals(lblCerrarSesion)) {
+		if (e.getSource().equals(lblCerrarSesion)) {
 			cerrarSesion();
 		}
-		if(e.getSource().equals(lblIconoCerrar)) {
+		if (e.getSource().equals(lblIconoCerrar)) {
 			cerrarSesion();
 		}
 	}
@@ -133,32 +137,33 @@ public class WAdmin extends JDialog implements MouseListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	public void cerrarSesion() {
 		int seleccion = JOptionPane.showConfirmDialog(libros, "Estas seguro que quieres cerrar sesion?", "Aviso", 0);
-		if(seleccion == 0) {
+		if (seleccion == 0) {
 			this.dispose();
-			WLogIn login = new WLogIn(userInterface, authorInterface, genreInterface, bookInterface, authorBookInterface, comprasInterface);
+			WLogIn login = new WLogIn(userInterface, authorInterface, genreInterface, bookInterface,
+					authorBookInterface, comprasInterface, consultaInterface);
 			login.setVisible(true);
 		}
 	}
