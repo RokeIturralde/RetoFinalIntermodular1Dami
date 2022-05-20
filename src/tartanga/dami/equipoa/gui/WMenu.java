@@ -36,10 +36,17 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 
+/**
+ * 
+ * @author Eneko
+ * Ventana en la que se inician los paneles Inicio, consultas y perfil. Gestiona tambien la lista 
+ * de compras y el boton de carrito
+ * 
+ *
+ */
+
 public class WMenu extends JDialog implements MouseListener {
 	private ArrayList<AuthorBook> listLikedBooks;
-	private JTable tableFav;
-	private JScrollPane scrollFav;
 	private IUserController userInterface;
 	private IBookController bookInterface;
 	private IAuthorController authorInterface;
@@ -54,10 +61,21 @@ public class WMenu extends JDialog implements MouseListener {
 	private JLabel lblCarrito;
 	private JLabel lblCerrar;
 	private ArrayList<Compra> compras;
+	
+	/**
+	 * @param user el usuario que ha iniciado sesion
+	 * @param bookInterface Interfaz de libro
+	 * @param authorInterface Interfaz de autor
+	 * @param genreInterface Intefaz de genero
+	 * @param userInterface Interfaz de usuario
+	 * @param comprasInterface Interfaz de compras
+	 * @param compras 
+	 * @param compras lista que almacena todas las compras pendientes que tiene un usuario
+	 */
 
 	public WMenu(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface,
 			IBookController bookInterface, IComprasController comprasInterface, User user,
-			IConsultaController consultaInterface) {
+			IConsultaController consultaInterface, ArrayList<Compra> compras) {
 		setBounds(100, 100, 1047, 680);
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.DARK_GRAY);
@@ -103,6 +121,9 @@ public class WMenu extends JDialog implements MouseListener {
 
 	}
 
+	/**
+	 * Inicia los componentes de la ventana
+	 */
 	private void iniciarComponentes(IUserController userInterface, IAuthorController authorInterface,
 			IBookController bookInterface, User user, IComprasController comprasInterface, IGenreController genreInterface) {
 
@@ -122,14 +143,19 @@ public class WMenu extends JDialog implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		/**
+		 * Cierra la ventana y regresa al login
+		 */
 		if (e.getSource().equals(lblCerrar)) {
 			WLogIn login = new WLogIn(userInterface, authorInterface, genreInterface, bookInterface,
 				 comprasInterface, consultaInterface);
 			login.setVisible(true);
 			this.dispose();
 		}
+		/**
+		 * Abre la ventana carrito
+		 */
 		if (e.getSource().equals(lblCarrito)) {
-
 			WCarrito carrito = new WCarrito(bookInterface, authorInterface, comprasInterface, compras, genreInterface,
 					user, consultaInterface);
 			carrito.setVisible(true);

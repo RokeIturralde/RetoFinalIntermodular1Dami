@@ -74,7 +74,6 @@ public class WAdmin extends JDialog implements MouseListener {
 	 * @param authorInterface Interfaz de autor
 	 * @param genreInterface Intefaz de genero
 	 * @param userInterface Interfaz de usuario
-	 * @param authorBookInterface Interfaz auxiliar
 	 * @param comprasInterface Interfaz de compras
 	 */
 	public WAdmin(User user, IBookController bookInterface, IAuthorController authorInterface,

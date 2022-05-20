@@ -36,16 +36,28 @@ import javax.swing.JButton;
 
 public class WMenuInicio extends JPanel implements MouseListener, ComponentListener {
 	
+	/**
+	 * @author Eneko
+	 * Panel que muestra dos tablas, una para los libros favoritos y otra para los best sellers
+	 */
 	private User user;
 	private JTable tableFav;
 	private JTable tableSales;
-	private JScrollPane scrollFav = new JScrollPane();;
+	private JScrollPane scrollFav = new JScrollPane();
 	private JScrollPane scrollSellers;
 	private ArrayList<Integer> bookSales;
 	private ArrayList<Book> libros;
 	private ArrayList<Compra> compras;
 	private ArrayList<Book> listLikedBooks;
 	private IBookController bookInterface;
+	/**
+	 * @param user El usuario que ha iniciado sesion
+	 * @param bookInterface Interfaz de libro
+	 * @param compras Lista que almacena las compras pendientes de un usuario
+	 * @param bookSales Lista con los libros ordenados por orden de ventas
+	 * @param listLikedBooks Lista con los libros que le gustan a un usuario
+	 * @param libros Lista con todos los libros que hay en la libreria
+	 */
 
 	public WMenuInicio(IUserController userInterface, IBookController bookInterface, IAuthorController authorInterface,
 			User user, ArrayList<Compra> compras) {
@@ -54,7 +66,6 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 		this.compras = compras;
 		this.user = user;
 		this.bookInterface = bookInterface;
-		this.compras = compras;
 		this.user = user;
 		this.listLikedBooks = listLikedBooks;
 
@@ -78,10 +89,15 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 		txtrPromociones.setBounds(169, 537, 666, 84);
 		this.add(txtrPromociones);
 
-		// Tabla de preferencias personales
+		
+		/**
+		 *Metodo que crea y refresa la tabla de libros favoritos 
+		 */
 		crearTablaFavoritos(user, bookInterface);
 
-		// Tabla de Best Sellers
+		/**
+		 * Creacion de la tabla de libros ordenados por ventas
+		 */
 		try {
 			bookSales = bookInterface.listTopSales();
 		} catch (GestorException e) {
@@ -123,10 +139,10 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 		tableSales = new JTable(matrizTablaSales, columNames) {
 			private static final long serialVersionUID = 1L;
 
-			// ***********************METODO PARA HACER QUE LA TABLA NO SEA EDITABLE, Y ASI
-			// HACER DOBLE CLICK************************************
-			// Para ello sobreescribimos el metodo que ya tiene la clase
-			// JTable.isCellEditable
+			/**
+			 * Hacer que la tabla no sea editable
+			 */
+			
 			public boolean isCellEditable(int row, int column) {
 				for (int i = 0; i < tableSales.getRowCount(); i++) {
 					if (row == i) {
@@ -180,7 +196,9 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// Mostrar descripcion del libro
+		/**
+		 * Mostrar descripciones de los libros
+		 */
 		if (e.getSource().equals(tableSales)) {
 			if (e.getClickCount() == 2) {
 				if (tableSales.getSelectedColumn() == 1) {
@@ -265,7 +283,9 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 			}
 		}
 
-		// Anadir libro al carrito
+		/**
+		 * Añadir el libro al carrito
+		 */
 		if (e.getSource().equals(tableSales)) {
 			if (tableSales.getSelectedColumn() == 4) {
 				int cual = tableSales.getSelectedRow();
@@ -284,8 +304,7 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 							if (compras.get(i).getIsbn() == book.getIsbn()) {
 								compras.get(i).setCantidadLibros(compras.get(i).getCantidadLibros() + cantidad);
 								if (compras.get(i).getCantidadLibros() > book.getStock()) {
-									JOptionPane.showMessageDialog(this, "No hay suficiente stock", "Error",
-											JOptionPane.INFORMATION_MESSAGE);
+									
 									compras.get(i).setCantidadLibros(compras.get(i).getCantidadLibros() - cantidad);
 								}
 								repetido = true;
@@ -371,17 +390,12 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 
 			String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
 
-			// Estilo de la tabla
 			tableFav = new JTable(matrizTabla, columNames) {
-				/*
-				 * 
-				 */
 				private static final long serialVersionUID = 1L;
 
-				// ***********************METODO PARA HACER QUE LA TABLA NO SEA EDITABLE, Y ASI
-				// HACER DOBLE CLICK************************************
-				// Para ello sobreescribimos el metodo que ya tiene la clase
-				// JTable.isCellEditable
+				/**
+				 * Hace que la tabla no sea editable
+				 */
 				public boolean isCellEditable(int row, int column) {
 					for (int i = 0; i < tableFav.getRowCount(); i++) {
 						if (row == i) {

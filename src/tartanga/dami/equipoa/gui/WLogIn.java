@@ -21,6 +21,7 @@ import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IUserController;
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Administrator;
+import tartanga.dami.equipoa.model.Compra;
 import tartanga.dami.equipoa.model.User;
 
 import java.awt.Toolkit;
@@ -30,6 +31,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 import javax.swing.SwingConstants;
 
@@ -53,6 +55,7 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 	private IBookController bookInterface;
 	private IComprasController comprasInterface;
 	private IConsultaController consultaInterface;
+	private ArrayList<Compra> compras;
 
 	/**
 	 * @param userInterface       interfaz de usuarios
@@ -70,6 +73,8 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 		this.bookInterface = bookInterface;
 		this.comprasInterface = comprasInterface;
 		this.consultaInterface = consultaInterface;
+		this.compras =compras;
+		compras = new ArrayList();
 
 		setIconImage(Toolkit.getDefaultToolkit()
 				.getImage(WLogIn.class.getResource("/tartanga/dami/equipoa/resources/Logo.png")));
@@ -192,7 +197,7 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 						admin.setVisible(true);
 					} else {
 						WMenu menu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface,
-								comprasInterface, user, consultaInterface);
+								comprasInterface, user, consultaInterface, compras);
 						menu.setVisible(true);
 					}
 				} else {

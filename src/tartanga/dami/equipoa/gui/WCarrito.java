@@ -36,6 +36,11 @@ import tartanga.dami.equipoa.model.RowsRenderer;
 import tartanga.dami.equipoa.model.User;
 
 public class WCarrito extends JDialog implements ActionListener, MouseListener {
+	/**
+	 * @author Eneko
+	 * Ventana que a traves de la lista compras genera una tabla y permite al usuario realizar la compra
+	 */
+	
 	private IBookController bookInterface;
 	private IAuthorController authorInterface;
 	private IComprasController comprasInterface;
@@ -48,7 +53,19 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 	private JLabel lblVacio;
 	private IUserController userInterface;
 	private IConsultaController consultaInterface;
-
+	private JButton bRegresar;
+	private JLabel lblComprar;
+	
+	/**
+	 * @param user el usuario que ha iniciado sesion
+	 * @param bookInterface Interfaz de libro
+	 * @param authorInterface Interfaz de autor
+	 * @param genreInterface Intefaz de genero
+	 * @param userInterface Interfaz de usuario
+	 * @param comprasInterface Interfaz de compras
+	 * @param consultaInterface interfaz de consultas 
+	 * @param compras Lista de compras
+	 */
 
 
 	public WCarrito(IBookController bookInterface, IAuthorController authorInterface,
@@ -66,21 +83,34 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 		this.user = user;
 		this.consultaInterface = consultaInterface;
 		
-		/*
-		 * this.userInterface = userInterface; this.consultaInterface =
-		 * consultaInterface;
-		 */
-
 		crearTablaCompras(bookInterface, genreInterface, compras);
 
+		bRegresar = new JButton();
+		bRegresar.setBounds(850, 30, 125, 55);
+		bRegresar.setText("Regresar");
+		bRegresar.addActionListener(this);
+		this.add(bRegresar);
+		
+		lblComprar = new JLabel();
+		lblComprar.setBounds(430, 450, 125, 75);
+		getContentPane().add(lblComprar);
+		lblComprar.setText("Comprar");
+		lblComprar.setBackground(Color.white);;
+		
 		bComprar = new JButton();
-		bComprar.setBounds(500, 500, 125, 75);
+		bComprar.setBounds(420, 500, 125, 75);
 		getContentPane().add(bComprar);
 		bComprar.setIcon(new ImageIcon(WMenu.class.getResource("/tartanga/dami/equipoa/resources/ejecutarCompra.png")));
 		bComprar.addActionListener(this);
+		if(compras.size()<=0) {
+			bComprar.setEnabled(false);
+		}
 
 	}
 
+	/**
+	 * Meotodo que crea la tabla de compras, en el caso de que la lista de compras este vacio en su lugar sale un icono 
+	 */
 	private void crearTablaCompras(IBookController bookInterface, IGenreController genreInterface,
 			ArrayList<Compra> compras) {
 		if (compras.size() > 0) {
@@ -143,7 +173,7 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 			lblVacio = new JLabel();
 			lblVacio.setIcon(
 					new ImageIcon(WMenu.class.getResource("/tartanga/dami/equipoa/resources/carritoVacioIcono.png")));
-			lblVacio.setBounds(50, 100, 900, 325);
+			lblVacio.setBounds(350, 100, 900, 325);
 			this.add(lblVacio);
 		}
 
@@ -151,6 +181,9 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		/**
+		 *Compra todos los libros que haya en la tabla
+		 */
 		if (e.getSource().equals(bComprar)) {
 			for (int i = 0; i < compras.size(); i++) {
 				try {
@@ -159,8 +192,6 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 					JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
-
-
 			int seleccion = JOptionPane.showConfirmDialog(this, "Estas seguro de que quieres confirmar la compra?",
 					"Aviso", 0);
 			if (seleccion == 0) {
@@ -173,11 +204,23 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 				this.dispose();
 			}
 		}
+		/**
+		 * Regresa a la ventana menu inicio
+		 */
+		if(e.getSource().equals(bRegresar)) {
+			this.dispose();
+			WMenu wMenu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface, comprasInterface,
+					user, consultaInterface, compras);
+			wMenu.setVisible(true);
+		}
 
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		/**
+		 * Elimina una compra de la lista
+		 */
 		if (e.getSource().equals(tablaCarrito)) {
 			int seleccion = JOptionPane.showConfirmDialog(this,
 					"Estas seguro que quieres eliminar el libro del carrito?", "Aviso", 0);
@@ -195,6 +238,8 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 			}
 
 		}
+		
+		
 
 	}
 
