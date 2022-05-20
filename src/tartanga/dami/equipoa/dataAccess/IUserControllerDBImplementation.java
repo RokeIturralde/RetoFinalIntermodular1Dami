@@ -241,6 +241,7 @@ public class IUserControllerDBImplementation implements IUserController {
 		} catch (SQLException e1) {
 			String error = "Error con la conexion con la base de datos";
 			GestorException exception = new GestorException(error);
+			e1.printStackTrace();
 			throw exception;
 		} finally {
 			try {
@@ -313,39 +314,6 @@ public class IUserControllerDBImplementation implements IUserController {
 			}
 		}
 		return userGenero;
-	}
-
-	@Override
-	public ArrayList<String> userAuthor (String username) throws GestorException {
-		ArrayList<String> userTitulo = new ArrayList<String>();
-		String buscarTitulo = "call userTitulo(?)";
-		ResultSet rs = null;
-		
-		try {
-			con = connection.openConnection();
-			stmt = con.prepareStatement(buscarTitulo);
-			stmt.setString(1, username);
-			rs = stmt.executeQuery();
-			
-			if(rs.next()){
-				String titulo;
-				titulo = rs.getString("genreName");
-				userTitulo.add(titulo);
-			}
-		}  catch (SQLException e1) {
-			String error = "Error con la conexion con la base de datos";
-			GestorException exception = new GestorException(error);
-			throw exception;
-		} finally {
-			try {
-				connection.closeConnection(stmt, con);
-			} catch (SQLException e) {
-				String error = "Error al cerrar conexion con la base de datos";
-				GestorException exception = new GestorException(error);
-				throw exception;
-			}
-		}
-		return userTitulo;
 	}
 
 }

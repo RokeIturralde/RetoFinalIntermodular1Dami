@@ -60,7 +60,6 @@ public class IGenreControllerDBImplementation implements IGenreController {
 				genero.setDescription(rs.getString("description"));
 			} else {
 				genero = null;
-
 			}
 
 			if (rs != null) {
@@ -235,10 +234,10 @@ public class IGenreControllerDBImplementation implements IGenreController {
 	@Override
 	public int insertarGeneroPreferido(String username, String genreName) throws GestorException {
 		int cambio;
-		String insertarAutorPreferido = "insert into partnerGenre values (?,?)";
+		String insertarGeneroPreferido = "insert into partnerGenre values (?,?)";
 		try {
 			con = connection.openConnection();
-			stmt = con.prepareStatement(insertarAutorPreferido);
+			stmt = con.prepareStatement(insertarGeneroPreferido);
 			stmt.setString(1, username);
 			stmt.setString(2, genreName);
 			cambio = stmt.executeUpdate();

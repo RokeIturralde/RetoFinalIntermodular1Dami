@@ -76,12 +76,4 @@ public interface IUserController {
 	 */
 	public ArrayList<String> userGenero(String username) throws GestorException;
 	
-	/**
-	 * Metodo para seleccionar los autores favoritos de un usuario
-	 * @param username el nombre de usuario del usuario del que queremos saber sus autores favoritos
-	 * @author Eneko
-	 * @return devuelve un ArrayList con todos los codigos de los autores
-	 * @throws GestorException
-	 */
-	public ArrayList<String> userAuthor(String username) throws GestorException;
 }

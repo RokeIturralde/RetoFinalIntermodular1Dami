@@ -23,7 +23,6 @@ import tartanga.dami.equipoa.gui.WLogIn;
  * Clase para iniciar el programa
  */
 public class Application {
-
 	
 	/**
 	 * @param args
