@@ -49,7 +49,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 	private IAuthorController authorInterface;
 	private IGenreController genreInterface;
 	private IComprasController comprasInterface;
-
+	private IBookController bookInterface;
 	private JButton btnGuardarCambios;
 	private JButton btnModificarDatos;
 	private JButton btnAnnadirPreferencia;
@@ -70,7 +70,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 	private DefaultListModel modelo2, modelo;
 	private final JLabel label = new JLabel("");
 
-	public WMenuPerfil(IUserController userInterface, IAuthorController authorInterface,
+	public WMenuPerfil(IUserController userInterface, IAuthorController authorInterface, IBookController bookInterface,
 			IGenreController genreInterface, IComprasController comprasInterface, User user, WMenuInicio panelInicio) {
 
 		setLayout(null);
@@ -79,6 +79,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 		this.user = user;
 		this.genreInterface = genreInterface;
 		this.comprasInterface = comprasInterface;
+		this.bookInterface = bookInterface;
 		this.menuInicio = panelInicio;
 		setBounds(100, 300, 1010, 704);
 
@@ -256,7 +257,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 			cbxAutores.setEnabled(false);
 			add(cbxAutores);
 		} catch (GestorException e1) {
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 
 		// Creacion tabla del historial de compra
@@ -321,8 +322,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 				this.add(label);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			e.getMessage();
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -361,9 +361,9 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 			cargarAutores();
 			cargarGeneros();
 		} catch (GestorException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
-		menuInicio.refrescarTablaSoloParaTi();
+		menuInicio.crearTablaFavoritos(user, bookInterface);
 
 	}
 
@@ -417,7 +417,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 				}
 
 			} catch (GestorException e) {
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
@@ -444,7 +444,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 			cbxAutores.setSelectedIndex(-1);
 
 		} catch (GestorException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 
 	}
@@ -470,7 +470,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 			cbxGeneros.setSelectedIndex(-1);
 
 		} catch (GestorException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 
 	}
@@ -523,7 +523,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 				refrescarPreferencias();
 			}
 		} catch (GestorException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 
 	}
@@ -578,8 +578,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 				JOptionPane.showMessageDialog(this, "Modificacion no realizada");
 			}
 		} catch (GestorException e) {
-			e.printStackTrace();
-			e.getMessage();
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -599,7 +598,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 				}
 			}
 		} catch (GestorException e1) {
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 
 	}
@@ -648,7 +647,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 
 			}
 		} catch (GestorException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return cuantos;
 	}

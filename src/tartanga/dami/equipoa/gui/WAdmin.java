@@ -5,7 +5,6 @@ import java.awt.EventQueue;
 import javax.swing.JDialog;
 import javax.swing.JTextArea;
 
-import tartanga.dami.equipoa.dataAccess.IAuthorBookController;
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
 import tartanga.dami.equipoa.dataAccess.IBookController;
 import tartanga.dami.equipoa.dataAccess.IComprasController;
@@ -49,6 +48,10 @@ import javax.swing.JTable;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 
+/**
+ * @author Sendoa
+ * Ventana en la que se almacenaran a modo de pesta�as todos los paneles para la gestion administrativa de la libreria
+ */
 public class WAdmin extends JDialog implements MouseListener {
 
 	private IBookController bookInterface;
@@ -56,7 +59,6 @@ public class WAdmin extends JDialog implements MouseListener {
 	private IGenreController genreInterface;
 	private IUserController userInterface;
 	private IComprasController comprasInterface;
-	private IAuthorBookController authorBookInterface;
 	private IConsultaController consultaInterface;
 	private JTabbedPane tabbedPane;
 	private JPanel libros;
@@ -66,15 +68,24 @@ public class WAdmin extends JDialog implements MouseListener {
 	private JLabel lblCerrarSesion;
 	private JLabel lblIconoCerrar;
 
+	/**
+	 * @param user el usuario que ha iniciado sesion
+	 * @param bookInterface Interfaz de libro
+	 * @param authorInterface Interfaz de autor
+	 * @param genreInterface Intefaz de genero
+	 * @param userInterface Interfaz de usuario
+	 * @param authorBookInterface Interfaz auxiliar
+	 * @param comprasInterface Interfaz de compras
+	 */
 	public WAdmin(User user, IBookController bookInterface, IAuthorController authorInterface,
-			IGenreController genreInterface, IUserController userInterface, IAuthorBookController authorBookInterface,
+			IGenreController genreInterface, IUserController userInterface, 
 			IComprasController comprasInterface, IConsultaController consultaInterface) {
 		this.authorInterface = authorInterface;
 		this.bookInterface = bookInterface;
 		this.genreInterface = genreInterface;
 		this.userInterface = userInterface;
 		this.comprasInterface = comprasInterface;
-		this.authorBookInterface = authorBookInterface;
+		
 		this.consultaInterface = consultaInterface;
 		getContentPane().setBackground(Color.DARK_GRAY);
 		setBounds(100, 100, 1047, 680);
@@ -110,6 +121,14 @@ public class WAdmin extends JDialog implements MouseListener {
 
 	}
 
+	/**
+	 * Metodo para iniciar los componentes de la ventana
+	 * @param userInterface Interfaz de usuario
+	 * @param authorInterface Interfaz de autor
+	 * @param genreInterface Interfaz de genero
+	 * @param bookInterface Interfaz de libro
+	 * @param tabbedPane donde se guardan los paneles
+	 */
 	private void iniciarComponentes(IUserController userInterface, IAuthorController authorInterface,
 			IGenreController genreInterface, IBookController bookInterface, JTabbedPane tabbedPane) {
 		libros = new WAdminLibro(authorInterface, genreInterface, bookInterface, tabbedPane);
@@ -157,13 +176,14 @@ public class WAdmin extends JDialog implements MouseListener {
 		// TODO Auto-generated method stub
 
 	}
-
+	/**
+	 * Metodo para cerrar sesion en el programa
+	 */
 	public void cerrarSesion() {
 		int seleccion = JOptionPane.showConfirmDialog(libros, "Estas seguro que quieres cerrar sesion?", "Aviso", 0);
 		if (seleccion == 0) {
 			this.dispose();
-			WLogIn login = new WLogIn(userInterface, authorInterface, genreInterface, bookInterface,
-					authorBookInterface, comprasInterface, consultaInterface);
+			WLogIn login = new WLogIn(userInterface, authorInterface, genreInterface, bookInterface, comprasInterface, consultaInterface);
 			login.setVisible(true);
 		}
 	}

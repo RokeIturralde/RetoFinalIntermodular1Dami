@@ -1,6 +1,5 @@
 package tartanga.dami.equipoa.gui;
 
-
 import javax.swing.JDialog;
 
 import java.awt.Color;
@@ -29,6 +28,10 @@ import tartanga.dami.equipoa.model.User;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 
+/**
+ * @author Sendoa
+ *
+ */
 public class WRegistro extends JDialog implements ActionListener, FocusListener {
 	private JTextField textNombreUsr;
 	private JTextField textEmail;
@@ -39,7 +42,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 	private JLabel lblDireccion;
 	private JTextField textDireccion;
 	private JLabel lblNumTelef;
-	private JTextField textNumtelef;
+	private JTextField textNumTelef;
 	private JLabel lblNumCuenta;
 	private JTextField textCuenta;
 	private JLabel lblAutores;
@@ -53,11 +56,18 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 	private User user;
 	private ArrayList<Author> authorList = new ArrayList<Author>();
 	private ArrayList<Genre> genreList = new ArrayList<Genre>();
+	private static final String patronEmail = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	private IUserController userInterface;
 	private IAuthorController authorInterface;
 	private IGenreController genreInterface;
 
-	public WRegistro(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface) {
+	/**
+	 * @param userInterface Interfaz de usuario
+	 * @param authorInterface Interfaz de autor
+	 * @param genreInterface Interfaz de genero
+	 */
+	public WRegistro(IUserController userInterface, IAuthorController authorInterface,
+			IGenreController genreInterface) {
 		this.userInterface = userInterface;
 		this.authorInterface = authorInterface;
 		this.genreInterface = genreInterface;
@@ -82,6 +92,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 		textNombreUsr.addFocusListener(this);
 
 		textEmail = new JTextField();
+		textEmail.setToolTipText("");
 		textEmail.setColumns(10);
 		textEmail.setBounds(309, 149, 172, 20);
 		getContentPane().add(textEmail);
@@ -126,7 +137,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 		textNombre.setBounds(309, 242, 172, 20);
 		getContentPane().add(textNombre);
 		textNombre.addFocusListener(this);
-		
+
 		JLabel lblApellidos = new JLabel("Apellidos:");
 		lblApellidos.setForeground(Color.WHITE);
 		lblApellidos.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -157,12 +168,12 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 		lblNumTelef.setBounds(140, 337, 149, 14);
 		getContentPane().add(lblNumTelef);
 
-		textNumtelef = new JTextField();
-		textNumtelef.setColumns(10);
-		textNumtelef.setBounds(309, 335, 172, 20);
-		getContentPane().add(textNumtelef);
-		textNumtelef.addFocusListener(this);
-		
+		textNumTelef = new JTextField();
+		textNumTelef.setColumns(10);
+		textNumTelef.setBounds(309, 335, 172, 20);
+		getContentPane().add(textNumTelef);
+		textNumTelef.addFocusListener(this);
+
 		lblNumCuenta = new JLabel("Numero de cuenta:");
 		lblNumCuenta.setForeground(Color.WHITE);
 		lblNumCuenta.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -228,9 +239,11 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(btnAutores)) {
+			// Comprobamos que no alcance el maximo de autores permitidos
 			if (authorList.size() <= 2) {
 				boolean esta = false;
 				try {
+					// Buscamos si el autor buscado ya a sido introducido y si no es asi se añade al arraylist
 					Author autor = authorInterface.buscarAuthor(textAutor.getText());
 					if (autor != null) {
 						for (int i = 0; i < authorList.size(); i++) {
@@ -249,7 +262,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 								JOptionPane.WARNING_MESSAGE);
 					}
 				} catch (GestorException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
 				JOptionPane.showMessageDialog(this, "Solo se pueden introducir un maximo de 3 autores", "Error",
@@ -258,9 +271,11 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 			}
 		}
 		if (e.getSource().equals(btnGenero)) {
+			// Comprobamos que no alcance el maximo de generos permitidos
 			if (genreList.size() <= 2) {
 				boolean esta = false;
 				try {
+					// Buscamos si el genero buscado ya a sido introducido y si no es asi se añade al arraylist
 					Genre genero = genreInterface.buscarGenre(textGenero.getText());
 					if (genero != null) {
 						for (int i = 0; i < genreList.size(); i++) {
@@ -279,7 +294,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 								JOptionPane.WARNING_MESSAGE);
 					}
 				} catch (GestorException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
 				JOptionPane.showMessageDialog(this, "Solo se pueden introducir un maximo de 3 generos", "Error",
@@ -289,6 +304,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 		}
 		if (e.getSource().equals(btnRegistrar)) {
 			String pass = new String(passwordField.getPassword());
+			// Comprobamos que ninguno de los campos que nos interesa esta vacio
 			if (!(textDireccion.getText().isEmpty() || textEmail.getText().isEmpty() || textNombre.getText().isEmpty()
 					|| pass.isEmpty() || textApellidos.getText().isEmpty() || textNombreUsr.getText().isEmpty()
 					|| textCuenta.getText().isEmpty())) {
@@ -298,28 +314,30 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 					user.setEmail(textEmail.getText());
 					user.setName(textNombre.getText());
 					user.setPassword(pass);
-					if (textNumtelef.getText().length() != 0) {
-						user.setPhone(Integer.valueOf(textNumtelef.getText()));
+					if (textNumTelef.getText().length() != 0) {
+						user.setPhone(Integer.valueOf(textNumTelef.getText()));
 					}
 					user.setSurname(textApellidos.getText());
 					user.setTipo('P');
 					user.setUserName(textNombreUsr.getText());
 					((Partner) user).setNumAccount(Integer.valueOf(textCuenta.getText()));
 
+					// Añadimos sus autores favoritos
 					userInterface.altaUsuario(user);
 					for (int i = 0; i < authorList.size(); i++) {
 						userInterface.anadirAutor(user.getUserName(), authorList.get(i).getCodAuthor());
 					}
+					// Añadimos sus generos favoritos
 					for (int i = 0; i < genreList.size(); i++) {
 						userInterface.anadirGenero(user.getUserName(), genreList.get(i).getGenreName());
 					}
 
 					JOptionPane.showMessageDialog(this, "Usuario registrado con exito", "Ta bien",
 							JOptionPane.INFORMATION_MESSAGE);
-					
+
 					this.dispose();
 				} catch (GestorException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
 				JOptionPane.showMessageDialog(this, "Uno de los campos esta vacio", "Error",
@@ -332,6 +350,7 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 	@Override
 	public void focusGained(FocusEvent e) {
 		if (e.getSource().equals(confPasswordField)) {
+			// Que no pueda introducir una contraseña de confirmacion sin antes introducir la contraseña normal
 			String contr = new String(passwordField.getPassword());
 			if (contr.isEmpty()) {
 				confPasswordField.transferFocusBackward();
@@ -346,23 +365,25 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 		if (e.getSource().equals(textNombreUsr)) {
 			if (insertString(50, textNombreUsr.getText())) {
 				textNombreUsr.setText("");
+				textNombreUsr.grabFocus();
 			}
 			try {
 				User usr = userInterface.buscarUser(textNombreUsr.getText());
 				if (usr != null && !textNombreUsr.getText().isEmpty()) {
 					textNombreUsr.setText("");
-
+					textNombreUsr.grabFocus();
 					JOptionPane.showMessageDialog(this, "El nombre de usuario ya esta registrado", "Error",
 							JOptionPane.WARNING_MESSAGE);
 				}
 			} catch (GestorException e1) {
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		if (e.getSource().equals(passwordField)) {
 			String contr = new String(passwordField.getPassword());
 			if (insertString(50, contr)) {
 				passwordField.setText("");
+				passwordField.grabFocus();
 			}
 		}
 		if (e.getSource().equals(confPasswordField)) {
@@ -372,84 +393,110 @@ public class WRegistro extends JDialog implements ActionListener, FocusListener 
 				JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden", "Error",
 						JOptionPane.WARNING_MESSAGE);
 				passwordField.setText("");
+				passwordField.grabFocus();
 				confPasswordField.setText("");
 			}
 			if (insertString(50, conf)) {
 				confPasswordField.setText("");
+				confPasswordField.grabFocus();
 			}
 		}
 		if (e.getSource().equals(textApellidos)) {
 			if (insertString(50, textApellidos.getText())) {
 				textApellidos.setText("");
+				textApellidos.grabFocus();
 			}
 		}
 		if (e.getSource().equals(textAutor)) {
 			if (insertString(50, textAutor.getText())) {
 				textAutor.setText("");
+				textAutor.grabFocus();
 			}
 		}
 		if (e.getSource().equals(textCuenta)) {
 			if (insertString(50, textCuenta.getText())) {
 				textCuenta.setText("");
+				textCuenta.grabFocus();
 			}
 			try {
-				if(!textCuenta.getText().isEmpty()) {
-					if(Integer.valueOf(textCuenta.getText()) < 0) {
+				if (!textCuenta.getText().isEmpty()) {
+					if (Integer.valueOf(textCuenta.getText()) < 0) {
 						JOptionPane.showMessageDialog(this, "No se puede introducir un numero negativo", "Error",
 								JOptionPane.WARNING_MESSAGE);
 						textCuenta.setText("");
+						textCuenta.grabFocus();
 					}
 				}
 			} catch (NumberFormatException e1) {
 				JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros", "Error",
 						JOptionPane.WARNING_MESSAGE);
 				textCuenta.setText("");
+				textCuenta.grabFocus();
 			}
-			
+
 		}
 		if (e.getSource().equals(textDireccion)) {
 			if (insertString(50, textDireccion.getText())) {
 				textDireccion.setText("");
+				textDireccion.grabFocus();
 			}
 		}
 		if (e.getSource().equals(textEmail)) {
 			if (insertString(50, textEmail.getText())) {
 				textEmail.setText("");
+				textEmail.grabFocus();
+			}
+			if(!textEmail.getText().matches(patronEmail) && !textEmail.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(this, "El formato del email no es correcto", "Error",
+						JOptionPane.WARNING_MESSAGE);
+				textEmail.setText("");
+				textEmail.grabFocus();
 			}
 		}
 		if (e.getSource().equals(textGenero)) {
 			if (insertString(50, textGenero.getText())) {
 				textGenero.setText("");
+				textGenero.grabFocus();
 			}
 		}
 		if (e.getSource().equals(textNombre)) {
 			if (insertString(50, textNombre.getText())) {
 				textNombre.setText("");
+				textNombre.grabFocus();
 			}
 		}
-		if (e.getSource().equals(textNumtelef)) {
-			if (insertString(50, textNumtelef.getText())) {
-				textNumtelef.setText("");
+		if (e.getSource().equals(textNumTelef)) {
+			if (insertString(50, textNumTelef.getText())) {
+				textNumTelef.setText("");
+				textNumTelef.grabFocus();
 			}
 			try {
-				if(!textNumtelef.getText().isEmpty()) {
-					if(Integer.valueOf(textNumtelef.getText())<0) {
+				if (!textNumTelef.getText().isEmpty()) {
+					if (Integer.valueOf(textNumTelef.getText()) < 0) {
 						JOptionPane.showMessageDialog(this, "No se pueden introducir un numero negativo", "Error",
 								JOptionPane.WARNING_MESSAGE);
-						textNumtelef.setText("");
+						textNumTelef.setText("");
+						textNumTelef.grabFocus();
 					}
 				}
 			} catch (NumberFormatException e1) {
 				JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros enteros", "Error",
 						JOptionPane.WARNING_MESSAGE);
-				textNumtelef.setText("");
+				textNumTelef.setText("");
+				textNumTelef.grabFocus();
 			}
 		}
 	}
 
+	/**
+	 * Metodo para comprobar que el texto introducido no es mayor de lo permitido
+	 * @param maximo el numero maximo de caracteres permitido
+	 * @param texto el texto que quieres comprobar
+	 * @return un boolean, en caso de que tenga mas caracteres de lo permitido sera <b>true</b>, en caso contrario <b>false</b>
+	 */
 	public boolean insertString(int maximo, String texto) {
 		if (texto.length() > maximo) {
-			JOptionPane.showMessageDialog(this, "Excedido el limite de caracteres ("+maximo+")", "Error",
+			JOptionPane.showMessageDialog(this, "Excedido el limite de caracteres (" + maximo + ")", "Error",
 					JOptionPane.WARNING_MESSAGE);
 			return true;
 		}

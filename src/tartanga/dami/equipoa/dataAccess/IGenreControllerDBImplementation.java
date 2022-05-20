@@ -13,7 +13,7 @@ import tartanga.dami.equipoa.model.Genre;
 public class IGenreControllerDBImplementation implements IGenreController {
 	private Connection con;
 	private PreparedStatement stmt;
-	final String insertarGenero = "INSERT INTO genre VALUES( ?,?)";
+	private final String insertarGenero = "INSERT INTO genre VALUES( ?,?)";
 	private ConnectionOpenClose connection = new ConnectionOpenClose();
 
 	@Override
@@ -244,7 +244,7 @@ public class IGenreControllerDBImplementation implements IGenreController {
 		} catch (Exception e) {
 			String error = "Error en la insercion de un genero preferido";
 			GestorException exception = new GestorException(error);
-			e.printStackTrace();
+		
 			throw exception;
 		} finally {
 			try {

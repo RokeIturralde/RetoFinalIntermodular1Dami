@@ -12,6 +12,10 @@ import tartanga.dami.equipoa.model.Author;
 import tartanga.dami.equipoa.model.ConnectionOpenClose;
 import tartanga.dami.equipoa.model.Consulta;
 
+/**
+ * @author Roke
+ *
+ */
 public class IAuthorControllerDBImplementation implements IAuthorController {
 
 	private Connection con;

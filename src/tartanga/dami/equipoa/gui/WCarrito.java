@@ -21,6 +21,7 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
+
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
 import tartanga.dami.equipoa.dataAccess.IBookController;
 import tartanga.dami.equipoa.dataAccess.IComprasController;
@@ -48,9 +49,11 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 	private IUserController userInterface;
 	private IConsultaController consultaInterface;
 
+
+
 	public WCarrito(IBookController bookInterface, IAuthorController authorInterface,
-			IComprasController comprasInterface, ArrayList<Compra> compras, IGenreController genreInterface,
-			User user) {
+			IComprasController comprasInterface, ArrayList<Compra> compras, IGenreController genreInterface, User user,
+		  IConsultaController consultaInterface) {
 		setBounds(100, 100, 1047, 680);
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.DARK_GRAY);
@@ -61,8 +64,12 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 		this.compras = compras;
 		this.comprasInterface = comprasInterface;
 		this.user = user;
-		this.userInterface = userInterface;
 		this.consultaInterface = consultaInterface;
+		
+		/*
+		 * this.userInterface = userInterface; this.consultaInterface =
+		 * consultaInterface;
+		 */
 
 		crearTablaCompras(bookInterface, genreInterface, compras);
 
@@ -128,7 +135,7 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 
 				} catch (GestorException e) {
 					JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-					e.printStackTrace();
+					
 				}
 
 			}
@@ -149,9 +156,10 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 				try {
 					comprasInterface.escribirCompra(compras.get(i), user.getUserName());
 				} catch (GestorException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
+
 
 			int seleccion = JOptionPane.showConfirmDialog(this, "Estas seguro de que quieres confirmar la compra?",
 					"Aviso", 0);
@@ -180,6 +188,7 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 				if (compras.size() <= 0) {
 					WMenu wMenu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface,
 							comprasInterface, user, consultaInterface);
+
 					wMenu.setVisible(true);
 					this.dispose();
 				}

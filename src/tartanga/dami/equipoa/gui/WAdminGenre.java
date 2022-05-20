@@ -23,6 +23,10 @@ import javax.swing.JTextArea;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+/**
+ * @author Sendoa
+ * Panel para la gestion administrativa de los generos, se podran añadir modificar y/o eliminar
+ */
 public class WAdminGenre extends JPanel implements ActionListener, FocusListener{
 	
 	private IGenreController genreInterface;
@@ -34,6 +38,9 @@ public class WAdminGenre extends JPanel implements ActionListener, FocusListener
 	private JButton btnEliminarGenero;
 	private Genre genero;
 	
+	/**
+	 * @param genreInterface Interfaz de genero
+	 */
 	public WAdminGenre(IGenreController genreInterface) {
 		this.genreInterface = genreInterface;
 		
@@ -130,7 +137,7 @@ public class WAdminGenre extends JPanel implements ActionListener, FocusListener
 					textGenero.setText("");
 					textDescripcion.setText("");
 				} catch (GestorException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
@@ -150,32 +157,32 @@ public class WAdminGenre extends JPanel implements ActionListener, FocusListener
 					
 					textGenero.setText("");
 					textDescripcion.setText("");
-					textGenero.setEditable(true);
+					textGenero.setEnabled(true);
 					btnEliminarGenero.setEnabled(false);
 					btnModificarGenero.setEnabled(false);
 					btnRegistrarGenero.setEnabled(true);
 				} catch (GestorException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
 		if(e.getSource().equals(btnEliminarGenero)) {
-			int seleccion = JOptionPane.showConfirmDialog(this, "Quieres eliminar este libro?", "Aviso", 0);
+			int seleccion = JOptionPane.showConfirmDialog(this, "Quieres eliminar el genero "+textGenero.getText()+"?", "Aviso", 0);
 			if(seleccion == 0) {
 				try {
 					genreInterface.eliminarGenre(textGenero.getText());
 					
-					JOptionPane.showMessageDialog(this, "Libro eliminado con exito", "Ta bien",
+					JOptionPane.showMessageDialog(this, "Genero eliminado con exito", "Ta bien",
 							JOptionPane.INFORMATION_MESSAGE);
 					
 					textGenero.setText("");
 					textDescripcion.setText("");
-					textGenero.setEditable(true);
+					textGenero.setEnabled(true);
 					btnEliminarGenero.setEnabled(false);
 					btnModificarGenero.setEnabled(false);
 					btnRegistrarGenero.setEnabled(true);
 				} catch (GestorException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
@@ -202,6 +209,7 @@ public class WAdminGenre extends JPanel implements ActionListener, FocusListener
 		if(e.getSource().equals(textGenero)) {
 			if(insertString(50, textGenero.getText())) {
 				textGenero.setText("");
+				textGenero.grabFocus();
 			}
 			try {
 				genero = genreInterface.buscarGenre(textGenero.getText());
@@ -218,19 +226,27 @@ public class WAdminGenre extends JPanel implements ActionListener, FocusListener
 						textDescripcion.setText(genero.getDescription());
 					} else {
 						textGenero.setText("");
+						textGenero.grabFocus();
 					}
 				}
 			} catch (GestorException e1) {
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		if(e.getSource().equals(textDescripcion)) {
 			if(insertString(50, textDescripcion.getText())) {
 				textDescripcion.setText("");
+				textDescripcion.grabFocus();
 			}
 		}
 	}
 	
+	/**
+	 * Metodo para comprobar que el texto introducido no es mayor de lo permitido
+	 * @param maximo el numero maximo de caracteres permitido
+	 * @param texto el texto que quieres comprobar
+	 * @return un boolean, en caso de que tenga mas caracteres de lo permitido sera <b>true</b>, en caso contrario <b>false</b>
+	 */
 	public boolean insertString(int maximo, String texto) {
 		if (texto.length() > maximo) {
 			JOptionPane.showMessageDialog(this, "Excedido el limite de caracteres ("+maximo+")", "Error",
