@@ -16,9 +16,14 @@ import tartanga.dami.equipoa.dataAccess.IGenreControllerDBImplementation;
 import tartanga.dami.equipoa.dataAccess.IUserController;
 import tartanga.dami.equipoa.dataAccess.IUserControllerDBImplementation;
 import tartanga.dami.equipoa.gui.WLogIn;
-
+/**
+ * @author 1dami
+ * Clase para iniciar el programa
+ */
 public class Application {
-
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
 
 		IUserController userInterface = new IUserControllerDBImplementation();

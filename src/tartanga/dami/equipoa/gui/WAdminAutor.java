@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.Calendar;
 
 import javax.swing.ImageIcon;
@@ -25,6 +24,10 @@ import tartanga.dami.equipoa.dataAccess.IAuthorController;
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Author;
 
+/**
+ * @author Sendoa
+ * Panel para la gestion administrativa de los autores, se podran añadir modificar y/o eliminar
+ */
 public class WAdminAutor extends JPanel implements ActionListener, FocusListener {
 
 	private IAuthorController authorInterface;
@@ -44,6 +47,9 @@ public class WAdminAutor extends JPanel implements ActionListener, FocusListener
 	private JButton btnEliminarAutor;
 	private JButton btnCancelarAutor;
 
+	/**
+	 * @param authorInterface Interfaz de autor
+	 */
 	public WAdminAutor(IAuthorController authorInterface) {
 		this.authorInterface = authorInterface;
 
@@ -162,6 +168,7 @@ public class WAdminAutor extends JPanel implements ActionListener, FocusListener
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(chckbxVivo)) {
+			// Dependiendo de si esta vivo o no se activara el calendario
 			if (chckbxVivo.isSelected()) {
 				calendarioAutorMuer.setEnabled(false);
 			} else {
@@ -203,7 +210,7 @@ public class WAdminAutor extends JPanel implements ActionListener, FocusListener
 						calendarAutorNac.setCalendar(Calendar.getInstance());
 						calendarioAutorMuer.setCalendar(Calendar.getInstance());
 					} catch (GestorException e1) {
-						e1.printStackTrace();
+						JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 					}
 
 				}
@@ -243,24 +250,26 @@ public class WAdminAutor extends JPanel implements ActionListener, FocusListener
 						textApellido.setText("");
 						calendarAutorNac.setCalendar(Calendar.getInstance());
 						calendarioAutorMuer.setCalendar(Calendar.getInstance());
+						calendarioAutorMuer.setEnabled(true);
+						chckbxVivo.setSelected(false);
 						btnEliminarAutor.setEnabled(false);
 						btnModificarAutor.setEnabled(false);
 						btnRegistrarAutor.setEnabled(true);
 						textAutor.setEnabled(true);
 					} catch (GestorException e1) {
-						e1.printStackTrace();
+						JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 					}
 
 				}
 			}
 		}
 		if (e.getSource().equals(btnEliminarAutor)) {
-			int seleccion = JOptionPane.showConfirmDialog(this, "Quieres eliminar este libro?", "Aviso", 0);
+			int seleccion = JOptionPane.showConfirmDialog(this, "Quieres eliminar este autor con el codigo: "+textAutor.getText()+"?", "Aviso", 0);
 			if (seleccion == 0) {
 				try {
 					authorInterface.eliminarAuthor(textAutor.getText());
 
-					JOptionPane.showMessageDialog(this, "Libro eliminado con exito", "Ta bien",
+					JOptionPane.showMessageDialog(this, "Autor eliminado con exito", "Ta bien",
 							JOptionPane.INFORMATION_MESSAGE);
 
 					textAutor.setText("");
@@ -268,11 +277,14 @@ public class WAdminAutor extends JPanel implements ActionListener, FocusListener
 					textApellido.setText("");
 					calendarAutorNac.setCalendar(Calendar.getInstance());
 					calendarioAutorMuer.setCalendar(Calendar.getInstance());
+					calendarioAutorMuer.setEnabled(true);
+					chckbxVivo.setSelected(false);
 					btnEliminarAutor.setEnabled(false);
 					btnModificarAutor.setEnabled(false);
 					btnRegistrarAutor.setEnabled(true);
+					textAutor.setEnabled(true);
 				} catch (GestorException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
@@ -302,6 +314,7 @@ public class WAdminAutor extends JPanel implements ActionListener, FocusListener
 		if (e.getSource().equals(textAutor)) {
 			if (insertString(50, textAutor.getText())) {
 				textAutor.setText("");
+				textAutor.grabFocus();
 			}
 			try {
 				autor = authorInterface.buscarAuthor(textAutor.getText());
@@ -319,6 +332,7 @@ public class WAdminAutor extends JPanel implements ActionListener, FocusListener
 						textApellido.setText(autor.getSurname());
 						textNombreA.setText(autor.getName());
 						calendarAutorNac.setDate(autor.getBirthDate());
+						// Si la fecha que le llega es null quiere decir que esta vivo
 						try {
 							calendarioAutorMuer.setDate(autor.getDeathDate());
 						} catch (NullPointerException e1) {
@@ -328,24 +342,33 @@ public class WAdminAutor extends JPanel implements ActionListener, FocusListener
 						}
 					} else {
 						textAutor.setText("");
+						textAutor.grabFocus();
 					}
 				}
 			} catch (GestorException e1) {
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		if (e.getSource().equals(textApellido)) {
 			if (insertString(50, textApellido.getText())) {
 				textApellido.setText("");
+				textApellido.grabFocus();
 			}
 		}
 		if (e.getSource().equals(textNombreA)) {
 			if (insertString(50, textNombreA.getText())) {
 				textNombreA.setText("");
+				textApellido.grabFocus();
 			}
 		}
 	}
 
+	/**
+	 * Metodo para comprobar que el texto introducido no es mayor de lo permitido
+	 * @param maximo el numero maximo de caracteres permitido
+	 * @param texto el texto que quieres comprobar
+	 * @return un boolean, en caso de que tenga mas caracteres de lo permitido sera <b>true</b>, en caso contrario <b>false</b>
+	 */
 	public boolean insertString(int maximo, String texto) {
 		if (texto.length() > maximo) {
 			JOptionPane.showMessageDialog(this, "Excedido el limite de caracteres ("+maximo+")", "Error",

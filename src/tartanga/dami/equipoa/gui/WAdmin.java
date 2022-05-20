@@ -49,6 +49,10 @@ import javax.swing.JTable;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 
+/**
+ * @author Sendoa
+ * Ventana en la que se almacenaran a modo de pesta�as todos los paneles para la gestion administrativa de la libreria
+ */
 public class WAdmin extends JDialog implements MouseListener {
 
 	private IBookController bookInterface;
@@ -66,6 +70,15 @@ public class WAdmin extends JDialog implements MouseListener {
 	private JLabel lblCerrarSesion;
 	private JLabel lblIconoCerrar;
 
+	/**
+	 * @param user el usuario que ha iniciado sesion
+	 * @param bookInterface Interfaz de libro
+	 * @param authorInterface Interfaz de autor
+	 * @param genreInterface Intefaz de genero
+	 * @param userInterface Interfaz de usuario
+	 * @param authorBookInterface Interfaz auxiliar
+	 * @param comprasInterface Interfaz de compras
+	 */
 	public WAdmin(User user, IBookController bookInterface, IAuthorController authorInterface,
 			IGenreController genreInterface, IUserController userInterface, IAuthorBookController authorBookInterface,
 			IComprasController comprasInterface, IConsultaController consultaInterface) {
@@ -110,6 +123,14 @@ public class WAdmin extends JDialog implements MouseListener {
 
 	}
 
+	/**
+	 * Metodo para iniciar los componentes de la ventana
+	 * @param userInterface Interfaz de usuario
+	 * @param authorInterface Interfaz de autor
+	 * @param genreInterface Interfaz de genero
+	 * @param bookInterface Interfaz de libro
+	 * @param tabbedPane donde se guardan los paneles
+	 */
 	private void iniciarComponentes(IUserController userInterface, IAuthorController authorInterface,
 			IGenreController genreInterface, IBookController bookInterface, JTabbedPane tabbedPane) {
 		libros = new WAdminLibro(authorInterface, genreInterface, bookInterface, tabbedPane);
@@ -157,7 +178,9 @@ public class WAdmin extends JDialog implements MouseListener {
 		// TODO Auto-generated method stub
 
 	}
-
+	/**
+	 * Metodo para cerrar sesion en el programa
+	 */
 	public void cerrarSesion() {
 		int seleccion = JOptionPane.showConfirmDialog(libros, "Estas seguro que quieres cerrar sesion?", "Aviso", 0);
 		if (seleccion == 0) {

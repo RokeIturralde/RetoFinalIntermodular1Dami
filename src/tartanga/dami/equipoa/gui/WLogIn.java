@@ -33,8 +33,16 @@ import java.awt.event.KeyListener;
 
 import javax.swing.SwingConstants;
 
+/**
+ * @author Sendoa
+ *
+ */
 public class WLogIn extends JFrame implements ActionListener, KeyListener, FocusListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField textUsuario;
 	private JPasswordField passwordField;
 	private JButton btnRegistrar;
@@ -47,9 +55,18 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 	private IComprasController comprasInterface;
 	private IConsultaController consultaInterface;
 
+
+	/**
+	 * @param userInterface       interfaz de usuarios
+	 * @param authorInterface     interfaz de autores
+	 * @param genreInterface      interfaz de generos
+	 * @param bookInterface       interfaz de libros
+	 * @param authorBookInterface interfaz auxiliar
+	 * @param comprasInterface    interfaz de compras
+	 */
 	public WLogIn(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface,
 			IBookController bookInterface, IAuthorBookController authorBookInterface,
-			IComprasController comprasInterface, IConsultaController consultaInterface) {
+			IComprasController comprasInterface) {
 		this.userInterface = userInterface;
 		this.authorInterface = authorInterface;
 		this.genreInterface = genreInterface;
@@ -57,6 +74,7 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 		this.authorBookInterface = authorBookInterface;
 		this.comprasInterface = comprasInterface;
 		this.consultaInterface = consultaInterface;
+
 
 		setIconImage(Toolkit.getDefaultToolkit()
 				.getImage(WLogIn.class.getResource("/tartanga/dami/equipoa/resources/Logo.png")));
@@ -73,7 +91,7 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 		textUsuario.addKeyListener(this);
 		textUsuario.addFocusListener(this);
 
-		JLabel lblNombreEmail = new JLabel("Nombre o email de la cuenta:");
+		JLabel lblNombreEmail = new JLabel("Nombre de usuario o email de la cuenta:");
 		lblNombreEmail.setForeground(Color.WHITE);
 		lblNombreEmail.setBackground(Color.WHITE);
 		lblNombreEmail.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -130,6 +148,7 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		// Abrimos la ventana registro
 		if (e.getSource().equals(btnRegistrar)) {
 			WRegistro registro = new WRegistro(userInterface, authorInterface, genreInterface);
 			registro.setVisible(true);
@@ -158,10 +177,16 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 
 	}
 
+	/**
+	 * Metodo para inicar sesion en el programa
+	 */
 	public void iniciarSesion() {
+		// Pasamos la contraseña a string y comprobamos que el username y la password no
+		// esten vacios
 		String pass = new String(passwordField.getPassword());
 		if (!(textUsuario.getText().isEmpty() || pass.isEmpty())) {
 			try {
+				// Comprobamos que las credenciales estan correctas
 				User user = userInterface.userLogIn(textUsuario.getText(), pass);
 				if (user != null) {
 					this.dispose();
@@ -174,11 +199,13 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 						menu.setVisible(true);
 					}
 				} else {
-					JOptionPane.showMessageDialog(this, "El nombre de la cuenta y/o la contrase�a son incorrectos",
+					JOptionPane.showMessageDialog(this, "El nombre de la cuenta y/o la contraseña son incorrectos",
 							"Error", JOptionPane.WARNING_MESSAGE);
+					passwordField.setText("");
+					passwordField.grabFocus();
 				}
 			} catch (GestorException e1) {
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		} else {
 			JOptionPane.showMessageDialog(this, "Uno de los campos esta vacio", "Error", JOptionPane.WARNING_MESSAGE);
@@ -205,7 +232,13 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 			}
 		}
 	}
-
+	/**
+	 * Metodo para comprobar que el texto introducido no es mayor de lo permitido
+	 * 
+	 * @param maximo el numero maximo de caracteres permitido
+	 * @param texto  el texto que quieres comprobar
+	 * @return un boolean, en caso de que tenga mas caracteres de lo permitido sera <b>true</b>, en caso contrario <b>false</b>
+	 */
 	public boolean insertString(int maximo, String texto) {
 		if (texto.length() > maximo) {
 			JOptionPane.showMessageDialog(this, "Excedido el limite de caracteres (" + maximo + ")", "Error",

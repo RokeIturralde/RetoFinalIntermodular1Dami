@@ -13,6 +13,10 @@ import tartanga.dami.equipoa.model.Book;
 import tartanga.dami.equipoa.model.ConnectionOpenClose;
 import tartanga.dami.equipoa.model.Genre;
 
+/**
+ * @author Eneko
+ *
+ */
 public class IBookControllerDBImplementation implements IBookController {
 
 	private Connection con;
@@ -193,13 +197,14 @@ public class IBookControllerDBImplementation implements IBookController {
 				book.setEditorial(rs.getString("editorial"));
 				book.setStock(rs.getInt("stock"));
 				book.setPrice(rs.getFloat("price"));
-				book.setIdDiscount(rs.getInt("discount"));
+				book.setIdDiscount(rs.getInt("idDiscount"));
 				book.setPubDate(rs.getDate("pubdate"));
 				books.add(book);
 			}
 		} catch (SQLException e1) {
 			String error = "Error en la conexion con la base de datos";
 			GestorException exception = new GestorException(error);
+			e1.printStackTrace();
 			throw exception;
 		} finally {
 			try {
@@ -232,7 +237,7 @@ public class IBookControllerDBImplementation implements IBookController {
 				book.setEditorial(rs.getString("editorial"));
 				book.setStock(rs.getInt("stock"));
 				book.setPrice(rs.getFloat("price"));
-				book.setIdDiscount(rs.getInt("discount"));
+				book.setIdDiscount(rs.getInt("idDiscount"));
 				book.setPubDate(rs.getDate("pubdate"));
 				books.add(book);
 			}
@@ -335,7 +340,7 @@ public class IBookControllerDBImplementation implements IBookController {
 
 	@Override
 	public ArrayList<Integer> listTopSales() throws GestorException {
-		ArrayList<Integer> listTopSales = new ArrayList();
+		ArrayList<Integer> listTopSales = new ArrayList<Integer>();
 		Book book = null;
 		ResultSet rs = null;
 		String sentence = "SELECT isbn, sum(quantity) as quantity FROM purchase group by isbn order by sum(quantity) desc limit 5";

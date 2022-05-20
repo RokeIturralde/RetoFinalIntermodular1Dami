@@ -2,122 +2,150 @@ package tartanga.dami.equipoa.dataAccess;
 
 import static org.junit.Assert.*;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.sql.Date;
+import java.util.ArrayList;
 
 import org.junit.Test;
 
 import tartanga.dami.equipoa.gestorException.GestorException;
 import tartanga.dami.equipoa.model.Book;
 
+/**
+ * @author 1dami
+ * Clase test para la implementacion de la interfaz de libros
+ */
 public class IBookControllerDBImplementationTest {
 
 	private Date fecha = new Date(2006 - 04 - 05);
-	private Date fechaPrueba = new Date(2014 - 05 - 06);
 	private Book book;
 	IBookController pruebaLibros = new IBookControllerDBImplementation();
+	ArrayList<String> codAuthor;
+	ArrayList<String> genreName;
+
 	
-	/*
->>>>>>> d3813e7e0e1f8bd20d59be1c687093fa6c4e2c4a
+	/**
+	 * Metodo que testea la creacion y busqueda de un libro
+	 * @throws GestorException
+	 */
 	@Test
-	public void testAltaBook() {
-		try {
-			book = new Book(1232, "El se�or de los anillos", "descripcion", "Elhuyar", 7, 2, 1, fecha);
-			System.out.println(book.toString());
-			// pruebaLibros.altaBook(book, "A001", "Fantasia");
-			Book libroPrueba = pruebaLibros.buscarBook(book.getIsbn());
-			assertNotEquals(null, libroPrueba);
-		} catch (GestorException e) {
-			e.printStackTrace();
-		}
-	}
-<<<<<<< HEAD
-=======
-	*/
-
-	@Test
-	public void testBuscarBook() {
-		try {
-			int isbnBuscar = 2;
-			Book libroBuscado = pruebaLibros.buscarBook(isbnBuscar);
-			Book bookComprobar = new Book(2, "La luz que no puedes ver", "Una novela imaginativa e intrincada",
-					"Charles Scribners sons", 16, 28, 1, fechaPrueba);
-			assertEquals(bookComprobar, libroBuscado);
-		} catch (GestorException e) {
-			e.printStackTrace();
-		}
+	public void testAltaBookYBusqueda() throws GestorException {
+		codAuthor = new ArrayList<String>();
+		genreName = new ArrayList<String>();
+		book = new Book(1239, "El señor de los anillos", "descripcion", "Elhuyar", 7, 2, 1, fecha);
+		pruebaLibros.altaBook(book);
+		codAuthor.add("A001");
+		genreName.add("ficcion");
+		pruebaLibros.anadirAuthor(codAuthor, book.getIsbn());
+		pruebaLibros.anadirGenre(genreName, book.getIsbn());
+		Book libroPrueba = pruebaLibros.buscarBook(book.getIsbn());
+		System.out.println(libroPrueba.toString());
+		assertEquals(libroPrueba.getIsbn(), book.getIsbn());
 	}
 
-/*	@Test
-	public void testModificarBook() {
-		try {
-			book = new Book(1232, "ROKE EL ROKERO", "descripcion", "El barco de papel", 7, 3, 1, fecha);
-			int cuantos = pruebaLibros.modificarBook(book);
-			System.out.println(cuantos);
-			assertEquals(1, cuantos);
-		} catch (GestorException e) {
-			e.printStackTrace();
-		}
-	}*/
-
+	/**
+	 * Metodo que testea la modificacion de un libro
+	 * @throws GestorException
+	 */
 	@Test
-	public void testEliminarBook() {
-
-		try {
-			int isbnPrueba = 1232;
-			pruebaLibros.eliminarBook(isbnPrueba);
-			Book libroPrueba = pruebaLibros.buscarBook(isbnPrueba);
-			assertEquals(null, libroPrueba);
-		} catch (GestorException e) {
-			e.printStackTrace();
-		}
-
+	public void testModificarBook() throws GestorException {
+		codAuthor = new ArrayList<String>();
+		genreName = new ArrayList<String>();
+		int isbn = 1236;
+		book = new Book(isbn, "El señor de los anillos 3", "descripcion", "Elhuyar", 7, 2, 1, fecha);
+		codAuthor.add("A001");
+		genreName.add("ficcion");
+		int prueba = pruebaLibros.modificarBook(book, codAuthor, genreName);
+		assertSame(prueba, 1);
+	}
+	/**
+	 * Metodo para testear la eliminacion y busqueda de un libro
+	 * @throws GestorException
+	 */
+	@Test
+	public void testEliminarBookYBusqueda() throws GestorException {
+		pruebaLibros.eliminarBook(1235);
+		Book libroPrueba = pruebaLibros.buscarBook(1235);
+		assertEquals(libroPrueba, null);
 	}
 
+	/**
+	 * Metodo test para listar los libros por genero
+	 * @throws GestorException
+	 */
 	@Test
-	public void testListaBookGenre() {
-		try {
-			ArrayList<Book> listaPrueba = new ArrayList();
-			listaPrueba = pruebaLibros.listaBookGenre("Fantasia");
-			assertNotEquals(null, listaPrueba);
-		} catch (GestorException e) {
-			e.printStackTrace();
-		}
+	public void testListaBookGenre() throws GestorException {
+		ArrayList<Book> prueba = pruebaLibros.listaBookGenre("fantasia");
+		assertNotEquals(prueba, null);
 	}
 
+	/**
+	 * Metodo test para listar los libros por autor
+	 * @throws GestorException
+	 */
 	@Test
-	public void testListaBookAuthor() {
-		try {
-			ArrayList<Book> listaPrueba = new ArrayList();
-			listaPrueba = pruebaLibros.listaBookAuthor("Tolkien");
-			assertNotEquals(null, listaPrueba);
-		} catch (GestorException e) {
-			e.printStackTrace();
-		}
-		;
+	public void testListaBookAuthor() throws GestorException {
+		ArrayList<Book> prueba = pruebaLibros.listaBookAuthor("Tolkien");
+		assertNotEquals(prueba, null);
 	}
 
+	/**
+	 * Metodo test para listar los libros por autor y por genero
+	 * @throws GestorException
+	 */
 	@Test
-	public void testListBookAuthorGenre() {
-		try {
-			ArrayList<Book> listaPrueba = new ArrayList();
-			listaPrueba = pruebaLibros.listBookAuthorGenre("Tolkien", "Fantasia");
-			assertNotEquals(null, listaPrueba);
-		} catch (GestorException e) {
-			e.printStackTrace();
-		}
+	public void testListBookAuthorGenre() throws GestorException {
+		ArrayList<Book> prueba = pruebaLibros.listBookAuthorGenre("Tolkien", "fantasia");
+		assertNotEquals(prueba, null);
 	}
 
+	/**
+	 * Metodo test para listar todos los libros
+	 * @throws GestorException
+	 */
 	@Test
-	public void testListAllBooks() {
-		try {
-			ArrayList<Book> listaPrueba = new ArrayList();
-			listaPrueba = pruebaLibros.listAllBooks();
-			assertNotEquals(null, listaPrueba);
-		} catch (GestorException e) {
-			e.printStackTrace();
-		}
+	public void testListAllBooks() throws GestorException {
+		ArrayList<Book> prueba = pruebaLibros.listAllBooks();
+		assertNotEquals(prueba, null);
+	}
+
+	/**
+	 * Metodo test para listar los libros superventas
+	 * @throws GestorException
+	 */
+	@Test
+	public void testListTopSales() throws GestorException {
+		ArrayList<Integer> prueba = pruebaLibros.listTopSales();
+		assertNotEquals(prueba, null);
+	}
+
+	/**
+	 * Metodo test para listar todos los descuentos
+	 * @throws GestorException
+	 */
+	@Test
+	public void testListDiscount() throws GestorException {
+		ArrayList<Integer> prueba = pruebaLibros.listDiscount();
+		assertNotEquals(prueba, null);
+	}
+
+	/**
+	 * Metodo test para listar los autores de un libro
+	 * @throws GestorException
+	 */
+	@Test
+	public void testListAuthors() throws GestorException {
+		ArrayList<String> prueba = pruebaLibros.listAuthors(1);
+		assertNotEquals(prueba, null);
+	}
+
+	/**
+	 * Metodo test para listar los generos de un libro
+	 * @throws GestorException
+	 */
+	@Test
+	public void testListGenres() throws GestorException {
+		ArrayList<String> prueba = pruebaLibros.listGenres(1);
+		assertNotEquals(prueba, null);
 	}
 
 }
