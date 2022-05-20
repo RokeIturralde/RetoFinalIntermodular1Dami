@@ -164,7 +164,6 @@ public class WMenuConsultas extends JPanel implements ActionListener, MouseListe
 						}
 					};
 
-					
 					scrollPane.setBounds(33, 188, 890, 401);
 					this.add(scrollPane);
 
@@ -200,6 +199,9 @@ public class WMenuConsultas extends JPanel implements ActionListener, MouseListe
 
 	}
 
+	/**
+	 * Metodo para limpiar la tabla de consultas
+	 */
 	private void cleanTableConsultas() {
 		String titulos[] = { "Titulo", "Autor/es", "Fecha Publicacion", "Descripcion", "Genero/s",
 				"Precio/Te Interesa?" };

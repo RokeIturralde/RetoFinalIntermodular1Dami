@@ -58,6 +58,7 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 	 * @param listLikedBooks Lista con los libros que le gustan a un usuario
 	 * @param libros Lista con todos los libros que hay en la libreria
 	 */
+	private JLabel lblVacio;
 
 	public WMenuInicio(IUserController userInterface, IBookController bookInterface, IAuthorController authorInterface,
 			User user, ArrayList<Compra> compras) {
@@ -69,7 +70,7 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 		this.user = user;
 		this.listLikedBooks = listLikedBooks;
 
-		setBounds(100, 300, 920, 717);
+		setBounds(100, 300, 914, 711);
 
 		JLabel lblTablaFav = new JLabel("Solo para ti");
 		lblTablaFav.setBounds(190, 67, 135, 14);
@@ -87,6 +88,7 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 		txtrPromociones.setText(
 				"Comprar libros en Irakurle tiene numerosas ventajas como m\u00EDnimo env\u00EDo gratis en un d\u00EDa desde 19\u20AC en nuestros libros, numerosas formas de env\u00EDo como env\u00EDo en 24 horas, posibilidad de recogerlo en tienda en alguna de nuestras m\u00E1s de 46 librer\u00EDas y numerosos ofertas , descuentos y promociones.");
 		txtrPromociones.setBounds(169, 537, 666, 84);
+
 		this.add(txtrPromociones);
 
 		
@@ -354,6 +356,7 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 
 	}
 
+
 	public void crearTablaFavoritos(User user, IBookController bookInterface) {
 		listLikedBooks = new ArrayList();
 		try {
@@ -427,9 +430,13 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 			tableHeader.setForeground(Color.WHITE);
 			tableHeader.setBorder(null);
 			tableHeader.setEnabled(false);
-
 		} else {
-			JOptionPane.showMessageDialog(this, "Usuario sin libros");
+			lblVacio = new JLabel();
+			lblVacio.setIcon(new ImageIcon(
+					WMenu.class.getResource("/tartanga/dami/equipoa/resources/preferenciasPersonales.jpg")));
+			lblVacio.setBounds(30, -150, 900, 900);
+			this.add(lblVacio);
+
 		}
 
 	}

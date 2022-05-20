@@ -68,7 +68,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 
 	private User user;
 	private DefaultListModel modelo2, modelo;
-	private final JLabel label = new JLabel("");
+	private JLabel lblVacio;
 
 	public WMenuPerfil(IUserController userInterface, IAuthorController authorInterface, IBookController bookInterface,
 			IGenreController genreInterface, IComprasController comprasInterface, User user, WMenuInicio panelInicio) {
@@ -179,10 +179,6 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 		lblHistorialCompra.setBounds(636, 50, 118, 29);
 		add(lblHistorialCompra);
 
-		JPanel panelHistorialCompra = new JPanel();
-		panelHistorialCompra.setBounds(454, 76, 490, 319);
-		add(panelHistorialCompra);
-
 		// Cargar los datos del Usuario
 		txtNombre.setText(user.getName());
 		txtNombre.setEditable(false);
@@ -275,7 +271,6 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 
 				scrollPane = new JScrollPane();
 				scrollPane.setBounds(25, 209, 583, 125);
-				panelHistorialCompra.add(scrollPane);
 
 				String titulos[] = { "Fecha", "Autor", "Isbn", "Cantidad", "Precio" };
 
@@ -315,11 +310,12 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 				tableHeader.setBorder(null);
 				tableHeader.setEnabled(false);
 			} else {
+				lblVacio = new JLabel();
+				lblVacio.setIcon(
+						new ImageIcon(WMenu.class.getResource("/tartanga/dami/equipoa/resources/imgNoHayCompras.png")));
+				lblVacio.setBounds(650, 150, 400, 200);
+				this.add(lblVacio);
 
-				label.setIcon(new ImageIcon(
-						WMenuPerfil.class.getResource("/tartanga/dami/equipoa/resources/imgNoHayCompras.png")));
-				label.setBounds(25, 209, 583, 125);
-				this.add(label);
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -343,7 +339,10 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 
 	}
 
-	// Refrescar los datos modificados
+	/**
+	 * Metodo para refrescar la tabla de preferencias cuando haces una modificacion
+	 * en perfil
+	 */
 	public void refrescarPreferencias() {
 		try {
 			modelo.clear();
@@ -367,7 +366,13 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 
 	}
 
-	// Eliminar preferencias personales de la base de datos
+	/**
+	 * Metodo para eliminar las preferencias de la base de datos
+	 * 
+	 * @param arrayList de autores a eliminar
+	 * @param usuario   a quien hay que eliminar esas preferencias
+	 * @param arrayList de generos a eliminar
+	 */
 	private void borrarPreferencia(ArrayList<Author> autores, User user, ArrayList<String> generos) {
 		int cambio, confirmacion, posicion, posicion2;
 
@@ -422,6 +427,9 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 		}
 	}
 
+	/**
+	 * Metodo para cargar los autores a la comboBox
+	 */
 	private void cargarAutores() {
 		ArrayList<Author> autores;
 		boolean esta;
@@ -449,6 +457,9 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 
 	}
 
+	/**
+	 * Metodo para cargar los generos a la comboBox
+	 */
 	private void cargarGeneros() {
 		boolean esta;
 		try {
@@ -475,6 +486,9 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 
 	}
 
+	/**
+	 * Metodo para añadir preferencias personales al usuario(autores o generos)
+	 */
 	private void annadirPreferencia() {
 		int cantidadAutores, cantidadGeneros, longitudCombobox;
 		ArrayList<Author> autoresCombo;
@@ -528,6 +542,9 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 
 	}
 
+	/**
+	 * Metodo para hablitar los textos y poder editar los datos
+	 */
 	private void modificarDatos() {
 		btnGuardarCambios.setEnabled(true);
 		btnAnnadirPreferencia.setEnabled(true);
@@ -543,6 +560,12 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 		cbxAutores.setEnabled(true);
 	}
 
+	/**
+	 * Metodo para deshabilitar los textos e introduce los cambios a la base de
+	 * datos
+	 * 
+	 * @param usuario al quien hay que guardarle los cambios modificados
+	 */
 	private void guardarCambios(User user) {
 		User userModificado;
 		txtNombre.setEditable(false);
@@ -627,6 +650,11 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 
 	}
 
+	/**
+	 * Metodo contar la cantidad de objetos que hay cargados en el comboBox
+	 * 
+	 * @return un int con la cantidad de objetos
+	 */
 	public int cantidadComboBoxGeneros() {
 		boolean esta;
 		int cuantos = 0;
