@@ -53,7 +53,6 @@ public class IComprasDBImplementation implements IComprasController {
 			stmt.setString(1, username);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-
 				compra = new Compra();
 				compra.setFechaCompra(rs.getDate("p.purchaseDate"));
 				compra.setIsbn(rs.getInt("p.isbn"));
