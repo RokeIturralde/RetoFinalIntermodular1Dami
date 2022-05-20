@@ -157,7 +157,7 @@ public class WAdminLibro extends JPanel implements ActionListener, FocusListener
 			}
 		} catch (GestorException e) {
 			JOptionPane.showMessageDialog(this, "Error en la lectura de descuentos", "Error",
-					JOptionPane.WARNING_MESSAGE);
+					JOptionPane.ERROR_MESSAGE);
 		}
 
 		JLabel lblFecha = new JLabel("Selecciona la fecha de publicacion:");

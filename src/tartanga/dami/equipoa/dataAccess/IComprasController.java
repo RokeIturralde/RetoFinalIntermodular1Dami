@@ -32,8 +32,9 @@ public interface IComprasController {
 	 * Metodo para añadir una compra
 	 * @param compra la compra a introducir
 	 * @param user el nombre de usuario que compra
+	 * @return el numero de lineas introducidas
 	 * @throws GestorException
 	 */
-	public void escribirCompra(Compra compra, String user) throws GestorException;
+	public int escribirCompra(Compra compra, String user) throws GestorException;
 
 }

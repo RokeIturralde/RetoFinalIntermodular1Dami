@@ -27,7 +27,7 @@ public class IAuthorControllerDBImplementationTest {
 	@Test
 	public void testAltaAuthor() throws GestorException {
 		autor = new Author();
-		autor.setCodAuthor("A003");
+		autor.setCodAuthor("A007");
 		autor.setName("Koke");
 		autor.setSurname("Ruiz");
 		autor.setBirthDate(fecha);
@@ -113,7 +113,7 @@ public class IAuthorControllerDBImplementationTest {
 	 */
 	@Test
 	public void testInsertarAutorPreferido() throws GestorException {
-		int i = pruebaAutor.insertarAutorPreferido("gitanito77", "A001");
+		int i = pruebaAutor.insertarAutorPreferido("gitanito77", "A006");
 		assertEquals(i, 1);
 	}
 

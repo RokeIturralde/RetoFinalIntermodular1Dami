@@ -31,7 +31,7 @@ public class IBookControllerDBImplementationTest {
 	public void testAltaBookYBusqueda() throws GestorException {
 		codAuthor = new ArrayList<String>();
 		genreName = new ArrayList<String>();
-		book = new Book(1236, "El señor de los anillos", "descripcion", "Elhuyar", 7, 2, 1, fecha);
+		book = new Book(1239, "El señor de los anillos", "descripcion", "Elhuyar", 7, 2, 1, fecha);
 		pruebaLibros.altaBook(book);
 		codAuthor.add("A001");
 		genreName.add("ficcion");

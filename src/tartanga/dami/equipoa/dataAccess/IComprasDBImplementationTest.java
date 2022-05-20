@@ -47,7 +47,8 @@ public class IComprasDBImplementationTest {
 		compra.setCantidadLibros(1);
 		compra.setIsbn(1);
 		compra.setPrecioCompra(pruebaCompra.calcularPrecio(1));
-		pruebaCompra.escribirCompra(compra, "gitanito77");
+		int cuantos = pruebaCompra.escribirCompra(compra, "gitanito77");
+		assertEquals(cuantos, 1);
 	}
 
 }
