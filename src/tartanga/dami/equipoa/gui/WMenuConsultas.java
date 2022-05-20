@@ -12,7 +12,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import java.awt.event.KeyEvent;
-
 import com.mxrck.autocompleter.TextAutoCompleter;
 
 import tartanga.dami.equipoa.dataAccess.IAuthorController;

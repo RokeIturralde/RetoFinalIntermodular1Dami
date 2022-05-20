@@ -54,6 +54,10 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 		this.compras = compras;
 		this.user = user;
 
+		this.compras = compras;
+		this.user = user;
+		this.listLikedBooks = listLikedBooks;
+
 		setBounds(100, 300, 520, 12);
 
 		JLabel lblNewLabel = new JLabel("Solo para ti");
@@ -75,7 +79,7 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 		this.add(txtrPromociones);
 
 		// Tabla de preferencias personales
-		crearTablaFavoritos(user);
+		crearTablaFavoritos(user, bookInterface);
 
 		// Tabla de Best Sellers
 		try {
@@ -139,9 +143,9 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 		this.add(scrollSellers);
 
 		RowsRenderer rRowsRenderer = new RowsRenderer(3);
-		ArrayList<AuthorBook> listLikedBooks;
+		ArrayList<Integer> listLikedBooks;
 		try {
-			listLikedBooks = authorBookInterface.listAuthorBook(user.getUserName());
+			listLikedBooks = bookInterface.listaFavoritos(user.getUserName());
 			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 			tableSales.setDefaultRenderer(Object.class, rRowsRenderer);
 			tableSales.isCellEditable(listLikedBooks.size(), 4);
@@ -184,25 +188,43 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 		if (e.getSource().equals(tableFav)) {
 			if (tableFav.getSelectedColumn() == 3) {
 				int cual = tableFav.getSelectedRow();
+				String canti = null;
 				int cantidad;
-				try {
-					Book book = listLikedBooks.get(cual);
-					cantidad = Integer.parseInt(JOptionPane.showInputDialog(null,
-							"Introduce el numero de ejemplares que deseas comprar. Stock: " + book.getStock(),
-							"Confirma la compra", JOptionPane.PLAIN_MESSAGE));
-					if (cantidad > 0 && cantidad <= book.getStock()) {
-						Compra compra = new Compra();
-						compra.setIsbn(book.getIsbn());
-						compra.setCantidadLibros(cantidad);
-						compra.setPrecioCompra(book.getPrice());
-						compras.add(compra);
-					} else {
-						JOptionPane.showMessageDialog(this, "Sin stock", "Error", JOptionPane.WARNING_MESSAGE);
-					}
-				} catch (NumberFormatException a) {
-					JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros", "Error",
-							JOptionPane.WARNING_MESSAGE);
+				Book book = listLikedBooks.get(cual);
+				boolean repetido = false;
+				String valor = JOptionPane.showInputDialog(null,
+						"Introduce el numero de ejemplares que deseas comprar. Stock: " + book.getStock(),
+						"Confirma la compra", JOptionPane.PLAIN_MESSAGE);
+				if (valor != null) {
+					try {
 
+						cantidad = Integer.parseInt(valor);
+						for (int i = 0; i < compras.size(); i++) {
+							if (compras.get(i).getIsbn() == book.getIsbn()) {
+								compras.get(i).setCantidadLibros(compras.get(i).getCantidadLibros() + cantidad);
+								if (compras.get(i).getCantidadLibros() > book.getStock()) {
+									JOptionPane.showMessageDialog(this, "No hay suficiente stock", "Error",
+											JOptionPane.INFORMATION_MESSAGE);
+									compras.get(i).setCantidadLibros(compras.get(i).getCantidadLibros() - cantidad);
+								}
+								repetido = true;
+								i = compras.size();
+							}
+						}
+						if (cantidad > 0 && cantidad <= book.getStock() && repetido == false) {
+							Compra compra = new Compra();
+							compra.setIsbn(book.getIsbn());
+							compra.setCantidadLibros(cantidad);
+							compra.setPrecioCompra(book.getPrice());
+							compras.add(compra);
+
+						} else {
+							JOptionPane.showMessageDialog(this, "Sin stock", "Error", JOptionPane.WARNING_MESSAGE);
+						}
+					} catch (NumberFormatException a) {
+						JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros", "Error",
+								JOptionPane.WARNING_MESSAGE);
+					}
 				}
 
 			}
@@ -222,22 +244,39 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 		if (e.getSource().equals(tableSales)) {
 			if (tableSales.getSelectedColumn() == 4) {
 				int cual = tableSales.getSelectedRow();
+				String canti = null;
+				int cantidad;
+				Book book = libros.get(cual);
+				boolean repetido = false;
 				try {
-					Book book = libros.get(cual);
-					int cantidad = Integer.parseInt(JOptionPane.showInputDialog(null,
+					canti = String.valueOf(JOptionPane.showInputDialog(null,
 							"Introduce el numero de ejemplares que deseas comprar. Stock: " + book.getStock(),
 							"Confirma la compra", JOptionPane.PLAIN_MESSAGE));
-					if (cantidad > 0 && cantidad <= book.getStock()) {
+					cantidad = Integer.parseInt(canti);
+
+					for (int i = 0; i < compras.size(); i++) {
+						if (compras.get(i).getIsbn() == book.getIsbn()) {
+							compras.get(i).setCantidadLibros(compras.get(i).getCantidadLibros() + cantidad);
+							if (compras.get(i).getCantidadLibros() > book.getStock()) {
+								JOptionPane.showMessageDialog(this, "No hay suficiente stock", "Error",
+										JOptionPane.INFORMATION_MESSAGE);
+								compras.get(i).setCantidadLibros(compras.get(i).getCantidadLibros() - cantidad);
+							}
+							repetido = true;
+							i = compras.size();
+						}
+					}
+					if (cantidad > 0 && cantidad <= book.getStock() && repetido == false) {
 						Compra compra = new Compra();
 						compra.setIsbn(book.getIsbn());
 						compra.setCantidadLibros(cantidad);
 						compra.setPrecioCompra(book.getPrice());
-						compra.setCantidadLibros(cantidad);
 						compras.add(compra);
 					}
 				} catch (NumberFormatException a) {
-					JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros", "Error",
-							JOptionPane.WARNING_MESSAGE);
+					if (!canti.isEmpty())
+						JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros", "Error",
+								JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
@@ -386,94 +425,85 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 
 	}
 
-	public void crearTablaFavoritos(User user) {
-		// Tabla de preferencias personales
-		try { 
-			ArrayList<AuthorBook> listLikedBooks;
-			listLikedBooks = authorBookInterface.listAuthorBook(user.getUserName());
-			if (listLikedBooks.size() > 0) {
-				String matrizTabla[][] = new String[listLikedBooks.size()][4];
-				for (int i = 0; i < listLikedBooks.size(); i++) {
-					matrizTabla[i][0] = listLikedBooks.get(i).getTitle();
-					matrizTabla[i][1] = listLikedBooks.get(i).getName() + listLikedBooks.get(i).getSurname();
-					matrizTabla[i][2] = listLikedBooks.get(i).getDescription();
-					matrizTabla[i][3] = Float.toString(listLikedBooks.get(i).getPrice());
-					
-				}
-				scrollFav = new JScrollPane();
-				scrollFav.setBounds(25, 100, 420, 325);
-
-				this.add(scrollFav);
-
-				String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
-
-				// Estilo de la tabla
-				tableFav = new JTable(matrizTabla, columNames) {
-
-					private static final long serialVersionUID = 1L;
-
-					// ***********************METODO PARA HACER QUE LA TABLA NO SEA EDITABLE, Y ASI
-					// HACER DOBLE CLICK************************************
-					// Para ello sobreescribimos el metodo que ya tiene la clase
-					// JTable.isCellEditable
-					public boolean isCellEditable(int row, int column) {
-						for (int i = 0; i < tableFav.getRowCount(); i++) {
-							if (row == i) {
-								return false;
-							}
-						}
-						return true;
-					}
-				};
-				RowsRenderer rRowsRenderer = new RowsRenderer(3);
-				DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-				tableFav.setDefaultRenderer(Object.class, rRowsRenderer);
-				tableFav.isCellEditable(listLikedBooks.size(), 4);
-
-				tableFav.setSelectionBackground(new Color(0, 230, 168));
-				tableFav.setSelectionForeground(Color.WHITE);
-				tableFav.setRowMargin(0);
-				tableFav.setRowHeight(70);
-				tableFav.setShowHorizontalLines(true);
-				tableFav.setShowVerticalLines(true);
-				scrollFav.setViewportView(tableFav);
-
-				tableFav.addMouseListener(this);
-
-				// Estilo del header
-				JTableHeader tableHeader = tableFav.getTableHeader();
-				tableHeader.setBackground(new Color(0, 191, 140));
-				tableHeader.setForeground(Color.WHITE);
-				tableHeader.setBorder(null);
-				tableHeader.setEnabled(false);
-
-			} else {
-				// Crear una tabla vacia
-				String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
-
-				// Estilo de la tabla
-				tableFav = new JTable(null, columNames);
-				RowsRenderer rRowsRenderer = new RowsRenderer(3);
-				DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-				tableFav.setDefaultRenderer(Object.class, rRowsRenderer);
-
-				tableFav.setSelectionBackground(new Color(0, 230, 168));
-				tableFav.setSelectionForeground(Color.WHITE);
-				tableFav.setRowMargin(0);
-				tableFav.setRowHeight(70);
-				tableFav.setShowHorizontalLines(true);
-				tableFav.setShowVerticalLines(true);
-
-				tableFav.addMouseListener(this);
-				// Estilo del header
-				JTableHeader tableHeader = tableFav.getTableHeader();
-				tableHeader.setBackground(new Color(0, 191, 140));
-				tableHeader.setForeground(Color.WHITE);
-				tableHeader.setBorder(null);
-				tableHeader.setEnabled(false);
+	public void crearTablaFavoritos(User user, IBookController bookInterface) {
+		listLikedBooks = new ArrayList();
+		try {
+			Book book;
+			ArrayList<Integer> listLikedIsbn = new ArrayList();
+			listLikedIsbn = bookInterface.listaFavoritos(user.getUserName());
+			for (int i = 0; i < listLikedIsbn.size(); i++) {
+				book = bookInterface.buscarBook(listLikedIsbn.get(i));
+				listLikedBooks.add(book);
 			}
 		} catch (GestorException e) {
 			e.printStackTrace();
+		}
+
+		if (listLikedBooks.size() > 0) {
+			String matrizTabla[][] = new String[listLikedBooks.size()][4];
+			for (int i = 0; i < listLikedBooks.size(); i++) {
+				matrizTabla[i][0] = listLikedBooks.get(i).getTitle();
+				try {
+					matrizTabla[i][1] = bookInterface.listAuthorsIsbn(listLikedBooks.get(i).getIsbn());
+				} catch (GestorException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				matrizTabla[i][2] = listLikedBooks.get(i).getDescription();
+				matrizTabla[i][3] = " Comprar \n" + Float.toString(listLikedBooks.get(i).getPrice()) + "€";
+			}
+
+			scrollFav = new JScrollPane();
+			scrollFav.setBounds(25, 100, 420, 325);
+			this.add(scrollFav);
+
+			String[] columNames = { "Titulo", "Autor", "Descripcion", "Precio" };
+
+			// Estilo de la tabla
+			tableFav = new JTable(matrizTabla, columNames) {
+				/*
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+
+				// ***********************METODO PARA HACER QUE LA TABLA NO SEA EDITABLE, Y ASI
+				// HACER DOBLE CLICK************************************
+				// Para ello sobreescribimos el metodo que ya tiene la clase
+				// JTable.isCellEditable
+				public boolean isCellEditable(int row, int column) {
+					for (int i = 0; i < tableFav.getRowCount(); i++) {
+						if (row == i) {
+							return false;
+						}
+					}
+					return true;
+				}
+			};
+
+			RowsRenderer rRowsRenderer = new RowsRenderer(3);
+			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+			tableFav.setDefaultRenderer(Object.class, rRowsRenderer);
+			tableFav.isCellEditable(listLikedBooks.size(), 4);
+
+			tableFav.setSelectionBackground(new Color(0, 230, 168));
+			tableFav.setSelectionForeground(Color.WHITE);
+			tableFav.setRowMargin(0);
+			tableFav.setRowHeight(70);
+			tableFav.setShowHorizontalLines(true);
+			tableFav.setShowVerticalLines(true);
+			scrollFav.setViewportView(tableFav);
+
+			tableFav.addMouseListener(this);
+
+			// Estilo del header
+			JTableHeader tableHeader = tableFav.getTableHeader();
+			tableHeader.setBackground(new Color(0, 191, 140));
+			tableHeader.setForeground(Color.WHITE);
+			tableHeader.setBorder(null);
+			tableHeader.setEnabled(false);
+
+		} else {
+			JOptionPane.showMessageDialog(this, "Usuario sin libros");
 		}
 	}
 

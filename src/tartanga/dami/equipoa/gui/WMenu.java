@@ -58,8 +58,7 @@ public class WMenu extends JDialog implements MouseListener {
 	private ArrayList<Compra> compras;
 
 	public WMenu(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface,
-			IBookController bookInterface, IAuthorBookController authorBookInterface,
-			IComprasController comprasInterface, User user, IConsultaController consultaInterface) {
+			IBookController bookInterface, IComprasController comprasInterface, User user, IConsultaController consultaInterface) {
 		setBounds(100, 100, 1047, 680);
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.DARK_GRAY);
@@ -139,6 +138,7 @@ public class WMenu extends JDialog implements MouseListener {
 			WCarrito carrito = new WCarrito(bookInterface, authorInterface, comprasInterface, compras, genreInterface,
 					user);
 			carrito.setVisible(true);
+			this.dispose();
 		}
 	}
 

@@ -170,8 +170,7 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 								authorBookInterface, comprasInterface, consultaInterface);
 						admin.setVisible(true);
 					} else {
-						WMenu menu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface,
-								authorBookInterface, comprasInterface, user, consultaInterface);
+						WMenu menu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface, comprasInterface, user, consultaInterface);
 						menu.setVisible(true);
 					}
 				} else {

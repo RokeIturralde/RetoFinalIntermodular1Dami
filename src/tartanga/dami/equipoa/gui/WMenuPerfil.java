@@ -80,7 +80,6 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 		this.genreInterface = genreInterface;
 		this.comprasInterface = comprasInterface;
 		this.menuInicio = panelInicio;
-
 		setBounds(100, 300, 1010, 704);
 
 		btnModificarDatos = new JButton("Modificar Datos");
@@ -364,7 +363,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 		} catch (GestorException e) {
 			e.printStackTrace();
 		}
-		menuInicio.crearTablaFavoritos(user);
+		menuInicio.crearTablaFavoritos(user, bookInterface);
 
 	}
 
