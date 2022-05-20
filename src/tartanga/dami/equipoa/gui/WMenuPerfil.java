@@ -364,7 +364,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 		} catch (GestorException e) {
 			e.printStackTrace();
 		}
-		menuInicio.crearTablaFavoritos(user, bookInterface);
+		menuInicio.refrescarTablaSoloParaTi();
 
 	}
 
