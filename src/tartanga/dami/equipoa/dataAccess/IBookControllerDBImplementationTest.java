@@ -31,7 +31,7 @@ public class IBookControllerDBImplementationTest {
 	public void testAltaBookYBusqueda() throws GestorException {
 		codAuthor = new ArrayList<String>();
 		genreName = new ArrayList<String>();
-		book = new Book(1239, "El señor de los anillos", "descripcion", "Elhuyar", 7, 2, 1, fecha);
+		book = new Book(1239, "El seÃ±or de los anillos", "descripcion", "Elhuyar", 7, 2, 1, fecha);
 		pruebaLibros.altaBook(book);
 		codAuthor.add("A001");
 		genreName.add("ficcion");
@@ -51,13 +51,12 @@ public class IBookControllerDBImplementationTest {
 		codAuthor = new ArrayList<String>();
 		genreName = new ArrayList<String>();
 		int isbn = 1236;
-		book = new Book(isbn, "El señor de los anillos 3", "descripcion", "Elhuyar", 7, 2, 1, fecha);
+		book = new Book(isbn, "El seÃ±or de los anillos 3", "descripcion", "Elhuyar", 7, 2, 1, fecha);
 		codAuthor.add("A001");
 		genreName.add("ficcion");
 		int prueba = pruebaLibros.modificarBook(book, codAuthor, genreName);
 		assertSame(prueba, 1);
 	}
-
 	/**
 	 * Metodo para testear la eliminacion y busqueda de un libro
 	 * @throws GestorException
@@ -68,7 +67,6 @@ public class IBookControllerDBImplementationTest {
 		Book libroPrueba = pruebaLibros.buscarBook(1235);
 		assertEquals(libroPrueba, null);
 	}
-	
 
 	/**
 	 * Metodo test para listar los libros por genero

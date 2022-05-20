@@ -29,7 +29,7 @@ public interface IComprasController {
 	public float calcularPrecio(int isbn) throws GestorException;
 	
 	/**
-	 * Metodo para añadir una compra
+	 * Metodo para aï¿½adir una compra
 	 * @param compra la compra a introducir
 	 * @param user el nombre de usuario que compra
 	 * @return el numero de lineas introducidas

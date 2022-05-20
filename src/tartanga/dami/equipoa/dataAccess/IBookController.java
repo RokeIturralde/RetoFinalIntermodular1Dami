@@ -22,7 +22,7 @@ public interface IBookController {
 	public void altaBook(Book book) throws GestorException;
 	
 	/**
-	 * Metodo para añadir autores a un libro
+	 * Metodo para aï¿½adir autores a un libro
 	 * @param codAuthor un ArrayList con todos los codigos de los autores que han participado en el libro
 	 * @param isbn el isbn del libro
 	 * @throws GestorException
@@ -30,7 +30,7 @@ public interface IBookController {
 	public void anadirAuthor(ArrayList<String> codAuthor, int isbn) throws GestorException;
 	
 	/**
-	 * Metodo para añadir generos a un libro
+	 * Metodo para aï¿½adir generos a un libro
 	 * @param genre un ArrayList con todos los nombres de los generos del libro
 	 * @param isbn el isbn del libro
 	 * @throws GestorException
@@ -76,7 +76,7 @@ public interface IBookController {
 	 * @param isbn el isbn del libro que se quiere eliminar
 	 * @throws GestorException
 	 */
-	public void eliminarBook(int isbn) throws GestorException;
+  public void eliminarBook(int isbn) throws GestorException;	
 
 	/**
 	 * Metodo para listar los libros por genero
@@ -85,7 +85,6 @@ public interface IBookController {
 	 * @throws GestorException
 	 */
 	public ArrayList<Book> listaBookGenre(String genre) throws GestorException;
-
 	/**
 	 * Metodo para listar los libros por autor
 	 * @param author el codigo del autor
@@ -93,7 +92,13 @@ public interface IBookController {
 	 * @throws GestorException
 	 */
 	public ArrayList<Book> listaBookAuthor(String author) throws GestorException;
-
+  /**
+  * Metodo para listar los libros por preferencia personal
+  * @param user el username
+  * @return un arrayList con los libros favoritos
+  * @throws GestorException
+  */
+  public ArrayList<Integer> listaFavoritos(String username) throws GestorException;
 	/**
 	 * Metodo para listar los libros por autor y genero
 	 * @param author el codigo del autor
@@ -123,5 +128,18 @@ public interface IBookController {
 	 * @throws GestorException
 	 */
 	public ArrayList<Integer> listDiscount() throws GestorException;
-  
+
+  /**
+  * Nombre y apellido de autores por isbn
+  * @param book isbn
+  * @return String con nombre y apellido de todos los autores
+  * @throws GestorException
+  */
+	public String listAuthorsIsbn(int isbn) throws GestorException;
+/**
+* Lista nombre y apellido de autor, titulo de libro y genero
+* @return un arrayList con nombre/apellido,titulo y genero
+* @throws GestorException
+*/
+	public ArrayList<String> listarConsulta() throws GestorException;
 }

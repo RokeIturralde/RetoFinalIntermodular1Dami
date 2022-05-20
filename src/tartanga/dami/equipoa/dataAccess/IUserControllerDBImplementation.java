@@ -241,7 +241,8 @@ public class IUserControllerDBImplementation implements IUserController {
 		} catch (SQLException e1) {
 			String error = "Error con la conexion con la base de datos";
 			GestorException exception = new GestorException(error);
-			throw exception;
+			//throw exception;
+			e1.printStackTrace();
 		} finally {
 			try {
 				connection.closeConnection(stmt, con);

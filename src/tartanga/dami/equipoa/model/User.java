@@ -4,6 +4,12 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
+	@Override
+	public String toString() {
+		return "User [userName=" + userName + ", email=" + email + ", password=" + password + ", surname=" + surname
+				+ ", name=" + name + ", address=" + address + ", phone=" + phone + ", tipo=" + tipo + "]";
+	}
+
 	private String userName;
 	private String email;
 	private String password;

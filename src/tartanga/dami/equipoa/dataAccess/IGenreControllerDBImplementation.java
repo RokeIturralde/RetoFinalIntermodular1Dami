@@ -1,7 +1,6 @@
 package tartanga.dami.equipoa.dataAccess;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -257,6 +256,35 @@ public class IGenreControllerDBImplementation implements IGenreController {
 			}
 		}
 		return cambio;
+	}
+
+	@Override
+	public String listarGenresIsbn(int isbn) throws GestorException {
+		String genres="";
+		String listGenres = "select GROUP_CONCAT(genreName)as genres from bookGenre where isbn = ? group by isbn";
+		ResultSet rs = null;
+		try {
+			con = connection.openConnection();
+			stmt = con.prepareStatement(listGenres);
+			stmt.setInt(1, isbn);
+			rs = stmt.executeQuery();
+			if(rs.next()) {
+				genres = rs.getString("genres");
+			}
+		 } catch (SQLException e1) {
+			String error = "Error en la conexion con la base de datos";
+			GestorException exception = new GestorException(error);
+			throw exception;
+		} finally {
+			try {
+				connection.closeConnection(stmt, con);
+			} catch (SQLException e1) {
+				String error = "Error al cerrar la base de datos";
+				GestorException exception = new GestorException(error);
+				throw exception;
+			}
+		}
+		return genres;
 	}
 
 }
