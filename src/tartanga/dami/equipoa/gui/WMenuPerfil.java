@@ -48,7 +48,6 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 	private IUserController userInterface;
 	private IAuthorController authorInterface;
 	private IGenreController genreInterface;
-	private IBookController bookInterface;
 	private IComprasController comprasInterface;
 
 	private JButton btnGuardarCambios;
@@ -69,6 +68,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 
 	private User user;
 	private DefaultListModel modelo2, modelo;
+	private final JLabel label = new JLabel("");
 
 	public WMenuPerfil(IUserController userInterface, IAuthorController authorInterface,
 			IGenreController genreInterface, IComprasController comprasInterface, User user, WMenuInicio panelInicio) {
@@ -81,7 +81,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 		this.comprasInterface = comprasInterface;
 		this.menuInicio = panelInicio;
 
-		setBounds(100, 300, 520, 12);
+		setBounds(100, 300, 1010, 704);
 
 		btnModificarDatos = new JButton("Modificar Datos");
 		btnModificarDatos.setBounds(32, 25, 118, 35);
@@ -306,6 +306,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 				tableHistorialCompras.setShowVerticalLines(false);
 				scrollPane.setViewportView(tableHistorialCompras);
 				tableHistorialCompras.setFont(new Font("Tahoma", Font.PLAIN, 12));
+				tableHistorialCompras.setEnabled(false);
 
 				JTableHeader tableHeader = tableHistorialCompras.getTableHeader();
 				tableHeader.setBackground(new Color(0, 191, 140));
@@ -314,12 +315,11 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 				tableHeader.setBorder(null);
 				tableHeader.setEnabled(false);
 			} else {
-				JLabel lblNoHayCompras = new JLabel("");
 
-				lblNoHayCompras.setIcon(new ImageIcon(
+				label.setIcon(new ImageIcon(
 						WMenuPerfil.class.getResource("/tartanga/dami/equipoa/resources/imgNoHayCompras.png")));
-				lblNoHayCompras.setBounds(25, 209, 583, 125);
-				this.add(lblNoHayCompras);
+				label.setBounds(25, 209, 583, 125);
+				this.add(label);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

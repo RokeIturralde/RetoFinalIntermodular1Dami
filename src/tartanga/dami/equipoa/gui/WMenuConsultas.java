@@ -13,7 +13,6 @@ import javax.swing.table.JTableHeader;
 
 import java.awt.event.KeyEvent;
 
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import com.mxrck.autocompleter.TextAutoCompleter;
 
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
@@ -68,7 +67,7 @@ public class WMenuConsultas extends JPanel implements ActionListener {
 		add(lblAgrupar);
 
 		btnBuscar = new JButton("Buscar");
-		btnBuscar.setBounds(221, 117, 109, 41);
+		btnBuscar.setBounds(260, 54, 109, 41);
 		add(btnBuscar);
 		btnBuscar.addActionListener(this);
 
@@ -78,7 +77,6 @@ public class WMenuConsultas extends JPanel implements ActionListener {
 		txteditorComp.setColumns(10);
 
 		TextAutoCompleter textAutoCompletado = new TextAutoCompleter(txteditorComp);
-
 		textAutoCompletado.setMode(0);
 		try {
 			listadoConsulta = bookInterface.listarConsulta();
@@ -130,10 +128,8 @@ public class WMenuConsultas extends JPanel implements ActionListener {
 						matrizTabla[i][4] = consultas.get(i).getGeneros();
 						matrizTabla[i][5] = Float.toString(consultas.get(i).getPrecio());
 					}
-
 					String titulos[] = { "Titulo", "Autor/es", "Fecha Publicacion", "Descripcion", "Genero/s",
 							"Precio" };
-
 					tableConsultas = new JTable(matrizTabla, titulos) {
 						/*
 						 * 
@@ -155,7 +151,7 @@ public class WMenuConsultas extends JPanel implements ActionListener {
 					};
 
 					scrollPane = new JScrollPane();
-					scrollPane.setBounds(396, 67, 461, 528);
+					scrollPane.setBounds(33, 188, 890, 401);
 					this.add(scrollPane);
 
 					tableConsultas.setSelectionBackground(new Color(0, 230, 168));
@@ -165,6 +161,7 @@ public class WMenuConsultas extends JPanel implements ActionListener {
 					tableConsultas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 					tableConsultas.setFont(new Font("Tahoma", Font.PLAIN, 12));
 					scrollPane.setViewportView(tableConsultas);
+					tableConsultas.setEnabled(false);
 
 					JTableHeader tableHeader = tableConsultas.getTableHeader();
 					tableHeader.setBackground(new Color(0, 191, 140));
@@ -172,6 +169,7 @@ public class WMenuConsultas extends JPanel implements ActionListener {
 					tableHeader.setFont(new Font("Tahoma", Font.BOLD, 15));
 					tableHeader.setBorder(null);
 					tableHeader.setEnabled(false);
+
 				} else {
 					JOptionPane.showMessageDialog(this, "No se han introducido datos validos de busqueda");
 				}
