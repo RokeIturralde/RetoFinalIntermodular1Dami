@@ -275,7 +275,6 @@ public class IAuthorControllerDBImplementation implements IAuthorController {
 		} catch (Exception e) {
 			String error = "Error en la insercion de un autor preferido";
 			GestorException exception = new GestorException(error);
-			e.printStackTrace();
 			throw exception;
 		} finally {
 			try {

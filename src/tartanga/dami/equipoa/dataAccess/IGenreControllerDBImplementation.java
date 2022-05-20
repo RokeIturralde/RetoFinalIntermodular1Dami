@@ -243,7 +243,6 @@ public class IGenreControllerDBImplementation implements IGenreController {
 		} catch (Exception e) {
 			String error = "Error en la insercion de un genero preferido";
 			GestorException exception = new GestorException(error);
-			e.printStackTrace();
 			throw exception;
 		} finally {
 			try {

@@ -140,7 +140,6 @@ public class IBookControllerDBImplementation implements IBookController {
 		} catch (SQLException e1) {
 			String error = "Error en la conexion con la base de datos";
 			GestorException exception = new GestorException(error);
-			e1.printStackTrace();
 			throw exception;
 		} finally {
 			try {
@@ -204,7 +203,6 @@ public class IBookControllerDBImplementation implements IBookController {
 		} catch (SQLException e1) {
 			String error = "Error en la conexion con la base de datos";
 			GestorException exception = new GestorException(error);
-			e1.printStackTrace();
 			throw exception;
 		} finally {
 			try {

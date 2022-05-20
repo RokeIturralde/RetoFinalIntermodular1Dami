@@ -114,7 +114,6 @@ public class IComprasDBImplementation implements IComprasController {
 		} catch (SQLException e) {
 			String error = "Error en el registro de compra";
 			GestorException exception = new GestorException(error);
-			e.printStackTrace();
 			throw exception;
 		} finally {
 			try {

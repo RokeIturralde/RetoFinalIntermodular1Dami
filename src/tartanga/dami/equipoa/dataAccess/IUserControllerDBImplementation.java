@@ -97,7 +97,6 @@ public class IUserControllerDBImplementation implements IUserController {
 
 			stmt.executeUpdate();
 		} catch (SQLException e1) {
-			e1.printStackTrace();
 			String error = "Error con la conexion con la base de datos";
 			GestorException exception = new GestorException(error);
 			throw exception;
@@ -267,7 +266,6 @@ public class IUserControllerDBImplementation implements IUserController {
 			
 			stmt.executeUpdate();
 		} catch (SQLException e1) {
-			e1.printStackTrace();
 			String error = "Error con la conexion con la base de datos";
 			GestorException exception = new GestorException(error);
 			throw exception;
