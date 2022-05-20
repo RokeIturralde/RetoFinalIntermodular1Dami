@@ -6,8 +6,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -29,22 +32,14 @@ public class IComprasDBImplementation implements IComprasController {
 	public ArrayList<Compra> historialCompras(String username) throws GestorException {
 		ResultSet rs;
 		Compra compra = null;
-		ArrayList<Compra> compras = new ArrayList<Compra>();
-
-		// Abrir conexion con BD
-		// String listadoCompras = "select
-		// p.purchaseDate,p.isbn,p.quantity,(p.quantity*b.price)-((p.quantity*b.price)*d.discount)/100
-		// from author a, book b, purchase p, discount d,partnerAuthor pa where
-		// p.username= ? and pa.username=p.username and p.isbn=b.isbn and
-		// pa.codAuthor=a.codAuthor and b.idDiscount=d.idDiscount";
-		String listadoCompras = "select p.purchaseDate,GROUP_CONCAT(distinct a.name,a.surname) as authors,p.isbn,p.quantity,(p.quantity*b.price)-((p.quantity*b.price)*d.discount)/100 from author a, book b, purchase p, discount d,partnerAuthor pa where p.username=? and pa.username=p.username and p.isbn=b.isbn and pa.codAuthor=a.codAuthor and b.idDiscount=d.idDiscount";
+		ArrayList<Compra> compras = new ArrayList();
+		String listadoCompras = "select distinct p.purchaseDate,p.isbn,p.quantity,CONCAT(a.name,\" \",a.surname) as authors,(p.quantity*b.price)-((p.quantity*b.price)*d.discount)/100 from author a, book b, purchase p, discount d,bookAuthor ba where p.username=? and p.isbn=ba.isbn and ba.codAuthor=a.codAuthor and ba.isbn=b.isbn and b.isbn=p.isbn and d.idDiscount=b.idDiscount";
 		try {
 			con = connection.openConnection();
 			stmt = con.prepareStatement(listadoCompras);
 			stmt.setString(1, username);
-			rs = stmt.executeQuery();			
-			if(rs.next()) {
-
+			rs = stmt.executeQuery();
+			while (rs.next()) {
 				compra = new Compra();
 				compra.setFechaCompra(rs.getDate("p.purchaseDate"));
 				compra.setIsbn(rs.getInt("p.isbn"));
@@ -73,16 +68,16 @@ public class IComprasDBImplementation implements IComprasController {
 	public float calcularPrecio(int isbn) throws GestorException {
 		String sentencia = "select b.price-(b.price*d.discount)/100 as price from book b, discount d where b.isbn = ? and b.idDiscount = d.idDiscount";
 		ResultSet rs;
-		float precio=0;
+		float precio = 0;
 		try {
 			con = connection.openConnection();
 			stmt = con.prepareStatement(sentencia);
 			stmt.setInt(1, isbn);
 			rs = stmt.executeQuery();
-			if(rs.next()) {
-				precio= rs.getInt("price");
+			if (rs.next()) {
+				precio = rs.getInt("price");
 			}
-		}  catch (SQLException e) {
+		} catch (SQLException e) {
 			String error = "Error en la agregacion de datos al Array";
 			GestorException exception = new GestorException(error);
 			throw exception;
@@ -99,18 +94,23 @@ public class IComprasDBImplementation implements IComprasController {
 	}
 
 	@Override
-	public int escribirCompra(Compra compra, String user) throws GestorException {
-		String sentencia = "insert into compra values ?, ?, ?, ?";
-		int cuantos;
-		
+	public void escribirCompra(Compra compra, String user) throws GestorException {
+		String sentencia = "insert into purchase values (?, ?, ?, ?)";
+		String sentencia2 = "update book set stock = stock - ? where isbn = ?";
 		try {
 			con = connection.openConnection();
 			stmt = con.prepareStatement(sentencia);
 			stmt.setString(1, user);
 			stmt.setInt(2, compra.getIsbn());
 			stmt.setInt(3, compra.getCantidadLibros());
-			stmt.setDate(4, Date.valueOf(LocalDateTime.now().toString()));
-			cuantos = stmt.executeUpdate();
+			Timestamp tsNow = Timestamp.valueOf(LocalDateTime.now());
+			stmt.setTimestamp(4, tsNow);
+			stmt.executeUpdate();
+
+			stmt = con.prepareStatement(sentencia2);
+			stmt.setInt(1, compra.getCantidadLibros());
+			stmt.setInt(2, compra.getIsbn());
+			stmt.executeUpdate();
 		} catch (SQLException e) {
 			String error = "Error en el registro de compra";
 			GestorException exception = new GestorException(error);

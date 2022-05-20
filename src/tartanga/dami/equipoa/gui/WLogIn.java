@@ -16,6 +16,7 @@ import tartanga.dami.equipoa.dataAccess.IAuthorBookController;
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
 import tartanga.dami.equipoa.dataAccess.IBookController;
 import tartanga.dami.equipoa.dataAccess.IComprasController;
+import tartanga.dami.equipoa.dataAccess.IConsultaController;
 import tartanga.dami.equipoa.dataAccess.IGenreController;
 import tartanga.dami.equipoa.dataAccess.IUserController;
 import tartanga.dami.equipoa.gestorException.GestorException;
@@ -52,6 +53,8 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 	private IBookController bookInterface;
 	private IAuthorBookController authorBookInterface;
 	private IComprasController comprasInterface;
+	private IConsultaController consultaInterface;
+
 
 	/**
 	 * @param userInterface       interfaz de usuarios
@@ -70,6 +73,8 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 		this.bookInterface = bookInterface;
 		this.authorBookInterface = authorBookInterface;
 		this.comprasInterface = comprasInterface;
+		this.consultaInterface = consultaInterface;
+
 
 		setIconImage(Toolkit.getDefaultToolkit()
 				.getImage(WLogIn.class.getResource("/tartanga/dami/equipoa/resources/Logo.png")));
@@ -176,7 +181,7 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 	 * Metodo para inicar sesion en el programa
 	 */
 	public void iniciarSesion() {
-		// Pasamos la contraseña a string y comprobamos que el username y la password no
+		// Pasamos la contraseÃ±a a string y comprobamos que el username y la password no
 		// esten vacios
 		String pass = new String(passwordField.getPassword());
 		if (!(textUsuario.getText().isEmpty() || pass.isEmpty())) {
@@ -187,15 +192,14 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 					this.dispose();
 					if (user instanceof Administrator) {
 						WAdmin admin = new WAdmin(user, bookInterface, authorInterface, genreInterface, userInterface,
-								authorBookInterface, comprasInterface);
+								authorBookInterface, comprasInterface, consultaInterface);
 						admin.setVisible(true);
 					} else {
-						WMenu menu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface,
-								authorBookInterface, comprasInterface, user);
+						WMenu menu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface, comprasInterface, user, consultaInterface);
 						menu.setVisible(true);
 					}
 				} else {
-					JOptionPane.showMessageDialog(this, "El nombre de la cuenta y/o la contraseña son incorrectos",
+					JOptionPane.showMessageDialog(this, "El nombre de la cuenta y/o la contraseÃ±a son incorrectos",
 							"Error", JOptionPane.WARNING_MESSAGE);
 					passwordField.setText("");
 					passwordField.grabFocus();
@@ -228,7 +232,6 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 			}
 		}
 	}
-
 	/**
 	 * Metodo para comprobar que el texto introducido no es mayor de lo permitido
 	 * 

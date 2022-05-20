@@ -6,6 +6,14 @@ public class AuthorBook {
 	String name;
 	String surname;
 	String description;
+	int isbn;
+	public int getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(int isbn) {
+		this.isbn = isbn;
+	}
 	float price;
 	
 	public AuthorBook(String title, String surname, String description, float price, String name) {
