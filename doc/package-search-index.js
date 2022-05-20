@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"tartanga.dami.equipoa"},{"l":"tartanga.dami.equipoa.dataAccess"},{"l":"tartanga.dami.equipoa.gestorException"},{"l":"tartanga.dami.equipoa.model"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"tartanga.dami.equipoa"},{"l":"tartanga.dami.equipoa.dataAccess"},{"l":"tartanga.dami.equipoa.gestorException"},{"l":"tartanga.dami.equipoa.gui"},{"l":"tartanga.dami.equipoa.model"}];updateSearchResults();

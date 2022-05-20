@@ -199,7 +199,7 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 				crearTablaCompras(bookInterface, genreInterface, compras);
 				bComprar.setEnabled(false);
 				WMenu wMenu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface, comprasInterface,
-						user, consultaInterface);
+						user, consultaInterface, compras);
 				wMenu.setVisible(true);
 				this.dispose();
 			}
@@ -230,7 +230,7 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 				crearTablaCompras(bookInterface, genreInterface, compras);
 				if (compras.size() <= 0) {
 					WMenu wMenu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface,
-							comprasInterface, user, consultaInterface);
+							comprasInterface, user, consultaInterface, compras);
 
 					wMenu.setVisible(true);
 					this.dispose();

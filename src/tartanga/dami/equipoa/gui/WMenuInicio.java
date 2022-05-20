@@ -50,12 +50,13 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 	private ArrayList<Compra> compras;
 	private ArrayList<Book> listLikedBooks;
 	private IBookController bookInterface;
+	
 	/**
 	 * @param user El usuario que ha iniciado sesion
 	 * @param bookInterface Interfaz de libro
 	 * @param compras Lista que almacena las compras pendientes de un usuario
 	 * @param bookSales Lista con los libros ordenados por orden de ventas
-	 * @param listLikedBooks Lista con los libros que le gustan a un usuario
+	 * @param listLikedBooks lista con los libros que le gustan a un usuario
 	 * @param libros Lista con todos los libros que hay en la libreria
 	 */
 	private JLabel lblVacio;
