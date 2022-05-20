@@ -55,7 +55,6 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 	private IComprasController comprasInterface;
 	private IConsultaController consultaInterface;
 
-
 	/**
 	 * @param userInterface       interfaz de usuarios
 	 * @param authorInterface     interfaz de autores
@@ -63,10 +62,11 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 	 * @param bookInterface       interfaz de libros
 	 * @param authorBookInterface interfaz auxiliar
 	 * @param comprasInterface    interfaz de compras
+	 * @param consultaInterface   interfaz de consultas
 	 */
 	public WLogIn(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface,
 			IBookController bookInterface, IAuthorBookController authorBookInterface,
-			IComprasController comprasInterface) {
+			IComprasController comprasInterface, IConsultaController consultaInterface) {
 		this.userInterface = userInterface;
 		this.authorInterface = authorInterface;
 		this.genreInterface = genreInterface;
@@ -74,7 +74,6 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 		this.authorBookInterface = authorBookInterface;
 		this.comprasInterface = comprasInterface;
 		this.consultaInterface = consultaInterface;
-
 
 		setIconImage(Toolkit.getDefaultToolkit()
 				.getImage(WLogIn.class.getResource("/tartanga/dami/equipoa/resources/Logo.png")));
@@ -181,7 +180,8 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 	 * Metodo para inicar sesion en el programa
 	 */
 	public void iniciarSesion() {
-		// Pasamos la contraseña a string y comprobamos que el username y la password no
+		// Pasamos la contraseña a string y comprobamos que el username y la password
+		// no
 		// esten vacios
 		String pass = new String(passwordField.getPassword());
 		if (!(textUsuario.getText().isEmpty() || pass.isEmpty())) {
@@ -195,7 +195,8 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 								authorBookInterface, comprasInterface, consultaInterface);
 						admin.setVisible(true);
 					} else {
-						WMenu menu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface, comprasInterface, user, consultaInterface);
+						WMenu menu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface,
+								comprasInterface, user, consultaInterface, authorBookInterface);
 						menu.setVisible(true);
 					}
 				} else {
@@ -232,12 +233,14 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 			}
 		}
 	}
+
 	/**
 	 * Metodo para comprobar que el texto introducido no es mayor de lo permitido
 	 * 
 	 * @param maximo el numero maximo de caracteres permitido
 	 * @param texto  el texto que quieres comprobar
-	 * @return un boolean, en caso de que tenga mas caracteres de lo permitido sera <b>true</b>, en caso contrario <b>false</b>
+	 * @return un boolean, en caso de que tenga mas caracteres de lo permitido sera
+	 *         <b>true</b>, en caso contrario <b>false</b>
 	 */
 	public boolean insertString(int maximo, String texto) {
 		if (texto.length() > maximo) {

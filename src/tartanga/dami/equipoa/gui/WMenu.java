@@ -58,7 +58,8 @@ public class WMenu extends JDialog implements MouseListener {
 	private ArrayList<Compra> compras;
 
 	public WMenu(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface,
-			IBookController bookInterface, IComprasController comprasInterface, User user, IConsultaController consultaInterface) {
+			IBookController bookInterface, IComprasController comprasInterface, User user,
+			IConsultaController consultaInterface, IAuthorBookController authorBookInterface) {
 		setBounds(100, 100, 1047, 680);
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.DARK_GRAY);
@@ -110,12 +111,11 @@ public class WMenu extends JDialog implements MouseListener {
 			IComprasController comprasInterface, IGenreController genreInterface,
 			IConsultaController consultaInterface) {
 
-		
 		panelInicio = new WMenuInicio(userInterface, bookInterface, authorInterface, user, authorBookInterface,
 				compras);
-		panelPerfil = new WMenuPerfil(userInterface, authorInterface, genreInterface, comprasInterface, user,
-				panelInicio);
-		panelConsultas = new WMenuConsultas(genreInterface, bookInterface, consultaInterface, authorInterface);
+		panelPerfil = new WMenuPerfil(userInterface, authorInterface, bookInterface, genreInterface, comprasInterface,
+				user, panelInicio);
+		panelConsultas = new WMenuConsultas(genreInterface, bookInterface, consultaInterface, authorInterface, compras);
 
 		tabbedPane.add("Inicio", panelInicio);
 		tabbedPane.add("Perfil", panelPerfil);
@@ -136,7 +136,7 @@ public class WMenu extends JDialog implements MouseListener {
 		if (e.getSource().equals(lblCarrito)) {
 
 			WCarrito carrito = new WCarrito(bookInterface, authorInterface, comprasInterface, compras, genreInterface,
-					user);
+					user, authorBookInterface);
 			carrito.setVisible(true);
 			this.dispose();
 		}

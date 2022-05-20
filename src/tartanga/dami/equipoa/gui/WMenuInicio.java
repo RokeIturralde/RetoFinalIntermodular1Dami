@@ -40,7 +40,7 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 	private User user;
 	private JTable tableFav;
 	private JTable tableSales;
-	private JScrollPane scrollFav;
+	private JScrollPane scrollFav = new JScrollPane();;
 	private JScrollPane scrollSellers;
 	private ArrayList<Integer> bookSales;
 	private ArrayList<Book> libros;
@@ -53,8 +53,6 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 		this.authorBookInterface = authorBookInterface;
 		this.compras = compras;
 		this.user = user;
-
-		this.compras = compras;
 		this.user = user;
 		this.listLikedBooks = listLikedBooks;
 
@@ -318,7 +316,6 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 					matrizTabla[i][1] = listLikedBooks.get(i).getName() + listLikedBooks.get(i).getSurname();
 					matrizTabla[i][2] = listLikedBooks.get(i).getDescription();
 					matrizTabla[i][3] = Float.toString(listLikedBooks.get(i).getPrice());
-					scrollFav = new JScrollPane();
 					scrollFav.setBounds(25, 100, 420, 325);
 
 					this.add(scrollFav);

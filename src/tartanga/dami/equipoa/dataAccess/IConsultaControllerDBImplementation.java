@@ -20,7 +20,7 @@ public class IConsultaControllerDBImplementation implements IConsultaController 
 		ResultSet rs = null;
 		Consulta consulta = null;
 		ArrayList<Consulta> listaConsulta = new ArrayList<>();
-		String consultaQuery = "select distinct b.pubDate,b.title,b.description,b.price,concat(a.name,\" \",a.surname) as authors,group_concat(g.genrename) as generos from author a,book b,bookauthor ba,bookgenre bg,genre g where a.codAuthor=ba.codAuthor and g.genrename=bg.genrename and bg.isbn=b.isbn  and ba.isbn=bg.isbn and (g.genreName=? or b.title=? or a.name=? or a.surname=?) group by b.title";
+		String consultaQuery = "select distinct b.isbn,b.pubDate,b.title,b.description,b.price,concat(a.name,\" \",a.surname) as authors,group_concat(g.genrename) as generos from author a,book b,bookauthor ba,bookgenre bg,genre g where a.codAuthor=ba.codAuthor and g.genrename=bg.genrename and bg.isbn=b.isbn  and ba.isbn=bg.isbn and (g.genreName=? or b.title=? or a.name=? or a.surname=?) group by b.title";
 		try {
 			con = connection.openConnection();
 			stmt = con.prepareStatement(consultaQuery);
@@ -37,6 +37,7 @@ public class IConsultaControllerDBImplementation implements IConsultaController 
 				consulta.setPrecio(rs.getFloat("b.price"));
 				consulta.setGeneros(rs.getString("generos"));
 				consulta.setAutores(rs.getString("authors"));
+				consulta.setIsbn(rs.getInt("b.isbn"));
 				listaConsulta.add(consulta);
 			}
 
@@ -63,7 +64,7 @@ public class IConsultaControllerDBImplementation implements IConsultaController 
 		ResultSet rs = null;
 		Consulta consulta = null;
 		ArrayList<Consulta> listaConsulta = new ArrayList<>();
-		String consultaQuery = "select distinct a.birthDate,b.title,b.description,b.price,concat(a.name,\" \",a.surname) as authors,group_concat(g.genrename) as generos from author a,book b,bookauthor ba,bookgenre bg,genre g where a.codAuthor=ba.codAuthor and g.genrename=bg.genrename and bg.isbn=b.isbn  and ba.isbn=bg.isbn group by b.title";
+		String consultaQuery = "select distinct b.isbn,a.birthDate,b.title,b.description,b.price,concat(a.name,\" \",a.surname) as authors,group_concat(g.genrename) as generos from author a,book b,bookauthor ba,bookgenre bg,genre g where a.codAuthor=ba.codAuthor and g.genrename=bg.genrename and bg.isbn=b.isbn  and ba.isbn=bg.isbn group by b.title";
 		try {
 			con = connection.openConnection();
 			stmt = con.prepareStatement(consultaQuery);
@@ -76,6 +77,7 @@ public class IConsultaControllerDBImplementation implements IConsultaController 
 				consulta.setPrecio(rs.getFloat("b.price"));
 				consulta.setGeneros(rs.getString("generos"));
 				consulta.setAutores(rs.getString("authors"));
+				consulta.setIsbn(rs.getInt("b.isbn"));
 				listaConsulta.add(consulta);
 			}
 

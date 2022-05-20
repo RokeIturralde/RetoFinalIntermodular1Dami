@@ -9,6 +9,23 @@ public class Consulta {
 	private float precio;
 	private String generos;
 	private String autores;
+	private int isbn;
+
+	public Date getFechaPub() {
+		return fechaPub;
+	}
+
+	public void setFechaPub(Date fechaPub) {
+		this.fechaPub = fechaPub;
+	}
+
+	public int getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(int isbn) {
+		this.isbn = isbn;
+	}
 
 	public Date getFechaNacim() {
 		return fechaPub;

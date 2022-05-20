@@ -49,7 +49,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 	private IAuthorController authorInterface;
 	private IGenreController genreInterface;
 	private IComprasController comprasInterface;
-
+	private IBookController bookInterface;
 	private JButton btnGuardarCambios;
 	private JButton btnModificarDatos;
 	private JButton btnAnnadirPreferencia;
@@ -70,7 +70,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 	private DefaultListModel modelo2, modelo;
 	private final JLabel label = new JLabel("");
 
-	public WMenuPerfil(IUserController userInterface, IAuthorController authorInterface,
+	public WMenuPerfil(IUserController userInterface, IAuthorController authorInterface, IBookController bookInterface,
 			IGenreController genreInterface, IComprasController comprasInterface, User user, WMenuInicio panelInicio) {
 
 		setLayout(null);
@@ -79,6 +79,7 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 		this.user = user;
 		this.genreInterface = genreInterface;
 		this.comprasInterface = comprasInterface;
+		this.bookInterface = bookInterface;
 		this.menuInicio = panelInicio;
 		setBounds(100, 300, 1010, 704);
 

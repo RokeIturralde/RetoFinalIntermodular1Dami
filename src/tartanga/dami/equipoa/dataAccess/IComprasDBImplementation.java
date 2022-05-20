@@ -94,9 +94,10 @@ public class IComprasDBImplementation implements IComprasController {
 	}
 
 	@Override
-	public void escribirCompra(Compra compra, String user) throws GestorException {
+	public int escribirCompra(Compra compra, String user) throws GestorException {
 		String sentencia = "insert into purchase values (?, ?, ?, ?)";
 		String sentencia2 = "update book set stock = stock - ? where isbn = ?";
+		int cuantos;
 		try {
 			con = connection.openConnection();
 			stmt = con.prepareStatement(sentencia);
@@ -110,7 +111,7 @@ public class IComprasDBImplementation implements IComprasController {
 			stmt = con.prepareStatement(sentencia2);
 			stmt.setInt(1, compra.getCantidadLibros());
 			stmt.setInt(2, compra.getIsbn());
-			stmt.executeUpdate();
+			cuantos = stmt.executeUpdate();
 		} catch (SQLException e) {
 			String error = "Error en el registro de compra";
 			GestorException exception = new GestorException(error);

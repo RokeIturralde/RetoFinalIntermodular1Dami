@@ -21,6 +21,7 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import tartanga.dami.equipoa.dataAccess.IAuthorBookController;
 import tartanga.dami.equipoa.dataAccess.IAuthorController;
 import tartanga.dami.equipoa.dataAccess.IBookController;
 import tartanga.dami.equipoa.dataAccess.IComprasController;
@@ -47,11 +48,11 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 	private JLabel lblVacio;
 	private IUserController userInterface;
 	private IConsultaController consultaInterface;
-	
+	private IAuthorBookController authorBookInterface;
 
 	public WCarrito(IBookController bookInterface, IAuthorController authorInterface,
-			IComprasController comprasInterface, ArrayList<Compra> compras, IGenreController genreInterface,
-			User user) {
+			IComprasController comprasInterface, ArrayList<Compra> compras, IGenreController genreInterface, User user,
+			IAuthorBookController authorBookInterface) {
 		setBounds(100, 100, 1047, 680);
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.DARK_GRAY);
@@ -62,8 +63,11 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 		this.compras = compras;
 		this.comprasInterface = comprasInterface;
 		this.user = user;
-		this.userInterface = userInterface;
-		this.consultaInterface = consultaInterface;
+		this.authorBookInterface = authorBookInterface;
+		/*
+		 * this.userInterface = userInterface; this.consultaInterface =
+		 * consultaInterface;
+		 */
 
 		crearTablaCompras(bookInterface, genreInterface, compras);
 
@@ -72,7 +76,7 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 		getContentPane().add(bComprar);
 		bComprar.setIcon(new ImageIcon(WMenu.class.getResource("/tartanga/dami/equipoa/resources/ejecutarCompra.png")));
 		bComprar.addActionListener(this);
-		
+
 	}
 
 	private void crearTablaCompras(IBookController bookInterface, IGenreController genreInterface,
@@ -98,10 +102,8 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 							* comprasInterface.calcularPrecio(book.getIsbn());
 					matrizTabla[i][4] = Float.toString(precioTotal);
 
-					
 					scrollCarrito.setBounds(50, 100, 900, 325);
 					this.add(scrollCarrito);
-					
 
 					String[] columNames = { "Titulo", "Autor(es)", "Genero(s)", "Cantidad", "Precio" };
 					tablaCarrito = new JTable(matrizTabla, columNames) {
@@ -158,9 +160,11 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 			compras.clear();
 			crearTablaCompras(bookInterface, genreInterface, compras);
 			bComprar.setEnabled(false);
-			int seleccion = JOptionPane.showConfirmDialog(this, "Estas seguro de que quieres confirmar la compra?", "Aviso", 0);
-			if (seleccion==0) {
-				WMenu wMenu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface, comprasInterface, user, consultaInterface);
+			int seleccion = JOptionPane.showConfirmDialog(this, "Estas seguro de que quieres confirmar la compra?",
+					"Aviso", 0);
+			if (seleccion == 0) {
+				WMenu wMenu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface, comprasInterface,
+						user, consultaInterface, authorBookInterface);
 				wMenu.setVisible(true);
 				this.dispose();
 			}
@@ -171,17 +175,18 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource().equals(tablaCarrito)) {
-				int seleccion = JOptionPane.showConfirmDialog(this,
-						"Estas seguro que quieres eliminar el libro del carrito?", "Aviso", 0);
-				if (seleccion == 0) {
-					int cual = tablaCarrito.getSelectedRow();
-					compras.remove(cual);
-					crearTablaCompras(bookInterface, genreInterface, compras);
-					if(compras.size()<=0) {
-						WMenu wMenu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface, comprasInterface, user, consultaInterface);
-						wMenu.setVisible(true);
-						this.dispose();
-					}
+			int seleccion = JOptionPane.showConfirmDialog(this,
+					"Estas seguro que quieres eliminar el libro del carrito?", "Aviso", 0);
+			if (seleccion == 0) {
+				int cual = tablaCarrito.getSelectedRow();
+				compras.remove(cual);
+				crearTablaCompras(bookInterface, genreInterface, compras);
+				if (compras.size() <= 0) {
+					WMenu wMenu = new WMenu(userInterface, authorInterface, genreInterface, bookInterface,
+							comprasInterface, user, consultaInterface, authorBookInterface);
+					wMenu.setVisible(true);
+					this.dispose();
+				}
 			}
 
 		}
