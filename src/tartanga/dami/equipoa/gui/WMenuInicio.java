@@ -50,7 +50,7 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 	private ArrayList<Compra> compras;
 	private ArrayList<Book> listLikedBooks;
 	private IBookController bookInterface;
-	
+	private JLabel lblVacio;
 	/**
 	 * @param user El usuario que ha iniciado sesion
 	 * @param bookInterface Interfaz de libro
@@ -59,7 +59,7 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 	 * @param listLikedBooks lista con los libros que le gustan a un usuario
 	 * @param libros Lista con todos los libros que hay en la libreria
 	 */
-	private JLabel lblVacio;
+
 
 	public WMenuInicio(IUserController userInterface, IBookController bookInterface, IAuthorController authorInterface,
 			User user, ArrayList<Compra> compras) {
@@ -130,7 +130,7 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 				JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 
-			matrizTablaSales[i][0] = Integer.toString(i + 1) + " " + ventas.get(i);
+			matrizTablaSales[i][0] = Integer.toString(i + 1) + "º  Ventas: " + ventas.get(i);
 			matrizTablaSales[i][1] = libros.get(i).getTitle();
 			matrizTablaSales[i][2] = libros.get(i).getAuthors();
 			matrizTablaSales[i][3] = libros.get(i).getDescription();
@@ -178,12 +178,6 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 
 			tableSales.addMouseListener(this);
 
-			JLabel lblFondo = new JLabel("");
-			lblFondo.setBounds(100, 300, 800, 717);
-			lblFondo.setIcon(
-					new ImageIcon(WMenu.class.getResource("/tartanga/dami/equipoa/resources/fondoMenuInicio.png")));
-			this.add(lblFondo);
-
 			// Estilo del header
 			JTableHeader tableHeader = tableSales.getTableHeader();
 			tableHeader.setBackground(new Color(0, 191, 140));
@@ -225,7 +219,6 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 		if (e.getSource().equals(tableFav)) {
 			if (tableFav.getSelectedColumn() == 3) {
 				int cual = tableFav.getSelectedRow();
-				String canti = null;
 				int cantidad;
 				Book book = listLikedBooks.get(cual);
 				boolean repetido = false;
@@ -255,7 +248,7 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 							compra.setPrecioCompra(book.getPrice());
 							compras.add(compra);
 
-						} else {
+						} else if (repetido == false){
 							JOptionPane.showMessageDialog(this, "Sin stock", "Error", JOptionPane.WARNING_MESSAGE);
 						}
 					} catch (NumberFormatException a) {
@@ -292,7 +285,6 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 		if (e.getSource().equals(tableSales)) {
 			if (tableSales.getSelectedColumn() == 4) {
 				int cual = tableSales.getSelectedRow();
-				String canti = null;
 				int cantidad;
 				Book book = libros.get(cual);
 				boolean repetido = false;
@@ -307,7 +299,8 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 							if (compras.get(i).getIsbn() == book.getIsbn()) {
 								compras.get(i).setCantidadLibros(compras.get(i).getCantidadLibros() + cantidad);
 								if (compras.get(i).getCantidadLibros() > book.getStock()) {
-									
+									JOptionPane.showMessageDialog(this, "No hay suficiente stock", "Error",
+											JOptionPane.INFORMATION_MESSAGE);
 									compras.get(i).setCantidadLibros(compras.get(i).getCantidadLibros() - cantidad);
 								}
 								repetido = true;
@@ -321,14 +314,14 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 							compra.setPrecioCompra(book.getPrice());
 							compras.add(compra);
 
-						} else {
+						} else if (repetido == false){
 							JOptionPane.showMessageDialog(this, "Sin stock", "Error", JOptionPane.WARNING_MESSAGE);
 						}
 					} catch (NumberFormatException a) {
 						JOptionPane.showMessageDialog(this, "En este campo solo se pueden introducir numeros", "Error",
 								JOptionPane.WARNING_MESSAGE);
 					}
-			}
+				}
 		}
 		}
 	}
@@ -384,7 +377,6 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 					matrizTabla[i][2] = listLikedBooks.get(i).getDescription();
 					matrizTabla[i][3] = " Comprar \n" + Float.toString(listLikedBooks.get(i).getPrice()) + "€";
 				} catch (GestorException e) {
-					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -433,9 +425,10 @@ public class WMenuInicio extends JPanel implements MouseListener, ComponentListe
 			tableHeader.setEnabled(false);
 		} else {
 			lblVacio = new JLabel();
-			lblVacio.setIcon(new ImageIcon(
-					WMenu.class.getResource("/tartanga/dami/equipoa/resources/preferenciasPersonales.jpg")));
-			lblVacio.setBounds(30, -150, 900, 900);
+			//lblVacio.setIcon(new ImageIcon(WMenu.class.getResource("/tartanga/dami/equipoa/resources/preferenciasPersonales.jpg")));
+			lblVacio.setText("No se han encontrado libros favoritos. Añade autores y generos preferidos en Perfil");
+			lblVacio.setBounds(100, 150, 100, 900);
+			System.out.println("dsa");
 			this.add(lblVacio);
 
 		}

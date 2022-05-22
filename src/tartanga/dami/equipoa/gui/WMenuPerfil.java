@@ -84,12 +84,12 @@ public class WMenuPerfil extends JPanel implements ActionListener, MouseListener
 		setBounds(100, 300, 1010, 704);
 
 		btnModificarDatos = new JButton("Modificar Datos");
-		btnModificarDatos.setBounds(32, 25, 118, 35);
+		btnModificarDatos.setBounds(32, 25, 130, 35);
 		add(btnModificarDatos);
 		btnModificarDatos.addActionListener(this);
 
-		btnGuardarCambios = new JButton("GuardarCambios");
-		btnGuardarCambios.setBounds(205, 25, 118, 35);
+		btnGuardarCambios = new JButton("Guardar Cambios");
+		btnGuardarCambios.setBounds(205, 25, 130, 35);
 		add(btnGuardarCambios);
 		btnGuardarCambios.setEnabled(false);
 		btnGuardarCambios.addActionListener(this);

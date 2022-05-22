@@ -7,6 +7,8 @@ import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import java.awt.Color;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import javax.swing.UIManager;
@@ -56,6 +58,7 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 	private IComprasController comprasInterface;
 	private IConsultaController consultaInterface;
 	private ArrayList<Compra> compras;
+	private JLabel lblIrakurle;
 
 	/**
 	 * @param userInterface       interfaz de usuarios
@@ -74,6 +77,7 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 		this.comprasInterface = comprasInterface;
 		this.consultaInterface = consultaInterface;
 		this.compras =compras;
+		this.lblIrakurle = lblIrakurle;
 		compras = new ArrayList();
 
 		setIconImage(Toolkit.getDefaultToolkit()
@@ -84,6 +88,13 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 
+		lblIrakurle = new JLabel();
+		lblIrakurle.setText("Irakurle");
+		lblIrakurle.setBounds(215,0,200,100);
+		lblIrakurle.setFont(new Font("Osaka", Font.PLAIN, 45));
+		lblIrakurle.setForeground(Color.WHITE);
+		this.add(lblIrakurle);
+		
 		textUsuario = new JTextField();
 		textUsuario.setBounds(173, 164, 239, 29);
 		getContentPane().add(textUsuario);
@@ -99,10 +110,11 @@ public class WLogIn extends JFrame implements ActionListener, KeyListener, Focus
 		getContentPane().add(lblNombreEmail);
 
 		JLabel lblIniciarSesion = new JLabel("Iniciar Sesi\u00F3n");
+		lblIniciarSesion.setBounds(210, 90, 159, 36);
 		lblIniciarSesion.setHorizontalAlignment(SwingConstants.CENTER);
 		lblIniciarSesion.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblIniciarSesion.setForeground(Color.WHITE);
-		lblIniciarSesion.setBounds(210, 66, 159, 36);
+		
 		getContentPane().add(lblIniciarSesion);
 
 		JLabel lblContr = new JLabel("Contrase\u00F1a:");

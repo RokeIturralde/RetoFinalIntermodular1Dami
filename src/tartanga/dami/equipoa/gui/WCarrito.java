@@ -3,6 +3,7 @@ package tartanga.dami.equipoa.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -65,12 +66,13 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 	 * @param comprasInterface Interfaz de compras
 	 * @param consultaInterface interfaz de consultas 
 	 * @param compras Lista de compras
+	 * @param userInterface 
 	 */
 
 
 	public WCarrito(IBookController bookInterface, IAuthorController authorInterface,
 			IComprasController comprasInterface, ArrayList<Compra> compras, IGenreController genreInterface, User user,
-		  IConsultaController consultaInterface) {
+		  IConsultaController consultaInterface, IUserController userInterface) {
 		setBounds(100, 100, 1047, 680);
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.DARK_GRAY);
@@ -82,6 +84,7 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 		this.comprasInterface = comprasInterface;
 		this.user = user;
 		this.consultaInterface = consultaInterface;
+		this.userInterface = userInterface;
 		
 		crearTablaCompras(bookInterface, genreInterface, compras);
 
@@ -92,10 +95,11 @@ public class WCarrito extends JDialog implements ActionListener, MouseListener {
 		this.add(bRegresar);
 		
 		lblComprar = new JLabel();
-		lblComprar.setBounds(430, 450, 125, 75);
+		lblComprar.setBounds(445, 450, 125, 75);
 		getContentPane().add(lblComprar);
 		lblComprar.setText("Comprar");
-		lblComprar.setBackground(Color.white);;
+		lblComprar.setForeground(Color.white);
+		lblComprar.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
 		bComprar = new JButton();
 		bComprar.setBounds(420, 500, 125, 75);

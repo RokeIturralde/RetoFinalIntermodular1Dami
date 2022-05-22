@@ -27,6 +27,7 @@ import tartanga.dami.equipoa.model.User;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -61,7 +62,6 @@ public class WMenu extends JDialog implements MouseListener {
 	private JLabel lblCarrito;
 	private JLabel lblCerrar;
 	private ArrayList<Compra> compras;
-	
 	/**
 	 * @param user el usuario que ha iniciado sesion
 	 * @param bookInterface Interfaz de libro
@@ -76,7 +76,7 @@ public class WMenu extends JDialog implements MouseListener {
 	public WMenu(IUserController userInterface, IAuthorController authorInterface, IGenreController genreInterface,
 			IBookController bookInterface, IComprasController comprasInterface, User user,
 			IConsultaController consultaInterface, ArrayList<Compra> compras) {
-		setBounds(100, 100, 1047, 680);
+		setBounds(100, 100, 1050, 720);
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.DARK_GRAY);
 
@@ -86,6 +86,7 @@ public class WMenu extends JDialog implements MouseListener {
 		this.genreInterface = genreInterface;
 		this.comprasInterface = comprasInterface;
 		this.consultaInterface = consultaInterface;
+		this.compras=compras;
 		// userInterface, authorInterface, genreInterface, bookInterface,
 		// authorBookInterface, comprasInterface
 		this.user = user;
@@ -96,6 +97,8 @@ public class WMenu extends JDialog implements MouseListener {
 		tabbedPane.setBounds(27, 27, 1005, 683);
 		getContentPane().add(tabbedPane);
 
+		
+		
 		JLabel usuario = new JLabel("");
 		usuario.setVerticalAlignment(SwingConstants.TOP);
 		usuario.setForeground(new Color(255, 255, 255));
@@ -106,9 +109,9 @@ public class WMenu extends JDialog implements MouseListener {
 
 		lblCarrito = new JLabel("");
 		lblCarrito.setIcon(new ImageIcon(WMenu.class.getResource("/tartanga/dami/equipoa/resources/carritoIcono.png")));
-		lblCarrito.setBounds(850, 10, 53, 33);
-		getContentPane().add(lblCarrito);
+		lblCarrito.setBounds(890, 10, 50, 30);
 		lblCarrito.addMouseListener(this);
+		getContentPane().add(lblCarrito);
 
 		lblCerrar = new JLabel("");
 		lblCerrar.setIcon(new ImageIcon(WMenu.class.getResource("/tartanga/dami/equipoa/resources/iconoSalir.png")));
@@ -157,7 +160,7 @@ public class WMenu extends JDialog implements MouseListener {
 		 */
 		if (e.getSource().equals(lblCarrito)) {
 			WCarrito carrito = new WCarrito(bookInterface, authorInterface, comprasInterface, compras, genreInterface,
-					user, consultaInterface);
+					user, consultaInterface, userInterface);
 			carrito.setVisible(true);
 			this.dispose();
 		}
